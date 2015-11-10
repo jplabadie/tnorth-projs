@@ -31,11 +31,11 @@
  */
 package gui;
 
-import issuetrackinglite.model.Issue;
-import issuetrackinglite.model.Issue.IssueStatus;
-import issuetrackinglite.model.ObservableIssue;
-import issuetrackinglite.model.TrackingService;
-import issuetrackinglite.model.TrackingServiceStub;
+import gui.model.Issue;
+import gui.model.Issue.IssueStatus;
+import gui.model.ObservableIssue;
+import gui.model.TrackingService;
+import gui.model.TrackingServiceStub;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;

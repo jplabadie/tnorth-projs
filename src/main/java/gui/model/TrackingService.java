@@ -29,18 +29,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package issuetrackinglite.model;
+package gui.model;
 
-import issuetrackinglite.model.Issue.IssueStatus;
+import gui.model.Issue.IssueStatus;
 import javafx.collections.ObservableList;
 
 public interface TrackingService {
 
-    public ObservableList<String> getIssueIds(String projectName);
-    public ObservableList<String> getProjectNames();
-    public ObservableIssue getIssue(String tickectId);
-    public ObservableIssue createIssueFor(String projectName);
-    public void deleteIssue(String issueId);
-    public void saveIssue(String issueId, IssueStatus status,
+    ObservableList<String> getIssueIds(String projectName);
+    ObservableList<String> getProjectNames();
+    ObservableIssue getIssue(String tickectId);
+    ObservableIssue createIssueFor(String projectName);
+    void deleteIssue(String issueId);
+    void saveIssue(String issueId, IssueStatus status,
             String synopsis, String description);
 }

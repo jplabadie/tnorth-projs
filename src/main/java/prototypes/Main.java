@@ -1,4 +1,4 @@
-package sample;
+package prototypes;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("NASPGuiMainLayout.fxml"));
+        primaryStage.setTitle("NASP GUI Prototype");
+        primaryStage.setScene(new Scene(root, 1024, 800));
         primaryStage.show();
     }
 

@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/NASPGui/NASPGui.java" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainApplication.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$1.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$2.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$3.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$4.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$5.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$DetailsData.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView$SaveState.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\MainView.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\Issue$IssueStatus.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\Issue.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\ObservableIssue.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\TrackingService.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\TrackingServiceStub$1.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\TrackingServiceStub$2.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\TrackingServiceStub$IssueStub.class" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\gui\model\TrackingServiceStub.class" afterPath="" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Major updates to GUI. Yes, I really should have made incremental commits.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/DragResizerController$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/DragResizerController$2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/DragResizerController$3.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/DragResizerController$4.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/DragResizerController.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabMainController$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabMainController$2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabMainController.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabMonitorController$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabMonitorController.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/JobTabVisualizationController.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/Main.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/MainController$1.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/MainController$2.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/MainController.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/OutputParser.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/prototypes/VisualizationBrowser.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/DragResizerController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/JobTabMainController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/JobTabMonitorController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/JobTabVisualizationController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/MainController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/NASPDefaultJobPane.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/NASPDefaultJobPane.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/NASPGuiMainLayout.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/NASPJobMonitorPane.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/NASPJobMonitorPane.fxml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/NaspInputSchema.xsd" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/NaspInputSchema.xsd" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/prototypes/OutputParser.java" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\java\NASPGui\NASPGui.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\java\sample\Controller.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\java\sample\sample.fxml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\NASPGui\NASPGui.class" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\sample\Browser.class" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\sample\Controller.class" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\sample\Main.class" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\target\classes\sample\WebViewSample.class" afterPath="" />
+      <change type="MOVED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\java\sample\Main.java" afterPath="$PROJECT_DIR$/src/main/java/prototypes/Main.java" />
+      <change type="MOVED" beforePath="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\java\sample\WebViewSample.java" afterPath="$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/flare_d3/d3.v3.min.js" afterPath="$PROJECT_DIR$/src/main/resources/flare_d3/d3.v3.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/flare_d3/d3.v3.min.js" afterPath="$PROJECT_DIR$/target/classes/flare_d3/d3.v3.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
@@ -37,6 +62,12 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DatabaseView">
+    <option name="FLATTEN" value="false" />
+    <option name="GROUP_BY_TYPE" value="true" />
+    <option name="SORT_CHILDREN" value="false" />
+    <option name="SHOW_TABLE_CONSTRAINTS" value="true" />
   </component>
   <component name="DebuggerManager">
     <ui_properties converted="true" />
@@ -82,14 +113,88 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="NASPGui.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/NASPGui/NASPGui.java">
+      <file leaf-file-name="VisualizationBrowser.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.91604936">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.45212767">
+              <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#1364#1365#0" expanded="true" />
+                <element signature="e#1390#1391#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tree.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/tree.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NASPDefaultJobPane.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/NASPDefaultJobPane.fxml">
+          <provider editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-168.68965">
+              <caret line="292" column="38" selection-start-line="292" selection-start-column="38" selection-end-line="292" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+          <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JobTabVisualizationController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabVisualizationController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="34" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JobTabMainController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabMainController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JobTabMonitorController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabMonitorController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="30" column="24" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -99,9 +204,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
-        <option value="XSLT Stylesheet" />
         <option value="JavaFXApplication" />
+        <option value="XSLT Stylesheet" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -111,6 +216,11 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="JP" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -129,7 +239,6 @@
         <option value="$PROJECT_DIR$/src/main/resources/html/tree.html" />
         <option value="$PROJECT_DIR$/src/main/resources/flare_d3/tree.html" />
         <option value="$PROJECT_DIR$/src/main/java/sample/WebViewSample.java" />
-        <option value="$PROJECT_DIR$/src/main/java/sample/sample.fxml" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/java/MainView.java" />
         <option value="$PROJECT_DIR$/src/main/java/MainViewApplication.java" />
@@ -143,8 +252,31 @@
         <option value="$PROJECT_DIR$/src/main/java/gui/model/TrackingService.java" />
         <option value="$PROJECT_DIR$/src/main/java/main.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/NASPGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/sample/Controller.java" />
         <option value="$PROJECT_DIR$/src/main/java/NASPGui/NASPGui.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sample/sample.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/sample/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/sample/Controller.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/sample.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/OutputParser.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPGuiFileBrowserLayout.fxml.xsl" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPGuiFileBrowserLayout.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/DragResizerController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/Controller.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPGuiLayout.fxml" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPDefaultJobTab.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/MainController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/JobTabController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/JobTabVizualizationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/JobTabVisualizationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/WebViewSample.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPJobMonitorPane.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/JobTabMonitorController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/flare_d3/d3.v3.min.js" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/prototypes/JobTabMainController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/NASPDefaultJobPane.fxml" />
       </list>
     </option>
   </component>
@@ -161,6 +293,9 @@
   </component>
   <component name="NamedScopeManager">
     <order />
+  </component>
+  <component name="PhpServers">
+    <servers />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
@@ -197,7 +332,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
@@ -275,35 +409,14 @@
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Capstone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Capstone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NASPGui" />
+              <option name="myItemId" value="prototypes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -319,31 +432,31 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/School (2014-2015)/Fall 2015/CS 249 - Data Structures/CS249_projects/cs249-p3-2.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
-    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.scopes" />
+    <property name="settings.editor.splitter.proportion" value="0.2331048" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\resources" />
       <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\resources\html" />
       <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\resources\json" />
       <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\test" />
       <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\main\resources\js" />
-      <recent name="C:\Users\Jean-Paul\IdeaProjects\Capstone\src\res\web\json" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NASPGui">
+  <component name="RunManager" selected="Application.Main">
     <configuration default="false" name="WebViewSample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="sample.*" />
+          <option name="PATTERN" value="prototypes.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="MAIN_CLASS_NAME" value="sample.WebViewSample" />
+      <option name="MAIN_CLASS_NAME" value="prototypes.WebViewSample" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -585,6 +698,16 @@
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -661,11 +784,11 @@
     <configuration default="false" name="Main" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="sample.*" />
+          <option name="PATTERN" value="prototypes.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="MAIN_CLASS_NAME" value="sample.Main" />
+      <option name="MAIN_CLASS_NAME" value="prototypes.Main" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -716,30 +839,51 @@
       <workItem from="1447032104697" duration="43000" />
       <workItem from="1447111837522" duration="500000" />
       <workItem from="1447193643707" duration="4398000" />
-      <workItem from="1447363020737" duration="110000" />
+      <workItem from="1447363020737" duration="636000" />
+      <workItem from="1450074093992" duration="2051000" />
+      <workItem from="1450189456327" duration="9661000" />
+      <workItem from="1451668710705" duration="1191000" />
+      <workItem from="1452036333405" duration="2977000" />
+      <workItem from="1452039339903" duration="6046000" />
+      <workItem from="1452115019958" duration="83000" />
+      <workItem from="1452115311632" duration="6860000" />
+      <workItem from="1452147471420" duration="4262000" />
+      <workItem from="1452228694680" duration="244000" />
+      <workItem from="1452274193989" duration="5980000" />
+      <workItem from="1452561571647" duration="599000" />
+      <workItem from="1452574491206" duration="10164000" />
+      <workItem from="1452585234644" duration="4701000" />
+      <workItem from="1452590962305" duration="5197000" />
+      <workItem from="1452596182538" duration="5624000" />
+      <workItem from="1452632218002" duration="751000" />
+      <workItem from="1452748497909" duration="1211000" />
+      <workItem from="1452808918712" duration="4309000" />
+      <workItem from="1452813359855" duration="4261000" />
+      <workItem from="1452842100816" duration="701000" />
+      <workItem from="1453413199217" duration="2963000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24859000" />
+    <option name="totallyTimeSpent" value="105221000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="7" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32744783" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15508021" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30497593" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.082170546" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28366113" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2306003" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995737" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -777,72 +921,158 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/NASPGui/NASPGui.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <caret line="40" column="53" selection-start-line="40" selection-start-column="53" selection-end-line="40" selection-end-column="53" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="148" column="0" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="53" selection-start-line="40" selection-start-column="53" selection-end-line="40" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="53" selection-start-line="40" selection-start-column="53" selection-end-line="40" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="53" selection-start-line="40" selection-start-column="53" selection-end-line="40" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/WebViewSample.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="46" column="35" selection-start-line="46" selection-start-column="35" selection-end-line="46" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/WebViewSample.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
@@ -853,35 +1083,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="6" column="20" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/WebViewSample.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
@@ -892,63 +1121,55 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="6" column="20" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+        </state>
+      </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/d3.v3.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6730769">
-          <caret line="4" column="22767" selection-start-line="4" selection-start-column="22767" selection-end-line="4" selection-end-column="22767" />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/flare.json">
@@ -958,18 +1179,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/tree.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11780822">
-          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -977,14 +1190,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="6" column="20" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_31/javafx-src.zip!/javafx/fxml/FXMLLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5833333">
-          <caret line="3200" column="0" selection-start-line="3200" selection-start-column="0" selection-end-line="3200" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -995,43 +1200,136 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NaspInputSchema.xsd">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16585366">
-          <caret line="8" column="39" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="60" selection-start-line="16" selection-start-column="60" selection-end-line="16" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/OutputParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08292683">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/sample.fxml">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_31/javafx-src.zip!/javafx/fxml/FXMLLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2594" column="0" selection-start-line="2594" selection-start-column="0" selection-end-line="2594" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/DragResizerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="86" column="23" selection-start-line="86" selection-start-column="23" selection-end-line="86" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPGuiMainLayout.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7560647">
+          <caret line="33" column="15" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/target/classes/flare_d3/tree.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/d3.v3.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="124.798965">
+          <caret line="5672" column="36" selection-start-line="5672" selection-start-column="36" selection-end-line="5672" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/flare_d3/tree.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="34" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabMonitorController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="24" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabVisualizationController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/JobTabMainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="9" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPJobMonitorPane.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37585035">
+          <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/NASPDefaultJobPane.fxml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-168.68965">
+          <caret line="292" column="38" selection-start-line="292" selection-start-column="38" selection-end-line="292" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-        </state>
-      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/sample/WebViewSample.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/prototypes/VisualizationBrowser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/NASPGui/NASPGui.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.91604936">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.45212767">
+          <caret line="22" column="35" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1364#1365#0" expanded="true" />
+            <element signature="e#1390#1391#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1100,6 +1398,17 @@
         </settings>
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
         <settings>
           <splitter-proportions>
             <option name="proportions">

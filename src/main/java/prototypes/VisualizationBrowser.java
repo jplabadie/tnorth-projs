@@ -1,44 +1,26 @@
-package sample;
+package prototypes;
 
 /**
  * @author Jean-Paul Labadie
  * @date 8/11/2015
  */
 
-import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 
 
-public class WebViewSample extends Application {
-    private Scene scene;
-    @Override public void start(Stage stage) {
-        // create the scene
-        stage.setTitle("Web View");
-        scene = new Scene(new Browser(),750,500, Color.web("#666970"));
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args){
-        launch(args);
-    }
-}
-class Browser extends Region {
+public class VisualizationBrowser extends Region {
 
     final WebView browser = new WebView();
     final WebEngine webEngine = browser.getEngine();
 
-    public Browser() {
+    public VisualizationBrowser() {
         //apply the styles
         getStyleClass().add("browser");
         // load the web page
@@ -62,10 +44,10 @@ class Browser extends Region {
     }
 
     @Override protected double computePrefWidth(double height) {
-        return 750;
+        return 800;
     }
 
     @Override protected double computePrefHeight(double width) {
-        return 500;
+        return 600;
     }
 }

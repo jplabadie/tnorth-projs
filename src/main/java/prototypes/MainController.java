@@ -25,7 +25,7 @@ public class MainController implements Initializable{
     private MenuItem createNewJob;
 
 
-    @Override
+    //@Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources){
 
         initMainFileBrowserTree();
@@ -37,7 +37,7 @@ public class MainController implements Initializable{
     private void initCreateNewJobHandler() {
         createNewJob.setOnAction(
                 new EventHandler<ActionEvent>() {
-                    @Override
+                    //@Override
                     public void handle(final ActionEvent e) {
                         try {
                             AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("NASPDefaultJobPane.fxml"));

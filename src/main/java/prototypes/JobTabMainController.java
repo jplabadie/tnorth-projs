@@ -121,24 +121,7 @@ public class JobTabMainController implements Initializable {
 
     private void handleCheckBoxes() {
 
-        for(TitledPane pane: panes){
-            checkArray[i].setOnAction(
-                    new EventHandler<ActionEvent>() {
-                        //@Override
-                        public void handle(final ActionEvent e) {
-                            if (checkArray[i].isSelected()) {
-                                pane.setDisable(false);
-                                pane.setExpanded(true);
-                            } else {
-                                panes[i].setDisable(true);
-                                panes[i].setExpanded(false);
-                            }
-                        }
-                    }
-            );
-            i++;
-
-        }
+        
 
         
         bwaSampCheck.setOnAction(

@@ -16,18 +16,19 @@ import java.util.ResourceBundle;
  */
 public class JobTabMonitorController implements Initializable {
 
-
     @FXML
     private Button nextButton;
     @FXML
     private AnchorPane jobTabMonitorPane;
 
     @Override
-    public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
+    public void initialize(final URL fxmlFileLocation, ResourceBundle resources)
+    {
         initNextButton();
     }
 
-    private void initNextButton() {
+    private void initNextButton()
+    {
         nextButton.setOnAction(
                 new EventHandler<ActionEvent>() {
                     @Override

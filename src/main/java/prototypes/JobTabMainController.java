@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author Jean-Paul Labadie
- * @date 8/11/2015
+ *
  */
 public class JobTabMainController implements Initializable {
 
@@ -71,7 +71,7 @@ public class JobTabMainController implements Initializable {
     private CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck};
     private TitledPane[] panes = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane};
 
-    //@Override
+    @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
 
         initStartJobButton();
@@ -120,18 +120,15 @@ public class JobTabMainController implements Initializable {
 
 
     private void handleCheckBoxes() {
-        /*
-        int i = 0;
-        int arrayLength = checkArray.length;
 
-        while (i < arrayLength) {
+        for(TitledPane pane: panes){
             checkArray[i].setOnAction(
                     new EventHandler<ActionEvent>() {
                         //@Override
                         public void handle(final ActionEvent e) {
                             if (checkArray[i].isSelected()) {
-                                panes[i].setDisable(false);
-                                panes[i].setExpanded(true);
+                                pane.setDisable(false);
+                                pane.setExpanded(true);
                             } else {
                                 panes[i].setDisable(true);
                                 panes[i].setExpanded(false);
@@ -142,7 +139,7 @@ public class JobTabMainController implements Initializable {
             i++;
 
         }
-        */
+
         
         bwaSampCheck.setOnAction(
                 new EventHandler<ActionEvent>() {

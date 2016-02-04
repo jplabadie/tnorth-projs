@@ -681,13 +681,13 @@
                                             <HBox>
                                                 <children>
                                                     <CheckBox mnemonicParsing="false"
-                                                              text="Mask Low Quality Calls in Output Matrix"/>
+                                                              text="Mask Low Quality Calls in Output Matrix" fx:id="maskLowQ"/>
                                                 </children>
                                             </HBox>
                                             <HBox prefHeight="17.0" prefWidth="868.0">
                                                 <children>
                                                     <CheckBox mnemonicParsing="false"
-                                                              text="Skip SNPs found in duplicated regions">
+                                                              text="Skip SNPs found in duplicated regions" fx:id="skipSNP">
                                                         <tooltip>
                                                             <Tooltip text="Empty Tooltip"/>
                                                         </tooltip>

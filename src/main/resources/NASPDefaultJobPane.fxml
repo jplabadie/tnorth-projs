@@ -39,12 +39,12 @@
                                                 </VBox>
                                                 <VBox prefHeight="359.0" prefWidth="330.0" spacing="5.0">
                                                     <children>
-                                                        <TextField fx:id="outputDirText" prefHeight="25.0"
+                                                        <TextField fx:id="outputTargetDir" prefHeight="25.0"
                                                                    prefWidth="360.0"/>
-                                                        <ChoiceBox fx:id="jobManagerChoice"
+                                                        <ChoiceBox fx:id="jobMngtSystem"
                                                                    nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0"
                                                                    prefWidth="153.0"/>
-                                                        <TextField prefHeight="25.0" prefWidth="155.0"/>
+                                                        <TextField prefHeight="25.0" prefWidth="155.0" fx:id="jobMngtQ"/>
                                                         <TextArea fx:id="jobManagerArgs" maxHeight="100.0"
                                                                   prefHeight="100.0" prefWidth="332.0" wrapText="true"/>
                                                     </children>
@@ -81,41 +81,41 @@
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="157.0"
-                                                           text="Reference FASTA Path:" fx:id="fastaReference"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                           text="Reference FASTA Path:"/>
+                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="fastaReference"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="156.0"
-                                                           text="FASTA for External Genomes:" textAlignment="CENTER" fx:id="externalFastaGenomes"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                           text="FASTA for External Genomes:" textAlignment="CENTER" />
+                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="externalFastaGenomes"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
-                                                    <Label prefHeight="17.0" prefWidth="156.0" text="Read files:" fx:id="readFiles"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                    <Label prefHeight="17.0" prefWidth="156.0" text="Read files:" />
+                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="readFiles"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="155.0"
-                                                           text="Pre-aligned SAM/BAM files:" fx:id="samBamFiles"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                           text="Pre-aligned SAM/BAM files:" />
+                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="samBamFiles"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="154.0"
-                                                           text="Pre-called VCF files:" fx:id="vcfFiles"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                           text="Pre-called VCF files:" />
+                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="vcfFiles"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label alignment="CENTER" text="Advanced NUCMER settings:"
-                                                           textAlignment="CENTER" fx:id="nucmerSettings"/>
+                                                           textAlignment="CENTER"/>
                                                     <VBox spacing="10.0">
                                                         <children>
                                                             <CheckBox fx:id="enableAdvNucmerButton"

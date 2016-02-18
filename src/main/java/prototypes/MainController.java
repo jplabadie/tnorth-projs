@@ -96,7 +96,6 @@ public class MainController implements Initializable{
                     File f = getValue();
                     isLeaf = f.isFile();
                 }
-
                 return isLeaf;
             }
 

@@ -1,8 +1,8 @@
 package prototypes;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import xmlsources.ExternalGenome;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +23,7 @@ public class OutputParser {
     private DocumentBuilderFactory docFactory;
     private DocumentBuilder docBuilder;
     private Document output;
+    private Element mainRootElement;
 
     public OutputParser(){
 
@@ -35,14 +36,11 @@ public class OutputParser {
 
         output = docBuilder.newDocument();
 
-        Element mainRootElement = output.createElement("NaspInputData");
+        mainRootElement = output.createElement("NaspInputData");
         output.appendChild(mainRootElement);
     }
 
-    public void addElement(Attr attribute, Element element) throws InputMismatchException{
-
-        output.createAttribute(attribute.getName());
-        output.createElement(element.getTagName());
+    public void addElement(ExternalGenome in) throws InputMismatchException{
     }
 
     public void createOutputXML(){

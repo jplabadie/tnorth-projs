@@ -11,12 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Hashtable;
+
 
 /**
  * @author Jean-Paul Labadie
@@ -64,6 +64,23 @@ public class JobTabMainController implements Initializable {
     private CheckBox novoalignCheck;
     @FXML
     private CheckBox snapCheck;
+    @FXML
+    private Button btnSaveSettings;
+    @FXML
+    private TextField altBwaSampQueue;
+    @FXML
+    private Button btnLoadSettings;
+    @FXML
+    private TextField altBwaSampPath;
+    @FXML
+    private TextField limitBwaSampMem;
+    @FXML
+    private TextField limitBwaSampCpu;
+    @FXML
+    private TextField limitBwaSampRuntime;
+
+
+
 
 
     private ArrayList<File> selectedFiles;
@@ -76,6 +93,8 @@ public class JobTabMainController implements Initializable {
 
         initStartJobButton();
         handleCheckBoxes();
+        saveSettings();
+        loadSettings();
 
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
@@ -120,9 +139,6 @@ public class JobTabMainController implements Initializable {
 
 
     private void handleCheckBoxes() {
-
-        
-
         
         bwaSampCheck.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -193,5 +209,90 @@ public class JobTabMainController implements Initializable {
                     }
                 });
     }
+
+    private void saveSettings() {
+        btnSaveSettings.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    //@Override
+                    public void handle(final ActionEvent e) {
+
+                        Hashtable<String, String> settings
+                                = new Hashtable<String, String>();
+                        if(!altBwaSampPath.isDisabled())
+                            settings.put("altBwaSampPath",altBwaSampPath.getText());
+                        settings.put("altBwaSampQueue",altBwaSampQueue.getText());
+                        settings.put("limitBwaSampMem",limitBwaSampMem.getText());
+                        settings.put("limitBwaSampCpu",limitBwaSampCpu.getText());
+                        settings.put("limitBwaSampRuntime",limitBwaSampRuntime.getText());
+
+
+                        try {
+
+                            PrintWriter out = new PrintWriter("PaneSetting.dat");
+                            out.write(settings.toString());
+                            out.close();
+
+                        }
+                        catch (IOException exception)
+                        {
+                            System.out.println("Error processing file: " + exception);
+
+                        }
+
+                    }
+                });
+    }
+
+    void loadSettings() {
+        btnLoadSettings.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    //@Override
+                    public void handle(final ActionEvent e) {
+                        try {
+                            File file = new File("PaneSetting.dat");
+                            FileReader fileReader = new FileReader(file);
+                            BufferedReader bufferedReader = new BufferedReader(fileReader);
+                            StringBuilder sb = new StringBuilder();
+                            String line;
+                            while ((line = bufferedReader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                            fileReader.close();
+                            String delims = "[,]";
+                            String[] entries = sb.toString().split(delims);
+                            entries[entries.length-1] = entries[entries.length-1].substring(0,entries[entries.length-1].length()-1);
+                            //int i = sb.indexOf("{");
+                            //int j = sb.indexOf("=");
+                            int j;
+                            for (int i = 0; i < entries.length; i++) {
+                                j = entries[i].indexOf("=");
+                                if ("altBwaSampPath".equals(entries[i].substring(1,j)))
+                                    altBwaSampPath.setText(entries[i].substring(j+1,entries[i].length()));
+                                else if ("altBwaSampQueue".equals(entries[i].substring(1,j)))
+                                    altBwaSampQueue.setText(entries[i].substring(j+1,entries[i].length()));
+                                else if ("limitBwaSampMem".equals(entries[i].substring(1,j)))
+                                    limitBwaSampMem.setText(entries[i].substring(j+1,entries[i].length()));
+                                else if ("limitBwaSampCpu".equals(entries[i].substring(1,j)))
+                                    limitBwaSampCpu.setText(entries[i].substring(j+1,entries[i].length()));
+                                else if ("limitBwaSampRuntime".equals(entries[i].substring(1,j)))
+                                    limitBwaSampRuntime.setText(entries[i].substring(j+1,entries[i].length()));
+                            }
+                            /*String key = sb.substring(i + 1, j);
+                            i = sb.indexOf("=");
+                            j = sb.indexOf("}");
+                            String value = sb.substring(i + 1, j);
+
+                            if ("altBwaSampQueue".equals( key)) {
+                                altBwaSampQueue.setText(value);
+                                System.out.print("loaded");
+                            }*/
+                        } catch (IOException w) {
+                            w.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+
 
 }

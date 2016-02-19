@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import java.io.*;
@@ -78,8 +79,60 @@ public class JobTabMainController implements Initializable {
     private TextField limitBwaSampCpu;
     @FXML
     private TextField limitBwaSampRuntime;
-
-
+    @FXML
+    private TitledPane aligner_options_pane;
+    @FXML
+    private TitledPane general_settings_pane;
+    @FXML
+    private TitledPane inputs_pane;
+    @FXML
+    private CheckBox useAltBwaMemVer;
+    @FXML
+    private TextField altBwaMemPath;
+    @FXML
+    private TextField altBwaMemQueue;
+    @FXML
+    private TextField limitBwaMemMem;
+    @FXML
+    private TextField limitBwaMemCpu;
+    @FXML
+    private TextField limitBwaMemRuntime;
+    @FXML
+    private CheckBox useAltNovoalignVer;
+    @FXML
+    private TextField altNovoalignPath;
+    @FXML
+    private TextField altNovoalignQueue;
+    @FXML
+    private TextField limitNovoalignMem;
+    @FXML
+    private TextField limitNovoalignCpu;
+    @FXML
+    private TextField limitNovoalignRuntime;
+    @FXML
+    private CheckBox useAltSnapVer;
+    @FXML
+    private TextField altSnapPath;
+    @FXML
+    private TextField altSnapQueue;
+    @FXML
+    private TextField limitSnapMem;
+    @FXML
+    private TextField limitSnapCpu;
+    @FXML
+    private TextField limitSnapRuntime;
+    @FXML
+    private CheckBox useAltBowTieVer;
+    @FXML
+    private TextField altBowTiePath;
+    @FXML
+    private TextField altBowTieQueue;
+    @FXML
+    private TextField limitBowTieMem;
+    @FXML
+    private TextField limitBowTieCpu;
+    @FXML
+    private TextField limitBowTieRuntime;
 
 
 
@@ -218,13 +271,56 @@ public class JobTabMainController implements Initializable {
 
                         Hashtable<String, String> settings
                                 = new Hashtable<String, String>();
-                        if(!altBwaSampPath.isDisabled())
-                            settings.put("altBwaSampPath",altBwaSampPath.getText());
-                        settings.put("altBwaSampQueue",altBwaSampQueue.getText());
-                        settings.put("limitBwaSampMem",limitBwaSampMem.getText());
-                        settings.put("limitBwaSampCpu",limitBwaSampCpu.getText());
-                        settings.put("limitBwaSampRuntime",limitBwaSampRuntime.getText());
 
+                        if (general_settings_pane.isExpanded())
+                        {
+                                settings.put("outputDirText", outputDirText.getText());
+                                settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
+                                settings.put("jobManagerArgs", jobManagerArgs.getText());
+
+                        }
+                        if (aligner_options_pane.isExpanded()) {
+                            if (bwaSampCheck.isSelected()) {
+                                if (!altBwaSampPath.isDisabled())
+                                    settings.put("altBwaSampPath", altBwaSampPath.getText());
+                                settings.put("altBwaSampQueue", altBwaSampQueue.getText());
+                                settings.put("limitBwaSampMem", limitBwaSampMem.getText());
+                                settings.put("limitBwaSampCpu", limitBwaSampCpu.getText());
+                                settings.put("limitBwaSampRuntime", limitBwaSampRuntime.getText());
+                            }
+                            else if (bwaMemCheck.isSelected()) {
+                                if (!useAltBwaMemVer.isDisabled())
+                                    settings.put("altBwaMemPath", altBwaMemPath.getText());
+                                settings.put("altBwaMemQueue", altBwaMemQueue.getText());
+                                settings.put("limitBwaMemMem", limitBwaMemMem.getText());
+                                settings.put("limitBwaMemCpu", limitBwaMemCpu.getText());
+                                settings.put("limitBwaMemRuntime", limitBwaMemRuntime.getText());
+                            }
+                            else if (novoalignCheck.isSelected()) {
+                                if (!useAltNovoalignVer.isDisabled())
+                                    settings.put("altNovoalignPath", altNovoalignPath.getText());
+                                settings.put("altNovoalignQueue", altNovoalignQueue.getText());
+                                settings.put("limitNovoalignMem", limitNovoalignMem.getText());
+                                settings.put("limitNovoalignCpu", limitNovoalignCpu.getText());
+                                settings.put("limitNovoalignRuntime", limitNovoalignRuntime.getText());
+                            }
+                            else if (snapCheck.isSelected()) {
+                                if (!useAltSnapVer.isDisabled())
+                                    settings.put("altSnapPath", altSnapPath.getText());
+                                settings.put("altSnapQueue", altSnapQueue.getText());
+                                settings.put("limitSnapMem", limitSnapMem.getText());
+                                settings.put("limitSnapCpu", limitSnapCpu.getText());
+                                settings.put("limitSnapRuntime", limitSnapRuntime.getText());
+                            }
+                            else if (bowtie2Check.isSelected()) {
+                                if (!useAltBowTieVer.isDisabled())
+                                    settings.put("altBowTiePath", altBowTiePath.getText());
+                                settings.put("altBowTieQueue", altBowTieQueue.getText());
+                                settings.put("limitBowTieMem", limitBowTieMem.getText());
+                                settings.put("limitBowTieCpu", limitBowTieCpu.getText());
+                                settings.put("limitBowTieRuntime", limitBowTieRuntime.getText());
+                            }
+                        }
 
                         try {
 
@@ -261,31 +357,71 @@ public class JobTabMainController implements Initializable {
                             String delims = "[,]";
                             String[] entries = sb.toString().split(delims);
                             entries[entries.length-1] = entries[entries.length-1].substring(0,entries[entries.length-1].length()-1);
-                            //int i = sb.indexOf("{");
-                            //int j = sb.indexOf("=");
-                            int j;
-                            for (int i = 0; i < entries.length; i++) {
-                                j = entries[i].indexOf("=");
-                                if ("altBwaSampPath".equals(entries[i].substring(1,j)))
-                                    altBwaSampPath.setText(entries[i].substring(j+1,entries[i].length()));
-                                else if ("altBwaSampQueue".equals(entries[i].substring(1,j)))
-                                    altBwaSampQueue.setText(entries[i].substring(j+1,entries[i].length()));
-                                else if ("limitBwaSampMem".equals(entries[i].substring(1,j)))
-                                    limitBwaSampMem.setText(entries[i].substring(j+1,entries[i].length()));
-                                else if ("limitBwaSampCpu".equals(entries[i].substring(1,j)))
-                                    limitBwaSampCpu.setText(entries[i].substring(j+1,entries[i].length()));
-                                else if ("limitBwaSampRuntime".equals(entries[i].substring(1,j)))
-                                    limitBwaSampRuntime.setText(entries[i].substring(j+1,entries[i].length()));
-                            }
-                            /*String key = sb.substring(i + 1, j);
-                            i = sb.indexOf("=");
-                            j = sb.indexOf("}");
-                            String value = sb.substring(i + 1, j);
 
-                            if ("altBwaSampQueue".equals( key)) {
-                                altBwaSampQueue.setText(value);
-                                System.out.print("loaded");
-                            }*/
+                            int j;
+                            if (aligner_options_pane.isExpanded()) {
+                                if (bwaSampCheck.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("altBwaSampPath".equals(entries[i].substring(1, j)))
+                                            altBwaSampPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("altBwaSampQueue".equals(entries[i].substring(1, j)))
+                                            altBwaSampQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaSampMem".equals(entries[i].substring(1, j)))
+                                            limitBwaSampMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaSampCpu".equals(entries[i].substring(1, j)))
+                                            limitBwaSampCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaSampRuntime".equals(entries[i].substring(1, j)))
+                                            limitBwaSampRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                                else if (bwaMemCheck.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("altBwaMemPath".equals(entries[i].substring(1, j)))
+                                            altBwaMemPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("altBwaMemQueue".equals(entries[i].substring(1, j)))
+                                            altBwaMemQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaMemMem".equals(entries[i].substring(1, j)))
+                                            limitBwaMemMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaMemCpu".equals(entries[i].substring(1, j)))
+                                            limitBwaMemCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitBwaMemRuntime".equals(entries[i].substring(1, j)))
+                                            limitBwaMemRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                                else if (novoalignCheck.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("altNovoalignPath".equals(entries[i].substring(1, j)))
+                                            altNovoalignPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("altNovoalignQueue".equals(entries[i].substring(1, j)))
+                                            altNovoalignQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitNovoalignMem".equals(entries[i].substring(1, j)))
+                                            limitNovoalignMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitNovoalignCpu".equals(entries[i].substring(1, j)))
+                                            limitNovoalignCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("limitNovoalignRuntime".equals(entries[i].substring(1, j)))
+                                            limitNovoalignRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                            }
+
+                            if (general_settings_pane.isExpanded())
+                            {
+                                for (int i = 0; i < entries.length; i++) {
+                                    j = entries[i].indexOf("=");
+                                    if ("outputDirText".equals(entries[i].substring(1, j)))
+                                        outputDirText.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerChoice".equals(entries[i].substring(1, j)))
+                                        jobManagerChoice.setValue(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
+                                        jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
+
+                                }
+
+                            }
+
                         } catch (IOException w) {
                             w.printStackTrace();
                         }

@@ -39,7 +39,7 @@
       </TabPane>
    </center>
    <left>
-      <TreeView fx:id="mainFileBrowserTree" prefHeight="566.0" prefWidth="248.0">
+      <TreeView fx:id="mainFileBrowserTree" editable="true" opacity="0.48" prefHeight="566.0" prefWidth="248.0">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>

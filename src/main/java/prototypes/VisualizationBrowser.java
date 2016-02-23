@@ -29,7 +29,6 @@ public class VisualizationBrowser extends Region {
         webEngine.load(local_path);
         //add the web view to the scene
         getChildren().add(browser);
-
     }
     private Node createSpacer() {
         Region spacer = new Region();

@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Callback;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,9 +53,19 @@ public class MainController implements Initializable{
     }
 
     private void initMainFileBrowserTree() {
+        mainFileBrowserTree.setEditable(true);
         TreeItem<File> root = createNode(new File("/"));
         root.setExpanded(true);
+
+        mainFileBrowserTree.setCellFactory(new Callback<TreeView<File>,TreeCell<File>>(){
+            @Override
+            public TreeCell<File> call(TreeView<File> param) {
+                return new DraggableTreeCell<File>();
+            }
+        });
         mainFileBrowserTree.setRoot(root);
+
+
     }
 
     // This method creates a TreeItem to represent the given File. It does this
@@ -96,19 +107,20 @@ public class MainController implements Initializable{
                     File f = getValue();
                     isLeaf = f.isFile();
                 }
-
                 return isLeaf;
             }
 
-            private ObservableList<TreeItem<File>> buildChildren(TreeItem<File> TreeItem) {
-                File f = TreeItem.getValue();
+            private ObservableList<TreeItem<File>> buildChildren(TreeItem<File> tree_item) {
+                File f = tree_item.getValue();
+
                 if (f != null && f.isDirectory()) {
                     File[] files = f.listFiles();
                     if (files != null) {
                         ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
 
-                        for (File childFile : files) {
-                            children.add(createNode(childFile));
+                        for (File child_file : files) {
+                            children.add(createNode(child_file));
+
                         }
 
                         return children;

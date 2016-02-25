@@ -35,6 +35,8 @@ package prototypes;
 
         private boolean dragging;
 
+        /*Constructor that creates and instantiates 
+        the region that we will be clicked and dragged for resizing.*/
         private DragResizerController(Region aRegion) {
             region = aRegion;
         }

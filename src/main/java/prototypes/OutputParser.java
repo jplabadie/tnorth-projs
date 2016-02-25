@@ -40,9 +40,21 @@ public class OutputParser {
         output.appendChild(mainRootElement);
     }
 
+    /*
+    Creates a new Element Node in the XML DOM with the supplied inputs. 
+    Note that this is represented in memory, but not yet written to the 
+    disk. Elements and Attributes are defined as Classes based on the 
+    NASPInputSchema.xsd
+    */
     public void addElement(ExternalGenome in) throws InputMismatchException{
     }
 
+    /*
+    Writes the current XML DOM to the disk using the filename given 
+    in the default output directory. This finished XML represents 
+    the entirety of the NASP tool job request, and can be sent to 
+    a remote service running NASP to begin a new job.
+    */
     public void createOutputXML(){
 
         Transformer transformer;

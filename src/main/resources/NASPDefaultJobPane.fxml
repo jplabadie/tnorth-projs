@@ -39,17 +39,11 @@
                                                 </VBox>
                                                 <VBox prefHeight="359.0" prefWidth="330.0" spacing="5.0">
                                                     <children>
-                                                        <TextField fx:id="outputTargetDir" prefHeight="25.0"
+                                                        <TextField fx:id="outputDirText" prefHeight="25.0"
                                                                    prefWidth="360.0"/>
-                                                        <ChoiceBox fx:id="jobMngtSystem"
+                                                        <ChoiceBox fx:id="jobManagerChoice"
                                                                    nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0"
                                                                    prefWidth="153.0"/>
-
-
-                                                        <TextField prefHeight="25.0" prefWidth="155.0" fx:id="jobMngtQ"/>
-
-                                                        <TextField fx:id="jobManagerQueue" prefHeight="25.0" prefWidth="155.0"/>
-
 
                                                         <TextField fx:id="jobManagerQueue" prefHeight="25.0" prefWidth="155.0"/>
 
@@ -90,12 +84,6 @@
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="157.0"
                                                            text="Reference FASTA Path:"/>
-
-                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="fastaReference"/>
-
-                                                    <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0"/>
-
-
                                                     <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0"/>
 
                                                 </children>
@@ -105,13 +93,7 @@
                                                     <Label prefHeight="17.0" prefWidth="156.0"
 
                                                            text="FASTA for External Genomes:" textAlignment="CENTER" />
-                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="externalFastaGenomes"/>
-
-                                                           text="FASTA for External Genomes:" textAlignment="CENTER"/>
                                                     <TextField fx:id="inputGenomes" prefHeight="200.0" prefWidth="200.0"/>
-
-
-
 
                                                 </children>
                                             </HBox>
@@ -119,13 +101,7 @@
                                                 <children>
 
                                                     <Label prefHeight="17.0" prefWidth="156.0" text="Read files:" />
-                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="readFiles"/>
-
-                                                    <Label prefHeight="17.0" prefWidth="156.0" text="Read files:"/>
                                                     <TextField fx:id="inputRead" prefHeight="200.0" prefWidth="200.0"/>
-
-
-
 
                                                 </children>
                                             </HBox>
@@ -134,14 +110,8 @@
                                                     <Label prefHeight="17.0" prefWidth="155.0"
 
                                                            text="Pre-aligned SAM/BAM files:" />
-                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="samBamFiles"/>
 
-                                                           text="Pre-aligned SAM/BAM files:"/>
                                                     <TextField fx:id="inputSAM" prefHeight="200.0" prefWidth="200.0"/>
-
-
-
-
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
@@ -149,13 +119,7 @@
                                                     <Label prefHeight="17.0" prefWidth="154.0"
 
                                                            text="Pre-called VCF files:" />
-                                                    <ListView prefHeight="200.0" prefWidth="200.0" fx:id="vcfFiles"/>
-
-                                                           text="Pre-called VCF files:"/>
                                                     <TextField fx:id="inputVCF" prefHeight="200.0" prefWidth="200.0"/>
-
-
-
 
                                                 </children>
                                             </HBox>
@@ -171,21 +135,10 @@
                                                                   spacing="5.0">
                                                                 <children>
 
-
-                                                                    <Label text="Additional arguments for NUCMER:" fx:id="additionalNucmer"/>
-                                                                    <TextField/>
-                                                                    <Label text="Additional arguments for Delta-Filter:" fx:id="additionalDeltaFilter"/>
-                                                                    <TextField/>
-
-
-
                                                                     <Label text="Additional arguments for NUCMER:"/>
                                                                     <TextField fx:id="inputNUCMER"/>
                                                                     <Label text="Additional arguments for Delta-Filter:"/>
                                                                     <TextField fx:id="inputDelta"/>
-
-
-
 
                                                                 </children>
                                                             </VBox>
@@ -740,12 +693,6 @@
                                         <children>
                                             <HBox>
                                                 <children>
-<
-
-                                                    <CheckBox mnemonicParsing="false"
-                                                              text="Mask Low Quality Calls in Output Matrix" fx:id="maskLowQ"/>
-
-
 
                                                     <CheckBox fx:id="optionsOutputMatrix" mnemonicParsing="false"
                                                               text="Mask Low Quality Calls in Output Matrix"/>
@@ -754,12 +701,6 @@
                                             </HBox>
                                             <HBox prefHeight="17.0" prefWidth="868.0">
                                                 <children>
-
-
-                                                    <CheckBox mnemonicParsing="false"
-                                                              text="Skip SNPs found in duplicated regions" fx:id="skipSNP"/>
-
-
 
                                                     <CheckBox fx:id="optionsSkip" mnemonicParsing="false"
                                                               text="Skip SNPs found in duplicated regions">

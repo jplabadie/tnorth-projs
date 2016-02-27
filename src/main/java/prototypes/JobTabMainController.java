@@ -133,6 +133,89 @@ public class JobTabMainController implements Initializable {
     private TextField limitBowTieCpu;
     @FXML
     private TextField limitBowTieRuntime;
+    @FXML
+    private TextField jobManagerQueue;
+    @FXML
+    private TextField GATKPath;
+    @FXML
+    private TextField GATKArguments;
+    @FXML
+    private TextField GATKQueue;
+    @FXML
+    private TextField GATKMemory;
+    @FXML
+    private TextField GATKCPU;
+    @FXML
+    private TextField GATKRuntime;
+    @FXML
+    private TextField solPath;
+    @FXML
+    private TextField solArguments;
+    @FXML
+    private TextField solQueue;
+    @FXML
+    private TextField solMemory;
+    @FXML
+    private TextField solCPU;
+    @FXML
+    private TextField solRuntime;
+    @FXML
+    private TextField varPath;
+    @FXML
+    private TextField varArguments;
+    @FXML
+    private TextField varQueue;
+    @FXML
+    private TextField varCPU;
+    @FXML
+    private TextField varMemory;
+    @FXML
+    private TextField varRuntime;
+    @FXML
+    private TextField SAMPath;
+    @FXML
+    private TextField SAMArguments;
+    @FXML
+    private TextField SAMQueue;
+    @FXML
+    private TextField SAMCPU;
+    @FXML
+    private TextField SAMMemory;
+    @FXML
+    private TextField SAMRuntime;
+    @FXML
+    private TitledPane snp_caller_options_pane;
+    @FXML
+    private CheckBox cbGATK;
+    @FXML
+    private CheckBox cbSolSNP;
+    @FXML
+    private CheckBox cbVarScan;
+    @FXML
+    private CheckBox cbSAMTools;
+    @FXML
+    private TitledPane filter_options_pane;
+    @FXML
+    private CheckBox optionsOutputMatrix;
+    @FXML
+    private CheckBox optionsSkip;
+    @FXML
+    private TextField inputPath;
+    @FXML
+    private TextField inputRead;
+    @FXML
+    private TextField inputGenomes;
+    @FXML
+    private TextField inputSAM;
+    @FXML
+    private TextField inputVCF;
+    @FXML
+    private TextField inputNUCMER;
+    @FXML
+    private TextField inputDelta;
+    @FXML
+    private CheckBox enableAdvNucmerButton;
+
 
 
 
@@ -274,9 +357,10 @@ public class JobTabMainController implements Initializable {
 
                         if (general_settings_pane.isExpanded())
                         {
-                                settings.put("outputDirText", outputDirText.getText());
-                                settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
-                                settings.put("jobManagerArgs", jobManagerArgs.getText());
+                            settings.put("outputDirText", outputDirText.getText());
+                            settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
+                            settings.put("jobManagerQueue" , jobManagerQueue.getText());
+                            settings.put("jobManagerArgs", jobManagerArgs.getText());
 
                         }
                         if (aligner_options_pane.isExpanded()) {
@@ -319,6 +403,73 @@ public class JobTabMainController implements Initializable {
                                 settings.put("limitBowTieMem", limitBowTieMem.getText());
                                 settings.put("limitBowTieCpu", limitBowTieCpu.getText());
                                 settings.put("limitBowTieRuntime", limitBowTieRuntime.getText());
+                            }
+
+                        }
+
+                        if (snp_caller_options_pane.isExpanded())
+                        {
+                            if (cbGATK.isSelected())
+                            {
+                                settings.put("GATKPath", GATKPath.getText());
+                                settings.put("GATKArguments", GATKArguments.getText());
+                                settings.put("GATKQueue", GATKQueue.getText());
+                                settings.put("GATKMemory", GATKMemory.getText());
+                                settings.put("GATKCPU", GATKCPU.getText());
+                                settings.put("GATKRuntime", GATKRuntime.getText());
+                            }
+                            else if (cbSolSNP.isSelected())
+                            {
+                                settings.put("solPath", solPath.getText());
+                                settings.put("solArguments", solArguments.getText());
+                                settings.put("solQueue", solQueue.getText());
+                                settings.put("solMemory", solMemory.getText());
+                                settings.put("solCPU", solCPU.getText());
+                                settings.put("solRuntime", solRuntime.getText());
+                            }
+                            else if (cbVarScan.isSelected())
+                            {
+                                settings.put("varPath", varPath.getText());
+                                settings.put("varArguments", varArguments.getText());
+                                settings.put("varQueue", varQueue.getText());
+                                settings.put("varMemory", varMemory.getText());
+                                settings.put("varCPU", varCPU.getText());
+                                settings.put("varRuntime", varRuntime.getText());
+                            }
+                            else if (cbSAMTools.isSelected())
+                            {
+                                settings.put("SAMPath", SAMPath.getText());
+                                settings.put("SAMArguments", SAMArguments.getText());
+                                settings.put("SAMQueue", SAMQueue.getText());
+                                settings.put("SAMMemory", SAMMemory.getText());
+                                settings.put("SAMCPU", SAMCPU.getText());
+                                settings.put("SAMRuntime", SAMRuntime.getText());
+                            }
+
+                        }
+
+                        if (filter_options_pane.isExpanded())
+                        {
+                            if (optionsOutputMatrix.isSelected())
+                                settings.put("optionsOutputMatrix","True");
+                            else
+                                settings.put("optionsOutputMatrix","False");
+
+                            if (optionsSkip.isSelected())
+                                settings.put("optionsSkip","True");
+                            else
+                                settings.put("optionsSkip","False");
+                        }
+                        if (inputs_pane.isExpanded())
+                        {
+                            settings.put("inputPath",inputPath.getText());
+                            settings.put("inputGenomes",inputGenomes.getText());
+                            settings.put("inputRead",inputRead.getText());
+                            settings.put("inputSAM",inputSAM.getText());
+                            settings.put("inputVCF",inputVCF.getText());
+                            if (enableAdvNucmerButton.isSelected()) {
+                                settings.put("inputNUCMER", inputPath.getText());
+                                settings.put("inputDelta", inputDelta.getText());
                             }
                         }
 
@@ -415,12 +566,127 @@ public class JobTabMainController implements Initializable {
                                         outputDirText.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("jobManagerChoice".equals(entries[i].substring(1, j)))
                                         jobManagerChoice.setValue(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerQueue".equals(entries[i].substring(1, j)))
+                                        jobManagerQueue.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
                                         jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
 
                                 }
 
                             }
+
+                            if (snp_caller_options_pane.isExpanded()) {
+                                if (cbGATK.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("GATKPath".equals(entries[i].substring(1, j)))
+                                            GATKPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("GATKArguments".equals(entries[i].substring(1, j)))
+                                            GATKArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("GATKQueue".equals(entries[i].substring(1, j)))
+                                            GATKQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("GATKMemory".equals(entries[i].substring(1, j)))
+                                            GATKMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("GATKCPU".equals(entries[i].substring(1, j)))
+                                            GATKCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("GATKRuntime".equals(entries[i].substring(1, j)))
+                                            GATKRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                                else if (cbSolSNP.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("solPath".equals(entries[i].substring(1, j)))
+                                            solPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("solArguments".equals(entries[i].substring(1, j)))
+                                            solArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("solQueue".equals(entries[i].substring(1, j)))
+                                            solQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("solMemory".equals(entries[i].substring(1, j)))
+                                            solMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("solCPU".equals(entries[i].substring(1, j)))
+                                            solCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("solRuntime".equals(entries[i].substring(1, j)))
+                                            solRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                                else if (cbVarScan.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("varPath".equals(entries[i].substring(1, j)))
+                                            varPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("varArguments".equals(entries[i].substring(1, j)))
+                                            varArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("varQueue".equals(entries[i].substring(1, j)))
+                                            varQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("varMemory".equals(entries[i].substring(1, j)))
+                                            varMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("varCPU".equals(entries[i].substring(1, j)))
+                                            varCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("varRuntime".equals(entries[i].substring(1, j)))
+                                            varRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                                else if (cbSAMTools.isSelected()) {
+                                    for (int i = 0; i < entries.length; i++) {
+                                        j = entries[i].indexOf("=");
+                                        if ("SAMPath".equals(entries[i].substring(1, j)))
+                                            SAMPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("SAMArguments".equals(entries[i].substring(1, j)))
+                                            SAMArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("SAMQueue".equals(entries[i].substring(1, j)))
+                                            SAMQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("SAMMemory".equals(entries[i].substring(1, j)))
+                                            SAMMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("SAMCPU".equals(entries[i].substring(1, j)))
+                                            SAMCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                        else if ("SAMRuntime".equals(entries[i].substring(1, j)))
+                                            SAMRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    }
+                                }
+                            }
+                            if (filter_options_pane.isExpanded())
+                            {
+                                for (int i = 0; i < entries.length; i++) {
+                                    j = entries[i].indexOf("=");
+                                    if ("optionsOutputMatrix".equals(entries[i].substring(1, j))) {
+                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
+                                            optionsOutputMatrix.setSelected(true);
+                                        else
+                                            optionsOutputMatrix.setSelected(false);
+                                    }
+                                    else if ("optionsSkip".equals(entries[i].substring(1, j))) {
+                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
+                                            optionsSkip.setSelected(true);
+                                        else
+                                            optionsSkip.setSelected(false);
+                                    }
+
+
+
+                                }
+                            }
+                            if (inputs_pane.isExpanded())
+                            {
+                                for (int i = 0; i < entries.length; i++) {
+                                    j = entries[i].indexOf("=");
+                                    if ("inputPath".equals(entries[i].substring(1, j)))
+                                        inputPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputGenomes".equals(entries[i].substring(1, j)))
+                                        inputGenomes.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputRead".equals(entries[i].substring(1, j)))
+                                        inputRead.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputSAM".equals(entries[i].substring(1, j)))
+                                        inputSAM.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputVCF".equals(entries[i].substring(1, j)))
+                                        inputVCF.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputNUCMER".equals(entries[i].substring(1, j)))
+                                        inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputDelta".equals(entries[i].substring(1, j)))
+                                        inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
+                                }
+                            }
+
 
                         } catch (IOException w) {
                             w.printStackTrace();

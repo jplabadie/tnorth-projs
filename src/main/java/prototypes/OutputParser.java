@@ -39,13 +39,19 @@ public class OutputParser {
         }
 
 
+    /*
+    Writes the current XML DOM to the disk using the filename given
+    in the default output directory. This finished XML represents
+    the entirety of the NASP tool job request, and can be sent to
+    a remote service running NASP to begin a new job.
+    */
     public void jaxbObjectToXML(JobParameters job, String name) {
-
         try {
             JAXBContext context = JAXBContext.newInstance(JobParameters.class);
             Marshaller m = context.createMarshaller();
             //for pretty-print XML in JAXB
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
 
             // Write to System.out for debugging
             // m.marshal(emp, System.out);

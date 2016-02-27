@@ -44,7 +44,9 @@
                                                         <ChoiceBox fx:id="jobManagerChoice"
                                                                    nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0"
                                                                    prefWidth="153.0"/>
-                                                        <TextField prefHeight="25.0" prefWidth="155.0"/>
+
+                                                        <TextField fx:id="jobManagerQueue" prefHeight="25.0" prefWidth="155.0"/>
+
                                                         <TextArea fx:id="jobManagerArgs" maxHeight="100.0"
                                                                   prefHeight="100.0" prefWidth="332.0" wrapText="true"/>
                                                     </children>
@@ -82,34 +84,43 @@
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="157.0"
                                                            text="Reference FASTA Path:"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+                                                    <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0"/>
+
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="156.0"
-                                                           text="FASTA for External Genomes:" textAlignment="CENTER"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+
+                                                           text="FASTA for External Genomes:" textAlignment="CENTER" />
+                                                    <TextField fx:id="inputGenomes" prefHeight="200.0" prefWidth="200.0"/>
+
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
-                                                    <Label prefHeight="17.0" prefWidth="156.0" text="Read files:"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+
+                                                    <Label prefHeight="17.0" prefWidth="156.0" text="Read files:" />
+                                                    <TextField fx:id="inputRead" prefHeight="200.0" prefWidth="200.0"/>
+
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="155.0"
-                                                           text="Pre-aligned SAM/BAM files:"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+
+                                                           text="Pre-aligned SAM/BAM files:" />
+
+                                                    <TextField fx:id="inputSAM" prefHeight="200.0" prefWidth="200.0"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="154.0"
-                                                           text="Pre-called VCF files:"/>
-                                                    <ListView prefHeight="200.0" prefWidth="200.0"/>
+
+                                                           text="Pre-called VCF files:" />
+                                                    <TextField fx:id="inputVCF" prefHeight="200.0" prefWidth="200.0"/>
+
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
@@ -123,10 +134,12 @@
                                                             <VBox disable="true" prefHeight="84.0" prefWidth="318.0"
                                                                   spacing="5.0">
                                                                 <children>
+
                                                                     <Label text="Additional arguments for NUCMER:"/>
-                                                                    <TextField/>
+                                                                    <TextField fx:id="inputNUCMER"/>
                                                                     <Label text="Additional arguments for Delta-Filter:"/>
-                                                                    <TextField/>
+                                                                    <TextField fx:id="inputDelta"/>
+
                                                                 </children>
                                                             </VBox>
                                                         </children>
@@ -433,10 +446,10 @@
                                             <HBox prefHeight="28.0" prefWidth="202.0" spacing="15.0">
                                                 <children>
                                                     <Label text="Optional SNP Callers:"/>
-                                                    <CheckBox mnemonicParsing="false" text="GATK"/>
-                                                    <CheckBox mnemonicParsing="false" text="SolSNP"/>
-                                                    <CheckBox mnemonicParsing="false" text="VarScan"/>
-                                                    <CheckBox mnemonicParsing="false" text="SAMtools"/>
+                                                    <CheckBox fx:id="cbGATK" mnemonicParsing="false" text="GATK"/>
+                                                    <CheckBox fx:id="cbSolSNP" mnemonicParsing="false" text="SolSNP"/>
+                                                    <CheckBox fx:id="cbVarScan" mnemonicParsing="false" text="VarScan"/>
+                                                    <CheckBox fx:id="cbSAMTools" mnemonicParsing="false" text="SAMtools"/>
                                                 </children>
                                             </HBox>
                                             <TitledPane fx:id="gatkOptionsPane" animated="false"
@@ -474,16 +487,16 @@
                                                                            GridPane.rowIndex="4"/>
                                                                     <Label text="Runtime Required (Hrs):"
                                                                            GridPane.rowIndex="5"/>
-                                                                    <TextField GridPane.columnIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="GATKPath" GridPane.columnIndex="1"/>
+                                                                    <TextField fx:id="GATKArguments" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="GATKQueue" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="2"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="GATKMemory" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="3"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="GATKCPU" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="4"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="GATKRuntime" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="5"/>
 
                                                                 </children>
@@ -531,16 +544,16 @@
                                                                            GridPane.rowIndex="4"/>
                                                                     <Label text="Runtime Required (Hrs):"
                                                                            GridPane.rowIndex="5"/>
-                                                                    <TextField GridPane.columnIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="solPath" GridPane.columnIndex="1"/>
+                                                                    <TextField fx:id="solArguments" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="solQueue" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="2"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="solMemory" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="3"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="solCPU" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="4"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="solRuntime" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="5"/>
 
                                                                 </children>
@@ -588,16 +601,16 @@
                                                                            GridPane.rowIndex="4"/>
                                                                     <Label text="Runtime Required (Hrs):"
                                                                            GridPane.rowIndex="5"/>
-                                                                    <TextField GridPane.columnIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="varPath" GridPane.columnIndex="1"/>
+                                                                    <TextField fx:id="varArguments" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="varQueue" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="2"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="varMemory" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="3"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="varCPU" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="4"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="varRuntime" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="5"/>
 
                                                                 </children>
@@ -644,16 +657,16 @@
                                                                            GridPane.rowIndex="4"/>
                                                                     <Label text="Runtime Required (Hrs):"
                                                                            GridPane.rowIndex="5"/>
-                                                                    <TextField GridPane.columnIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="SAMPath" GridPane.columnIndex="1"/>
+                                                                    <TextField fx:id="SAMArguments" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="1"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="SAMQueue" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="2"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="SAMMemory" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="3"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="SAMCPU" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="4"/>
-                                                                    <TextField GridPane.columnIndex="1"
+                                                                    <TextField fx:id="SAMRuntime" GridPane.columnIndex="1"
                                                                                GridPane.rowIndex="5"/>
 
                                                                 </children>
@@ -680,14 +693,18 @@
                                         <children>
                                             <HBox>
                                                 <children>
-                                                    <CheckBox mnemonicParsing="false"
+
+                                                    <CheckBox fx:id="optionsOutputMatrix" mnemonicParsing="false"
                                                               text="Mask Low Quality Calls in Output Matrix"/>
+
                                                 </children>
                                             </HBox>
                                             <HBox prefHeight="17.0" prefWidth="868.0">
                                                 <children>
-                                                    <CheckBox mnemonicParsing="false"
+
+                                                    <CheckBox fx:id="optionsSkip" mnemonicParsing="false"
                                                               text="Skip SNPs found in duplicated regions">
+
                                                         <tooltip>
                                                             <Tooltip text="Empty Tooltip"/>
                                                         </tooltip>

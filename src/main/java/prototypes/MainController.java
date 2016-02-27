@@ -115,12 +115,12 @@ public class MainController implements Initializable{
 
                 if (f != null && f.isDirectory()) {
                     File[] files = f.listFiles();
+
                     if (files != null) {
                         ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
 
                         for (File child_file : files) {
                             children.add(createNode(child_file));
-
                         }
 
                         return children;

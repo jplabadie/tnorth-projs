@@ -1,7 +1,6 @@
 package prototypes;
 
-import xmlsources.JobParameters;
-import xmlsources.ObjectFactory;
+import xmlsources.NaspInputData;
 
 import java.io.File;
 
@@ -10,11 +9,11 @@ import java.io.File;
  */
 public class OutputParserTest {
 
-    private static OutputParser temp;
+    private static OutputParser tempparser;
 
     @org.junit.BeforeClass
     public static void onlyOnce(){
-        temp = new OutputParser();
+        tempparser = new OutputParser();
     }
 
     @org.junit.Test
@@ -25,19 +24,20 @@ public class OutputParserTest {
 
     @org.junit.Test
     public void testCreateOutputXML() throws Exception {
+        NaspInputData naspInputData = null;
+        try {
 
-        temp.jaxbXMLToObject(new File(getClass().getClassLoader().getResource("NaspInputExample_Aspen.xml").getFile()));
+            File nip = new File(getClass().getClassLoader().getResource("NaspInputExample_Aspen.xml").getPath());
 
-        ObjectFactory of = new ObjectFactory();
-        JobParameters jp = of.createJobParameters();
-        jp.setMemRequested("10");
-        jp.setName("Yo");
-        jp.setNumCPUs("4");
-        jp.setWalltime("100");
+            naspInputData = tempparser.jaxbXMLToObject(nip);
 
-        temp.jaxbObjectToXML(jp,"outputjob");
-
-
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        if(naspInputData != null) {
+            System.out.println(naspInputData.getExternalApplications().getAligner().get(0).getName());
+        }
 
     }
 }

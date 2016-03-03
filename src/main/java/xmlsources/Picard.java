@@ -5,23 +5,22 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ExternalGenome complex type.
+ * <p>Java class for PicardType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ExternalGenome">
+ * &lt;complexType name="PicardType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Path" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="SampleName" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -30,18 +29,39 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ExternalGenome", namespace = "http://www.tgen.org/NaspInputSchema", propOrder = {
-    "path"
+@XmlType(name = "Picard", propOrder = {
+    "additionalArgs"
 })
-@XmlSeeAlso({
-    ReferenceGenome.class
-})
-public class ExternalGenome {
+public class Picard {
 
-    @XmlElement(name = "Path", namespace = "http://www.tgen.org/NaspInputSchema", required = true)
+    @XmlElement(name = "AdditionalArgs", required = true)
+    protected String additionalArgs;
+    @XmlAttribute(name = "path")
     protected String path;
-    @XmlAttribute(name = "SampleName")
-    protected String sampleName;
+
+    /**
+     * Gets the value of the additionalArgs property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAdditionalArgs() {
+        return additionalArgs;
+    }
+
+    /**
+     * Sets the value of the additionalArgs property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAdditionalArgs(String value) {
+        this.additionalArgs = value;
+    }
 
     /**
      * Gets the value of the path property.
@@ -65,30 +85,6 @@ public class ExternalGenome {
      */
     public void setPath(String value) {
         this.path = value;
-    }
-
-    /**
-     * Gets the value of the sampleName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSampleName() {
-        return sampleName;
-    }
-
-    /**
-     * Sets the value of the sampleName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSampleName(String value) {
-        this.sampleName = value;
     }
 
 }

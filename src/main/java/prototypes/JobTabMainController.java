@@ -1,6 +1,5 @@
 package prototypes;
 
-
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,29 +7,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.util.Hashtable;
-import javafx.stage.Stage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import javafx.scene.control.Button;
-import javafx.stage.FileChooser;
-import javafx.scene.control.Alert.AlertType;
-
-
+import java.util.ResourceBundle;
 
 /**
  * @author Jean-Paul Labadie
  *
  */
 public class JobTabMainController implements Initializable {
-
     @FXML
     private AnchorPane jobConfigTabAnchorPane;
     @FXML
@@ -222,9 +215,6 @@ public class JobTabMainController implements Initializable {
     @FXML
     private CheckBox enableAdvNucmerButton;
 
-
-
-
     private ArrayList<File> selectedFiles;
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck};
@@ -279,9 +269,7 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
-
     private void handleCheckBoxes() {
-        
         bwaSampCheck.setOnAction(
                 new EventHandler<ActionEvent>() {
                     //@Override
@@ -323,6 +311,7 @@ public class JobTabMainController implements Initializable {
                         }
                     }
                 });
+
         novoalignCheck.setOnAction(
                 new EventHandler<ActionEvent>() {
                     //@Override
@@ -366,7 +355,6 @@ public class JobTabMainController implements Initializable {
                             settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
                             settings.put("jobManagerQueue", jobManagerQueue.getText());
                             settings.put("jobManagerArgs", jobManagerArgs.getText());
-
                         }
                         if (aligner_options_pane.isExpanded()) {
                             if (bwaSampCheck.isSelected()) {
@@ -405,7 +393,6 @@ public class JobTabMainController implements Initializable {
                                 settings.put("limitBowTieCpu", limitBowTieCpu.getText());
                                 settings.put("limitBowTieRuntime", limitBowTieRuntime.getText());
                             }
-
                         }
 
                         if (snp_caller_options_pane.isExpanded()) {
@@ -438,7 +425,6 @@ public class JobTabMainController implements Initializable {
                                 settings.put("SAMCPU", SAMCPU.getText());
                                 settings.put("SAMRuntime", SAMRuntime.getText());
                             }
-
                         }
 
                         if (filter_options_pane.isExpanded()) {
@@ -472,10 +458,8 @@ public class JobTabMainController implements Initializable {
                         File file = fileChooser.showSaveDialog(dialogStage);
                         if (file != null) {
                             saveTempFile(settings.toString(), file);
-
                         }
                     }
-
                 });
     }
 
@@ -485,7 +469,6 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
-
                             final Stage dialogStage = new Stage();
                             FileChooser fileChooser = new FileChooser();
                             fileChooser.setTitle("Save Template");
@@ -552,7 +535,6 @@ public class JobTabMainController implements Initializable {
                                     }
                                 }
                             }
-
                             if (general_settings_pane.isExpanded())
                             {
                                 for (int i = 0; i < entries.length; i++) {
@@ -569,7 +551,6 @@ public class JobTabMainController implements Initializable {
                                 }
 
                             }
-
                             if (snp_caller_options_pane.isExpanded()) {
                                 if (cbGATK.isSelected()) {
                                     for (int i = 0; i < entries.length; i++) {
@@ -640,8 +621,7 @@ public class JobTabMainController implements Initializable {
                                     }
                                 }
                             }
-                            if (filter_options_pane.isExpanded())
-                            {
+                            if (filter_options_pane.isExpanded()) {
                                 for (int i = 0; i < entries.length; i++) {
                                     j = entries[i].indexOf("=");
                                     if ("optionsOutputMatrix".equals(entries[i].substring(1, j))) {
@@ -656,13 +636,9 @@ public class JobTabMainController implements Initializable {
                                         else
                                             optionsSkip.setSelected(false);
                                     }
-
-
-
                                 }
                             }
-                            if (inputs_pane.isExpanded())
-                            {
+                            if (inputs_pane.isExpanded()){
                                 for (int i = 0; i < entries.length; i++) {
                                     j = entries[i].indexOf("=");
                                     if ("inputPath".equals(entries[i].substring(1, j)))
@@ -681,45 +657,34 @@ public class JobTabMainController implements Initializable {
                                         inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
                                 }
                             }
-
-                            Alert alert = new Alert(AlertType.CONFIRMATION);
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                             alert.setTitle("Confirmation");
                             alert.setHeaderText("");
                             alert.setContentText("Your template was loaded successfully");
                             alert.showAndWait();
-
-
-                        } catch (IOException w) {
+                        }
+                        catch (IOException w) {
                             w.printStackTrace();
                         }
                     }
-
                 });
-
-
     }
-
 
     private void saveTempFile(String content,File file){
         try {
-
-            FileWriter fileWriter = null;
-            fileWriter = new FileWriter(file);
-            fileWriter.write(content);
-            fileWriter.close();
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("");
-            alert.setContentText("Your template was saved successfully");
-            alert.showAndWait();
+                FileWriter fileWriter = null;
+                fileWriter = new FileWriter(file);
+                fileWriter.write(content);
+                fileWriter.close();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("");
+                alert.setContentText("Your template was saved successfully");
+                alert.showAndWait();
         }
         catch (IOException exception)
         {
             System.out.println("Error processing file: " + exception);
-
         }
     }
-
-
-
 }

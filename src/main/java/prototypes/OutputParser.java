@@ -32,8 +32,8 @@ public class OutputParser {
     public NaspInputData jaxbXMLToObject(File xml_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-            Unmarshaller un = context.createUnmarshaller();
-            NaspInputData naspData = ((JAXBElement<NaspInputData>) context.createUnmarshaller().unmarshal(xml_path)).getValue();
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            NaspInputData naspData = ((JAXBElement<NaspInputData>) unmarshaller.unmarshal(xml_path)).getValue();
             return naspData;
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class OutputParser {
      *  a remote service running NASP to begin a new job.
      *
      * @param input_for_conversion NaspInputData object which will be converted to XML for output to NASP
-     * @param output_path
+     * @param output_path the absolute path desired for the output XML
      */
     public void jaxbObjectToXML(NaspInputData input_for_conversion, String output_path) {
         try {
@@ -57,9 +57,6 @@ public class OutputParser {
             //for pretty-print XML in JAXB
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-
-            // Write to System.out for debugging
-            // m.marshal(emp, System.out);
 
             // Write to File
             m.marshal(input_for_conversion, new File(output_path));

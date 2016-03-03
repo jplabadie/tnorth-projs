@@ -25,8 +25,12 @@ public class MainController implements Initializable{
     @FXML
     private MenuItem createNewJob;
 
-
-    //@Override
+    /**
+     *
+     * @param fxmlFileLocation the location of the required fxml layout
+     * @param resources the ResourceBundle which stores a desired saved or default state for the scene
+     */
+    @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources){
 
         initMainFileBrowserTree();
@@ -34,13 +38,12 @@ public class MainController implements Initializable{
 
         DragResizerController.makeResizable(mainFileBrowserTree);
     }
-
-    /*
-    On startup, creates a Handler which monitors the “Create New Job” 
-    button in the main menu. When the “Create New Job” button in the 
-    main menu is pressed, this Handler will add a new Tab to the 
-    JobTabPane with its own Handler.
-    */
+    /**
+     *  On startup, creates a Handler which monitors the “Create New Job”
+     button in the main menu. When the “Create New Job” button in the
+     main menu is pressed, this Handler will add a new Tab to the
+     JobTabPane with its own Handler.
+     */
     private void initCreateNewJobHandler() {
         createNewJob.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -58,12 +61,12 @@ public class MainController implements Initializable{
                 });
     }
 
-    /*
-    On startup, creates a Tree which visualizes the user’s file 
-    system, and displays this tree in the file browser pane. This 
-    Tree allows users to drag and drop their selected files or 
-    directories into containers in a JobTabPane.
-    */
+    /**
+     * On startup, creates a Tree which visualizes the user’s file
+     * system, and displays this tree in the file browser pane. This
+     * Tree allows users to drag and drop their selected files or
+     * directories into containers in a JobTabPane.
+     */
     private void initMainFileBrowserTree() {
         mainFileBrowserTree.setEditable(true);
         TreeItem<File> root = createNode(new File("/"));
@@ -80,11 +83,16 @@ public class MainController implements Initializable{
 
     }
 
-    // This method creates a TreeItem to represent the given File. It does this
-    // by overriding the TreeItem.getChildren() and TreeItem.isLeaf() methods
-    // anonymously, but this could be better abstracted by creating a
-    // 'FileTreeItem' subclass of TreeItem. However, this is left as an exercise
-    // for the reader.
+    /**
+     * This method creates a TreeItem to represent the given File. It does this
+     * by overriding the TreeItem.getChildren() and TreeItem.isLeaf() methods
+     * anonymously, but this could be better abstracted by creating a
+     * 'FileTreeItem' subclass of TreeItem. However, this is left as an exercise
+     * for the reader.
+     *
+     * @param f the root File from which a tree will be created
+     * @return the Tree of Files and Directories
+     */
     private TreeItem<File> createNode(final File f) {
         return new TreeItem<File>(f) {
             // We cache whether the File is a leaf or not. A File is a leaf if

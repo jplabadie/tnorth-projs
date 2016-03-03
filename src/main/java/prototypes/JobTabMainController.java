@@ -8,15 +8,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Hashtable;
+import javafx.stage.Stage;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import javafx.scene.control.Alert.AlertType;
+
 
 
 /**
@@ -352,14 +358,13 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
 
-                        Hashtable<String, String> settings
+                        final Hashtable<String, String> settings
                                 = new Hashtable<String, String>();
 
-                        if (general_settings_pane.isExpanded())
-                        {
+                        if (general_settings_pane.isExpanded()) {
                             settings.put("outputDirText", outputDirText.getText());
                             settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
-                            settings.put("jobManagerQueue" , jobManagerQueue.getText());
+                            settings.put("jobManagerQueue", jobManagerQueue.getText());
                             settings.put("jobManagerArgs", jobManagerArgs.getText());
 
                         }
@@ -371,32 +376,28 @@ public class JobTabMainController implements Initializable {
                                 settings.put("limitBwaSampMem", limitBwaSampMem.getText());
                                 settings.put("limitBwaSampCpu", limitBwaSampCpu.getText());
                                 settings.put("limitBwaSampRuntime", limitBwaSampRuntime.getText());
-                            }
-                            else if (bwaMemCheck.isSelected()) {
+                            } else if (bwaMemCheck.isSelected()) {
                                 if (!useAltBwaMemVer.isDisabled())
                                     settings.put("altBwaMemPath", altBwaMemPath.getText());
                                 settings.put("altBwaMemQueue", altBwaMemQueue.getText());
                                 settings.put("limitBwaMemMem", limitBwaMemMem.getText());
                                 settings.put("limitBwaMemCpu", limitBwaMemCpu.getText());
                                 settings.put("limitBwaMemRuntime", limitBwaMemRuntime.getText());
-                            }
-                            else if (novoalignCheck.isSelected()) {
+                            } else if (novoalignCheck.isSelected()) {
                                 if (!useAltNovoalignVer.isDisabled())
                                     settings.put("altNovoalignPath", altNovoalignPath.getText());
                                 settings.put("altNovoalignQueue", altNovoalignQueue.getText());
                                 settings.put("limitNovoalignMem", limitNovoalignMem.getText());
                                 settings.put("limitNovoalignCpu", limitNovoalignCpu.getText());
                                 settings.put("limitNovoalignRuntime", limitNovoalignRuntime.getText());
-                            }
-                            else if (snapCheck.isSelected()) {
+                            } else if (snapCheck.isSelected()) {
                                 if (!useAltSnapVer.isDisabled())
                                     settings.put("altSnapPath", altSnapPath.getText());
                                 settings.put("altSnapQueue", altSnapQueue.getText());
                                 settings.put("limitSnapMem", limitSnapMem.getText());
                                 settings.put("limitSnapCpu", limitSnapCpu.getText());
                                 settings.put("limitSnapRuntime", limitSnapRuntime.getText());
-                            }
-                            else if (bowtie2Check.isSelected()) {
+                            } else if (bowtie2Check.isSelected()) {
                                 if (!useAltBowTieVer.isDisabled())
                                     settings.put("altBowTiePath", altBowTiePath.getText());
                                 settings.put("altBowTieQueue", altBowTieQueue.getText());
@@ -407,37 +408,29 @@ public class JobTabMainController implements Initializable {
 
                         }
 
-                        if (snp_caller_options_pane.isExpanded())
-                        {
-                            if (cbGATK.isSelected())
-                            {
+                        if (snp_caller_options_pane.isExpanded()) {
+                            if (cbGATK.isSelected()) {
                                 settings.put("GATKPath", GATKPath.getText());
                                 settings.put("GATKArguments", GATKArguments.getText());
                                 settings.put("GATKQueue", GATKQueue.getText());
                                 settings.put("GATKMemory", GATKMemory.getText());
                                 settings.put("GATKCPU", GATKCPU.getText());
                                 settings.put("GATKRuntime", GATKRuntime.getText());
-                            }
-                            else if (cbSolSNP.isSelected())
-                            {
+                            } else if (cbSolSNP.isSelected()) {
                                 settings.put("solPath", solPath.getText());
                                 settings.put("solArguments", solArguments.getText());
                                 settings.put("solQueue", solQueue.getText());
                                 settings.put("solMemory", solMemory.getText());
                                 settings.put("solCPU", solCPU.getText());
                                 settings.put("solRuntime", solRuntime.getText());
-                            }
-                            else if (cbVarScan.isSelected())
-                            {
+                            } else if (cbVarScan.isSelected()) {
                                 settings.put("varPath", varPath.getText());
                                 settings.put("varArguments", varArguments.getText());
                                 settings.put("varQueue", varQueue.getText());
                                 settings.put("varMemory", varMemory.getText());
                                 settings.put("varCPU", varCPU.getText());
                                 settings.put("varRuntime", varRuntime.getText());
-                            }
-                            else if (cbSAMTools.isSelected())
-                            {
+                            } else if (cbSAMTools.isSelected()) {
                                 settings.put("SAMPath", SAMPath.getText());
                                 settings.put("SAMArguments", SAMArguments.getText());
                                 settings.put("SAMQueue", SAMQueue.getText());
@@ -448,45 +441,41 @@ public class JobTabMainController implements Initializable {
 
                         }
 
-                        if (filter_options_pane.isExpanded())
-                        {
+                        if (filter_options_pane.isExpanded()) {
                             if (optionsOutputMatrix.isSelected())
-                                settings.put("optionsOutputMatrix","True");
+                                settings.put("optionsOutputMatrix", "True");
                             else
-                                settings.put("optionsOutputMatrix","False");
+                                settings.put("optionsOutputMatrix", "False");
 
                             if (optionsSkip.isSelected())
-                                settings.put("optionsSkip","True");
+                                settings.put("optionsSkip", "True");
                             else
-                                settings.put("optionsSkip","False");
+                                settings.put("optionsSkip", "False");
                         }
-                        if (inputs_pane.isExpanded())
-                        {
-                            settings.put("inputPath",inputPath.getText());
-                            settings.put("inputGenomes",inputGenomes.getText());
-                            settings.put("inputRead",inputRead.getText());
-                            settings.put("inputSAM",inputSAM.getText());
-                            settings.put("inputVCF",inputVCF.getText());
+                        if (inputs_pane.isExpanded()) {
+                            settings.put("inputPath", inputPath.getText());
+                            settings.put("inputGenomes", inputGenomes.getText());
+                            settings.put("inputRead", inputRead.getText());
+                            settings.put("inputSAM", inputSAM.getText());
+                            settings.put("inputVCF", inputVCF.getText());
                             if (enableAdvNucmerButton.isSelected()) {
                                 settings.put("inputNUCMER", inputPath.getText());
                                 settings.put("inputDelta", inputDelta.getText());
                             }
                         }
+                        final Stage dialogStage = new Stage();
 
-                        try {
-
-                            PrintWriter out = new PrintWriter("PaneSetting.dat");
-                            out.write(settings.toString());
-                            out.close();
-
-                        }
-                        catch (IOException exception)
-                        {
-                            System.out.println("Error processing file: " + exception);
+                        FileChooser fileChooser = new FileChooser();
+                        fileChooser.setTitle("Save Template");
+                        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
+                        fileChooser.getExtensionFilters().add(extFilter);
+                        File file = fileChooser.showSaveDialog(dialogStage);
+                        if (file != null) {
+                            saveTempFile(settings.toString(), file);
 
                         }
-
                     }
+
                 });
     }
 
@@ -496,7 +485,13 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
-                            File file = new File("PaneSetting.dat");
+
+                            final Stage dialogStage = new Stage();
+                            FileChooser fileChooser = new FileChooser();
+                            fileChooser.setTitle("Save Template");
+                            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
+                            fileChooser.getExtensionFilters().add(extFilter);
+                            File file = fileChooser.showOpenDialog(dialogStage);
                             FileReader fileReader = new FileReader(file);
                             BufferedReader bufferedReader = new BufferedReader(fileReader);
                             StringBuilder sb = new StringBuilder();
@@ -687,6 +682,12 @@ public class JobTabMainController implements Initializable {
                                 }
                             }
 
+                            Alert alert = new Alert(AlertType.CONFIRMATION);
+                            alert.setTitle("Confirmation");
+                            alert.setHeaderText("");
+                            alert.setContentText("Your template was loaded successfully");
+                            alert.showAndWait();
+
 
                         } catch (IOException w) {
                             w.printStackTrace();
@@ -694,7 +695,31 @@ public class JobTabMainController implements Initializable {
                     }
 
                 });
+
+
     }
+
+
+    private void saveTempFile(String content,File file){
+        try {
+
+            FileWriter fileWriter = null;
+            fileWriter = new FileWriter(file);
+            fileWriter.write(content);
+            fileWriter.close();
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("");
+            alert.setContentText("Your template was saved successfully");
+            alert.showAndWait();
+        }
+        catch (IOException exception)
+        {
+            System.out.println("Error processing file: " + exception);
+
+        }
+    }
+
 
 
 }

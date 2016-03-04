@@ -199,17 +199,17 @@ public class JobTabMainController implements Initializable {
     @FXML
     private CheckBox optionsSkip;
     @FXML
-    private TextField inputPath;
+    private ListView inputPath;
     @FXML
-    private TextField inputRead;
+    private ListView inputRead;
     @FXML
-    private TextField inputGenomes;
+    private ListView inputGenomes;
     @FXML
-    private TextField inputSAM;
+    private ListView inputSAM;
     @FXML
-    private TextField inputVCF;
+    private ListView inputVCF;
     @FXML
-    private TextField inputNUCMER;
+    private ListView inputNUCMER;
     @FXML
     private TextField inputDelta;
     @FXML
@@ -225,8 +225,8 @@ public class JobTabMainController implements Initializable {
 
         initStartJobButton();
         handleCheckBoxes();
-        saveSettings();
-        loadSettings();
+        //saveSettings();
+        //loadSettings();
 
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
@@ -341,7 +341,7 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
-    private void saveSettings() {
+   /* private void saveSettings() {
         btnSaveSettings.setOnAction(
                 new EventHandler<ActionEvent>() {
                     //@Override
@@ -686,5 +686,5 @@ public class JobTabMainController implements Initializable {
         {
             System.out.println("Error processing file: " + exception);
         }
-    }
+    }*/
 }

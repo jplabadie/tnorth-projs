@@ -84,7 +84,7 @@
                                                 <children>
                                                     <Label prefHeight="17.0" prefWidth="157.0"
                                                            text="Reference FASTA Path:"/>
-                                                    <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0"/>
+                                                    <ListView fx:id="inputPath" prefHeight="200.0" prefWidth="200.0"/>
 
                                                 </children>
                                             </HBox>
@@ -93,7 +93,7 @@
                                                     <Label prefHeight="17.0" prefWidth="156.0"
 
                                                            text="FASTA for External Genomes:" textAlignment="CENTER" />
-                                                    <TextField fx:id="inputGenomes" prefHeight="200.0" prefWidth="200.0"/>
+                                                    <ListView fx:id="inputGenomes" prefHeight="200.0" prefWidth="200.0"/>
 
                                                 </children>
                                             </HBox>
@@ -101,7 +101,7 @@
                                                 <children>
 
                                                     <Label prefHeight="17.0" prefWidth="156.0" text="Read files:" />
-                                                    <TextField fx:id="inputRead" prefHeight="200.0" prefWidth="200.0"/>
+                                                    <ListView fx:id="inputRead" prefHeight="200.0" prefWidth="200.0"/>
 
                                                 </children>
                                             </HBox>
@@ -111,7 +111,7 @@
 
                                                            text="Pre-aligned SAM/BAM files:" />
 
-                                                    <TextField fx:id="inputSAM" prefHeight="200.0" prefWidth="200.0"/>
+                                                    <ListView fx:id="inputSAM" prefHeight="200.0" prefWidth="200.0"/>
                                                 </children>
                                             </HBox>
                                             <HBox spacing="100.0">
@@ -119,7 +119,7 @@
                                                     <Label prefHeight="17.0" prefWidth="154.0"
 
                                                            text="Pre-called VCF files:" />
-                                                    <TextField fx:id="inputVCF" prefHeight="200.0" prefWidth="200.0"/>
+                                                    <ListView fx:id="inputVCF" prefHeight="200.0" prefWidth="200.0"/>
 
                                                 </children>
                                             </HBox>

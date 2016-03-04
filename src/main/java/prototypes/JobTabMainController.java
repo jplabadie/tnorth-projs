@@ -1,12 +1,16 @@
 package prototypes;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -209,11 +213,19 @@ public class JobTabMainController implements Initializable {
     @FXML
     private ListView inputVCF;
     @FXML
-    private ListView inputNUCMER;
+    private TextField inputNUCMER;
     @FXML
     private TextField inputDelta;
     @FXML
     private CheckBox enableAdvNucmerButton;
+    @FXML
+    private TitledPane gatkOptionsPane;
+    @FXML
+    private TitledPane solSnpPane;
+    @FXML
+    private TitledPane varScanPane;
+    @FXML
+    private TitledPane samtoolsPane;
 
     private ArrayList<File> selectedFiles;
     private DirectoryChooser dirChooser = new DirectoryChooser();
@@ -222,11 +234,18 @@ public class JobTabMainController implements Initializable {
 
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
+        // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
+        ListView[] views = {inputPath, inputGenomes, inputRead, inputSAM, inputVCF};
+        CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools};
+        TitledPane[] checkPanes = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
 
         initStartJobButton();
-        handleCheckBoxes();
+        initializeCheckBoxToggle(checkArray, checkPanes);
+        //handleCheckBoxes();
         //saveSettings();
         //loadSettings();
+        initializeListViewDrag(views);
+        setTextDragHandler(outputDirText);
 
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
@@ -250,6 +269,80 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
+    // This method calls the setListDragHanlder for every ListView in the array passed to it
+    private void initializeListViewDrag (ListView[] listFields) {
+        int currentListItemIndex = 0;
+
+        while (currentListItemIndex < listFields.length) {
+            //System.out.println("Current Index: " + currentListItemIndex);
+            setListDragHandler(listFields[currentListItemIndex]);
+            currentListItemIndex++;
+        }
+
+    }
+    // This method sets the drag functionality to a ListView
+    private void setListDragHandler (ListView view) {
+        // Get the current items in the ListView passed in
+        final ObservableList listContents = view.getItems();
+        view.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                String content = db.getString();
+                
+                boolean success = false;
+                if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                    listContents.add(content.substring(content.indexOf("\\")+ 1, content.length() - 1));
+                    System.out.println(listContents);
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+        view.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if(db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+    }
+
+    private void setTextDragHandler(TextField field) {
+        field.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+        field.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                String content = db.getString();
+                //Node item = mainFileBrowserTree.lookup(db.getString());
+                boolean success = false;
+                if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                    outputDirText.setText(db.getString().substring(db.getString().indexOf('\\'), db.getString().length()));
+                    outputDirText.setText(content.substring(content.indexOf('\\'), content.length() - 1));
+                    //System.out.println("item: " + item.toString());
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+    }
+
     private void initStartJobButton() {
         startJobButton.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -267,6 +360,28 @@ public class JobTabMainController implements Initializable {
 
                     }
                 });
+    }
+    private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
+        for (int i = 0; i < checkArray.length; i++) {
+            setCheckboxToggle(checkArray[i], checkPanes, i);
+        }
+    }
+
+    private void setCheckboxToggle (final CheckBox checkBox, TitledPane[] checkPanes,  int paneIndex) {
+        final TitledPane correspondingPane = checkPanes[paneIndex];
+        checkBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (checkBox.isSelected()) {
+                    correspondingPane.setDisable(false);
+                    correspondingPane.setExpanded(true);
+                }
+                else {
+                    correspondingPane.setDisable(true);
+                    correspondingPane.setExpanded(false);
+                }
+            }
+        });
     }
 
     private void handleCheckBoxes() {

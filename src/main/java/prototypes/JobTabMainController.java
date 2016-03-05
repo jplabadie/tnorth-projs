@@ -475,7 +475,15 @@ public class JobTabMainController implements Initializable {
                             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
                             fileChooser.getExtensionFilters().add(extFilter);
                             File file = fileChooser.showOpenDialog(dialogStage);
-                            FileReader fileReader = new FileReader(file);
+                            FileReader fileReader;
+                            try {
+                                fileReader = new FileReader(file);
+                            }
+                            catch(NullPointerException no_file_chosen){
+                                //The user declined to choose a saved template
+                                //thus we should quit the load action
+                                return;
+                            }
                             BufferedReader bufferedReader = new BufferedReader(fileReader);
                             StringBuilder sb = new StringBuilder();
                             String line;

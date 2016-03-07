@@ -72,7 +72,8 @@
                                                <HBox spacing="100.0">
                                                    <children>
                                                        <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:" />
-                                                       <ListView fx:id="inputPath" prefHeight="200.0" prefWidth="300.0" />
+                                                       
+                                                       <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0" />
    
                                                    </children>
                                                </HBox>

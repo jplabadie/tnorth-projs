@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,17 +9,18 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for SamtoolsType complex type.
+ * <p>Java class for ReferenceType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SamtoolsType">
+ * &lt;complexType name="ReferenceType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="FindDups" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,38 +30,64 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Samtools", propOrder = {
-    "additionalArgs"
+@XmlType(name = "Reference", propOrder = {
+    "findDups"
 })
-public class Samtools {
+public class Reference {
 
-    @XmlElement(name = "AdditionalArgs", required = true)
-    protected String additionalArgs;
+    @XmlElement(name = "FindDups", required = true)
+    protected String findDups;
+    @XmlAttribute(name = "name")
+    protected String name;
     @XmlAttribute(name = "path")
     protected String path;
 
     /**
-     * Gets the value of the additionalArgs property.
+     * Gets the value of the findDups property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getAdditionalArgs() {
-        return additionalArgs;
+    public String getFindDups() {
+        return findDups;
     }
 
     /**
-     * Sets the value of the additionalArgs property.
+     * Sets the value of the findDups property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setAdditionalArgs(String value) {
-        this.additionalArgs = value;
+    public void setFindDups(String value) {
+        this.findDups = value;
+    }
+
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setName(String value) {
+        this.name = value;
     }
 
     /**

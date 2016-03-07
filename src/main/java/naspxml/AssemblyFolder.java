@@ -1,63 +1,66 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for ReadFolderType complex type.
+ * <p>Java class for AssemblyFolderType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ReadFolderType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ * &lt;complexType name="AssemblyFolderType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="Assembly" type="{}AssemblyType"/>
+ *       &lt;/sequence>
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ReadFolder", propOrder = {
-    "value"
+@XmlType(name = "AssemblyFolder", propOrder = {
+    "assembly"
 })
-public class ReadFolder {
+public class AssemblyFolder {
 
-    @XmlValue
-    protected String value;
+    @XmlElement(name = "Assembly", required = true)
+    protected Assembly assembly;
     @XmlAttribute(name = "path")
     protected String path;
 
     /**
-     * Gets the value of the value property.
+     * Gets the value of the assembly property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Assembly }
      *     
      */
-    public String getValue() {
-        return value;
+    public Assembly getAssembly() {
+        return assembly;
     }
 
     /**
-     * Sets the value of the value property.
+     * Sets the value of the assembly property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Assembly }
      *     
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setAssembly(Assembly value) {
+        this.assembly = value;
     }
 
     /**

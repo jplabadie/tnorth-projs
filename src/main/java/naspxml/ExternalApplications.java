@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import java.util.ArrayList;
 import java.util.List;

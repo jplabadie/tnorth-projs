@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,15 +9,15 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for AlignmentFolderType complex type.
+ * <p>Java class for AssemblyType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AlignmentFolderType">
+ * &lt;complexType name="AssemblyType">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="sample" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -26,15 +26,15 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AlignmentFolder", propOrder = {
+@XmlType(name = "Assembly", propOrder = {
     "value"
 })
-public class AlignmentFolder {
+public class Assembly {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "path")
-    protected String path;
+    @XmlAttribute(name = "sample")
+    protected String sample;
 
     /**
      * Gets the value of the value property.
@@ -61,27 +61,27 @@ public class AlignmentFolder {
     }
 
     /**
-     * Gets the value of the path property.
+     * Gets the value of the sample property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPath() {
-        return path;
+    public String getSample() {
+        return sample;
     }
 
     /**
-     * Sets the value of the path property.
+     * Sets the value of the sample property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPath(String value) {
-        this.path = value;
+    public void setSample(String value) {
+        this.sample = value;
     }
 
 }

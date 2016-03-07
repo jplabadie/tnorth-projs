@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,16 +9,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for PicardType complex type.
+ * <p>Java class for MatrixGeneratorType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="PicardType">
+ * &lt;complexType name="MatrixGeneratorType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="JobParameters" type="{}JobParametersType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
@@ -29,13 +30,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Picard", propOrder = {
-    "additionalArgs"
+@XmlType(name = "MatrixGenerator", propOrder = {
+    "additionalArgs",
+    "jobParameters"
 })
-public class Picard {
+public class MatrixGenerator {
 
     @XmlElement(name = "AdditionalArgs", required = true)
     protected String additionalArgs;
+    @XmlElement(name = "JobParameters", required = true)
+    protected JobParameters jobParameters;
     @XmlAttribute(name = "path")
     protected String path;
 
@@ -61,6 +65,30 @@ public class Picard {
      */
     public void setAdditionalArgs(String value) {
         this.additionalArgs = value;
+    }
+
+    /**
+     * Gets the value of the jobParameters property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JobParameters }
+     *     
+     */
+    public JobParameters getJobParameters() {
+        return jobParameters;
+    }
+
+    /**
+     * Sets the value of the jobParameters property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JobParameters }
+     *     
+     */
+    public void setJobParameters(JobParameters value) {
+        this.jobParameters = value;
     }
 
     /**

@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,26 +9,18 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for SNPCallerType complex type.
+ * <p>Java class for BamIndexType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SNPCallerType">
+ * &lt;complexType name="BamIndexType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AdditionalArgs">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;enumeration value="-stand_call_conf 100 -stand_emit_conf 100"/>
- *               &lt;enumeration value=""/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
+ *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="JobParameters" type="{}JobParametersType"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,18 +30,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SNPCaller", propOrder = {
+@XmlType(name = "BamIndex", propOrder = {
     "additionalArgs",
     "jobParameters"
 })
-public class SNPCaller {
+public class BamIndex {
 
     @XmlElement(name = "AdditionalArgs", required = true)
     protected String additionalArgs;
     @XmlElement(name = "JobParameters", required = true)
     protected JobParameters jobParameters;
-    @XmlAttribute(name = "name")
-    protected String name;
     @XmlAttribute(name = "path")
     protected String path;
 
@@ -99,30 +89,6 @@ public class SNPCaller {
      */
     public void setJobParameters(JobParameters value) {
         this.jobParameters = value;
-    }
-
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
     }
 
     /**

@@ -1,6 +1,6 @@
 package prototypes;
 
-import xmlsources.NaspInputData;
+import naspxml.NaspInputData;
 
 import java.io.File;
 

@@ -1,5 +1,5 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,15 +9,15 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for AssemblyType complex type.
+ * <p>Java class for VCFFolderType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AssemblyType">
+ * &lt;complexType name="VCFFolderType">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="sample" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -26,15 +26,15 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Assembly", propOrder = {
+@XmlType(name = "VCFFolder", propOrder = {
     "value"
 })
-public class Assembly {
+public class VCFFolder {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "sample")
-    protected String sample;
+    @XmlAttribute(name = "path")
+    protected String path;
 
     /**
      * Gets the value of the value property.
@@ -61,27 +61,27 @@ public class Assembly {
     }
 
     /**
-     * Gets the value of the sample property.
+     * Gets the value of the path property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getSample() {
-        return sample;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Sets the value of the sample property.
+     * Sets the value of the path property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setSample(String value) {
-        this.sample = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
 }

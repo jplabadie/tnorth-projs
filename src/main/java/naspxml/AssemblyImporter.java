@@ -1,30 +1,26 @@
 
-package xmlsources;
+package naspxml;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for AlignerType complex type.
+ * <p>Java class for AssemblyImporterType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AlignerType">
+ * &lt;complexType name="AssemblyImporterType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AdditionalArgs">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;enumeration value=""/>
- *               &lt;enumeration value="-r all"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
+ *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="JobParameters" type="{}JobParametersType"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,19 +30,16 @@ import javax.xml.bind.annotation.*;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Aligner", propOrder = {
+@XmlType(name = "AssemblyImporter", propOrder = {
     "additionalArgs",
     "jobParameters"
 })
-@XmlRootElement(name = "Aligner")
-public class Aligner {
+public class AssemblyImporter {
 
     @XmlElement(name = "AdditionalArgs", required = true)
     protected String additionalArgs;
     @XmlElement(name = "JobParameters", required = true)
     protected JobParameters jobParameters;
-    @XmlAttribute(name = "name")
-    protected String name;
     @XmlAttribute(name = "path")
     protected String path;
 
@@ -96,30 +89,6 @@ public class Aligner {
      */
     public void setJobParameters(JobParameters value) {
         this.jobParameters = value;
-    }
-
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
     }
 
     /**

@@ -1,63 +1,66 @@
 
-package xmlsources;
+package naspxml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for VCFFolderType complex type.
+ * <p>Java class for SamtoolsType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="VCFFolderType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ * &lt;complexType name="SamtoolsType">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="AdditionalArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *       &lt;/sequence>
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "VCFFolder", propOrder = {
-    "value"
+@XmlType(name = "Samtools", propOrder = {
+    "additionalArgs"
 })
-public class VCFFolder {
+public class Samtools {
 
-    @XmlValue
-    protected String value;
+    @XmlElement(name = "AdditionalArgs", required = true)
+    protected String additionalArgs;
     @XmlAttribute(name = "path")
     protected String path;
 
     /**
-     * Gets the value of the value property.
+     * Gets the value of the additionalArgs property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getValue() {
-        return value;
+    public String getAdditionalArgs() {
+        return additionalArgs;
     }
 
     /**
-     * Sets the value of the value property.
+     * Sets the value of the additionalArgs property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setValue(String value) {
-        this.value = value;
+    public void setAdditionalArgs(String value) {
+        this.additionalArgs = value;
     }
 
     /**

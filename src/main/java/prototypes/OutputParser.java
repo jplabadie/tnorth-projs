@@ -2,8 +2,8 @@ package prototypes;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import xmlsources.NaspInputData;
-import xmlsources.ObjectFactory;
+import naspxml.NaspInputData;
+import naspxml.ObjectFactory;
 
 import javax.xml.bind.*;
 import javax.xml.parsers.DocumentBuilder;

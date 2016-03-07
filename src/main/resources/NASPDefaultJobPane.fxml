@@ -73,7 +73,7 @@
                                                    <children>
                                                        <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:" />
                                                        
-                                                       <TextField fx:id="inputPath" prefHeight="200.0" prefWidth="200.0" />
+                                                       <TextField fx:id="inputPath" prefHeight="100.0" prefWidth="300.0" />
    
                                                    </children>
                                                </HBox>

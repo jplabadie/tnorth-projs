@@ -203,7 +203,7 @@ public class JobTabMainController implements Initializable {
     @FXML
     private CheckBox optionsSkip;
     @FXML
-    private ListView inputPath;
+    private TextField inputPath;
     @FXML
     private ListView inputRead;
     @FXML
@@ -235,17 +235,18 @@ public class JobTabMainController implements Initializable {
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
         // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
-        ListView[] views = {inputPath, inputGenomes, inputRead, inputSAM, inputVCF};
-        CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools};
-        TitledPane[] checkPanes = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
+        TextField[] textFieldArray = {inputPath, outputDirText};
+        ListView[] listViewArray = {inputGenomes, inputRead, inputSAM, inputVCF};
+        CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools};
+        TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
 
         initStartJobButton();
-        initializeCheckBoxToggle(checkArray, checkPanes);
-        //handleCheckBoxes();
+        // Drag and drop is initialized for all the fields that need it
+        initializeCheckBoxToggle(checkBoxArray, checkPaneArray);
+        initializeListViewDrag(listViewArray);
+        initializeTextFieldDrag(textFieldArray);
         //saveSettings();
         //loadSettings();
-        initializeListViewDrag(views);
-        setTextDragHandler(outputDirText);
 
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
@@ -269,7 +270,7 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
-    // This method calls the setListDragHanlder for every ListView in the array passed to it
+    // This method calls the setListDragHandler for every ListView in the array passed to it
     private void initializeListViewDrag (ListView[] listFields) {
         int currentListItemIndex = 0;
 
@@ -288,13 +289,23 @@ public class JobTabMainController implements Initializable {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
-                String content = db.getString();
                 
                 boolean success = false;
                 if (db.hasString()) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    listContents.add(content.substring(content.indexOf("\\")+ 1, content.length() - 1));
-                    System.out.println(listContents);
+                    String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
+                    File file = new File(content);
+                    if (!file.isDirectory()) {
+                        event.acceptTransferModes(TransferMode.ANY);
+                        listContents.add(content);
+                        System.out.println(listContents);
+                    }
+                    else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Incorrect Input Format");
+                        alert.setHeaderText(null);
+                        alert.setContentText("The dragged input is not a file.");
+                        alert.showAndWait();
+                    }
                 }
                 event.setDropCompleted(success);
                 event.consume();
@@ -313,8 +324,18 @@ public class JobTabMainController implements Initializable {
         });
     }
 
-    private void setTextDragHandler(TextField field) {
-        field.setOnDragOver(new EventHandler<DragEvent>() {
+    private void initializeTextFieldDrag(TextField[] textFields) {
+        int currentListItemIndex = 0;
+
+        while (currentListItemIndex < textFields.length) {
+            setTextFieldDragHandler(textFields[currentListItemIndex]);
+            currentListItemIndex++;
+        }
+    }
+
+    private void setTextFieldDragHandler(TextField textField) {
+
+        textField.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -324,18 +345,29 @@ public class JobTabMainController implements Initializable {
                 event.consume();
             }
         });
-        field.setOnDragDropped(new EventHandler<DragEvent>() {
+
+        textField.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
-                String content = db.getString();
-                //Node item = mainFileBrowserTree.lookup(db.getString());
+
                 boolean success = false;
                 if (db.hasString()) {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    outputDirText.setText(db.getString().substring(db.getString().indexOf('\\'), db.getString().length()));
-                    outputDirText.setText(content.substring(content.indexOf('\\'), content.length() - 1));
-                    //System.out.println("item: " + item.toString());
+                    String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
+                    File file = new File(content);
+                    if (file.isDirectory()) {
+                        event.acceptTransferModes(TransferMode.ANY);
+                        System.out.println("Contents: " + content);
+                        textField.setText(content);
+                        //System.out.println("item: " + item.toString());
+                    }
+                    else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Incorrect Input Format");
+                        alert.setHeaderText(null);
+                        alert.setContentText("The dragged input is not a file path.");
+                        alert.showAndWait();
+                    }
                 }
                 event.setDropCompleted(success);
                 event.consume();
@@ -361,6 +393,7 @@ public class JobTabMainController implements Initializable {
                     }
                 });
     }
+
     private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
         for (int i = 0; i < checkArray.length; i++) {
             setCheckboxToggle(checkArray[i], checkPanes, i);
@@ -382,78 +415,6 @@ public class JobTabMainController implements Initializable {
                 }
             }
         });
-    }
-
-    private void handleCheckBoxes() {
-        bwaSampCheck.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        if (bwaSampCheck.isSelected()) {
-                            bwaSampTitledPane.setDisable(false);
-                            bwaSampTitledPane.setExpanded(true);
-                        } else {
-                            bwaSampTitledPane.setDisable(true);
-                            bwaSampTitledPane.setExpanded(false);
-                        }
-                    }
-                });
-
-        bwaMemCheck.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        if (bwaMemCheck.isSelected()) {
-                            bwaMemTitledPane.setDisable(false);
-                            bwaMemTitledPane.setExpanded(true);
-                        } else {
-                            bwaMemTitledPane.setDisable(true);
-                            bwaMemTitledPane.setExpanded(false);
-                        }
-                    }
-                });
-
-        bowtie2Check.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        if (bowtie2Check.isSelected()) {
-                            bowTieTitledPane.setDisable(false);
-                            bowTieTitledPane.setExpanded(true);
-                        } else {
-                            bowTieTitledPane.setDisable(true);
-                            bowTieTitledPane.setExpanded(false);
-                        }
-                    }
-                });
-
-        novoalignCheck.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        if (novoalignCheck.isSelected()) {
-                            novoalignTitledPane.setDisable(false);
-                            novoalignTitledPane.setExpanded(true);
-                        } else {
-                            novoalignTitledPane.setDisable(true);
-                            novoalignTitledPane.setExpanded(false);
-                        }
-                    }
-                });
-
-        snapCheck.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        if (snapCheck.isSelected()) {
-                            snapTitledPane.setDisable(false);
-                            snapTitledPane.setExpanded(true);
-                        } else {
-                            snapTitledPane.setDisable(true);
-                            snapTitledPane.setExpanded(false);
-                        }
-                    }
-                });
     }
 
    /* private void saveSettings() {

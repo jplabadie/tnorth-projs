@@ -1,13 +1,9 @@
 package prototypes;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import xmlsources.NaspInputData;
 import xmlsources.ObjectFactory;
 
 import javax.xml.bind.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 /**
@@ -17,11 +13,6 @@ import java.io.File;
  */
 public class OutputParser {
 
-    private DocumentBuilderFactory docFactory;
-    private DocumentBuilder docBuilder;
-    private Document output;
-    private Element mainRootElement;
-
     public OutputParser(){}
 
     /**\
@@ -29,7 +20,7 @@ public class OutputParser {
       * @param xml_path the absolute path to the xml file we will use to create Java objects
      * @return a populated NaspInputData object with references to related classes
      */
-    public NaspInputData jaxbXMLToObject(File xml_path) {
+    public static NaspInputData jaxbXMLToObject(File xml_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -50,7 +41,7 @@ public class OutputParser {
      * @param input_for_conversion NaspInputData object which will be converted to XML for output to NASP
      * @param output_path the absolute path desired for the output XML
      */
-    public void jaxbObjectToXML(NaspInputData input_for_conversion, String output_path) {
+    public static void jaxbObjectToXML(NaspInputData input_for_conversion, String output_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(NaspInputData.class);
             Marshaller m = context.createMarshaller();

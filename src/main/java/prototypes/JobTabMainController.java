@@ -16,12 +16,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.collections.ObservableList;
+import xmlsources.*;
+
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class JobTabMainController implements Initializable {
@@ -224,6 +223,8 @@ public class JobTabMainController implements Initializable {
     @FXML
     private TitledPane samtoolsPane;
 
+    private NaspInputData naspData;
+
     public static final ObservableList data =
             FXCollections.observableArrayList();
 
@@ -268,6 +269,8 @@ public class JobTabMainController implements Initializable {
                         }
                     }
                 });
+
+        naspData = new ObjectFactory().createNaspInputDataType();
     }
 
     // This method calls the setListDragHandler for every ListView in the array passed to it
@@ -381,6 +384,8 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
+
+                            saveFormState();
                             AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("NASPJobMonitorPane.fxml"));
                             jobConfigTabAnchorPane.getChildren().clear();
                             jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
@@ -394,6 +399,135 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
+    private void saveFormState(){
+
+        ExternalApplications exapps = new ExternalApplications();
+        naspData.setExternalApplications(exapps);
+
+        Options opts = new Options();
+        naspData.setOptions(opts);
+
+        Files files = new Files();
+        naspData.setFiles(files);
+
+        opts.setOutputFolder(outputDirText.getText());
+        opts.setJobSubmitter(jobManagerChoice.getValue().toString());
+        opts.setRunName("jp-"+ Calendar.DATE);
+
+        // aligner_options_pane
+        List<Aligner> aligners = exapps.getAligner();
+        List<SNPCaller> snpcallers = exapps.getSNPCaller();
+
+        Aligner bwa_samp = new Aligner();
+        aligners.add(bwa_samp);
+        JobParameters bwa_samp_param = new JobParameters();
+        bwa_samp.setJobParameters(bwa_samp_param);
+        bwa_samp.setPath(altBwaSampPath.getText());
+        bwa_samp_param.setQueue(altBwaSampQueue.getText());
+        bwa_samp_param.setMemRequested(limitBwaSampMem.getText());
+        bwa_samp_param.setNumCPUs(limitBwaSampCpu.getText());
+        bwa_samp_param.setWalltime(limitBwaSampRuntime.getText());
+
+        Aligner bwa_mem = new Aligner();
+        aligners.add(bwa_mem);
+        JobParameters bwa_mem_param = new JobParameters();
+        bwa_mem.setJobParameters(bwa_mem_param);
+        bwa_mem.setPath(altBwaMemPath.getText());
+        bwa_mem_param.setQueue(altBwaMemQueue.getText());
+        bwa_mem_param.setMemRequested(limitBwaMemMem.getText());
+        bwa_mem_param.setNumCPUs(limitBwaMemCpu.getText());
+        bwa_mem_param.setWalltime(limitBwaMemRuntime.getText());
+
+        Aligner novo = new Aligner();
+        aligners.add(novo);
+        JobParameters novo_param = new JobParameters();
+        novo.setJobParameters(novo_param);
+        novo.setPath(altNovoalignPath.getText());
+        novo_param.setQueue(altNovoalignQueue.getText());
+        novo_param.setMemRequested(limitNovoalignMem.getText());
+        novo_param.setNumCPUs(limitNovoalignCpu.getText());
+        novo_param.setWalltime(limitNovoalignRuntime.getText());
+
+        Aligner snap = new Aligner();
+        aligners.add(snap);
+        JobParameters snap_param = new JobParameters();
+        snap.setJobParameters(snap_param);
+        snap.setPath(altSnapPath.getText());
+        snap_param.setQueue(altSnapQueue.getText());
+        snap_param.setMemRequested(limitSnapMem.getText());
+        snap_param.setNumCPUs(limitSnapCpu.getText());
+        snap_param.setWalltime(limitSnapRuntime.getText());
+
+        Aligner bow = new Aligner();
+        aligners.add(bow);
+        JobParameters bow_param = new JobParameters();
+        bow.setJobParameters(bow_param);
+        bow.setPath(altBowTiePath.getText());
+        bow_param.setQueue(altBowTieQueue.getText());
+        bow_param.setMemRequested(limitBowTieMem.getText());
+        bow_param.setNumCPUs(limitBowTieCpu.getText());
+        bow_param.setWalltime(limitBowTieRuntime.getText());
+
+        SNPCaller gatk = new SNPCaller();
+        snpcallers.add(gatk);
+        JobParameters gatk_param = new JobParameters();
+        gatk.setJobParameters(gatk_param);
+        gatk.setPath(GATKPath.getText());
+        gatk.setAdditionalArgs(GATKArguments.getText());
+        gatk_param.setQueue(GATKQueue.getText());
+        gatk_param.setMemRequested(GATKMemory.getText());
+        gatk_param.setNumCPUs(GATKCPU.getText());
+        gatk_param.setWalltime(GATKRuntime.getText());
+
+        SNPCaller sol = new SNPCaller();
+        snpcallers.add(sol);
+        JobParameters sol_param = new JobParameters();
+        sol.setJobParameters(sol_param);
+        sol.setPath(solPath.getText());
+        sol.setAdditionalArgs(solArguments.getText());
+        sol_param.setQueue(solQueue.getText());
+        sol_param.setMemRequested(solMemory.getText());
+        sol_param.setNumCPUs(solCPU.getText());
+        sol_param.setWalltime(solRuntime.getText());
+
+        SNPCaller var = new SNPCaller();
+        snpcallers.add(var);
+        JobParameters var_param = new JobParameters();
+        var.setJobParameters(var_param);
+        var.setPath(varPath.getText());
+        var.setAdditionalArgs(varArguments.getText());
+        var_param.setQueue(varQueue.getText());
+        var_param.setMemRequested(varMemory.getText());
+        var_param.setNumCPUs(varCPU.getText());
+        var_param.setWalltime(varRuntime.getText());
+
+        SNPCaller sam = new SNPCaller();
+        snpcallers.add(sam);
+        JobParameters sam_param = new JobParameters();
+        sam.setJobParameters(sam_param);
+        sam.setPath(SAMPath.getText());
+        sam.setAdditionalArgs(SAMArguments.getText());
+        sam_param.setQueue(SAMQueue.getText());
+        sam_param.setMemRequested(SAMMemory.getText());
+        sam_param.setNumCPUs(SAMCPU.getText());
+        sam_param.setWalltime(SAMRuntime.getText());
+
+        //filter_options_pane
+
+        //  inputs_pane
+        AlignmentFolder alignment = new AlignmentFolder();
+            files.setAlignmentFolder(alignment);
+        AssemblyFolder assembly = new AssemblyFolder();
+            files.setAssemblyFolder(assembly);
+        ReadFolder read = new ReadFolder();
+            files.setReadFolder(read);
+
+        alignment.setPath(inputPath.getText());
+        //read.setPath(inputRead.getItems().get(0).toString());
+
+        OutputParser.jaxbObjectToXML(naspData, outputDirText.getText());
+
+    }
     private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
         for (int i = 0; i < checkArray.length; i++) {
             setCheckboxToggle(checkArray[i], checkPanes, i);
@@ -462,7 +596,6 @@ public class JobTabMainController implements Initializable {
                         settings.put("limitBowTieCpu", limitBowTieCpu.getText());
                         settings.put("limitBowTieRuntime", limitBowTieRuntime.getText());
 
-
                         //snp_caller_options_pane
                         settings.put("GATKPath", GATKPath.getText());
                         settings.put("GATKArguments", GATKArguments.getText());
@@ -509,8 +642,6 @@ public class JobTabMainController implements Initializable {
                         settings.put("inputNUCMER", inputPath.getText());
                         settings.put("inputDelta", inputDelta.getText());
 
-
-
                         // saving all the inputs
                         final Stage dialogStage = new Stage();
 
@@ -525,7 +656,6 @@ public class JobTabMainController implements Initializable {
                     }
                 });
     }
-
 
     /*
         Loading the users input for loading template functionality
@@ -548,13 +678,11 @@ public class JobTabMainController implements Initializable {
                                 fileReader = new FileReader(file);
                                 BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-
                                 String line;
                                 while ((line = bufferedReader.readLine()) != null) {
                                     sb.append(line);
                                 }
                                 fileReader.close();
-
 
                                 String delims = "[,]";
                                 String[] entries = sb.toString().split(delims);
@@ -615,7 +743,6 @@ public class JobTabMainController implements Initializable {
                                     else if ("limitBowTieRuntime".equals(entries[i].substring(1, j)))
                                         limitBowTieRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
 
-
                                     // general_settings_pane
 
                                     if ("outputDirText".equals(entries[i].substring(1, j)))
@@ -627,9 +754,7 @@ public class JobTabMainController implements Initializable {
                                     else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
                                         jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
 
-
                                     //snp_caller_options_pane
-
                                     if ("GATKPath".equals(entries[i].substring(1, j)))
                                         GATKPath.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("GATKArguments".equals(entries[i].substring(1, j)))
@@ -708,7 +833,6 @@ public class JobTabMainController implements Initializable {
 
                                         for (int w = 0; w < genomesEntries.length; w++) {
                                             data.add(genomesEntries[w].substring(1, genomesEntries[w].length()));
-
                                         }
                                         inputGenomes.setItems(data);
 
@@ -739,7 +863,6 @@ public class JobTabMainController implements Initializable {
                     }
                 });
     }
-
 
 
     /*

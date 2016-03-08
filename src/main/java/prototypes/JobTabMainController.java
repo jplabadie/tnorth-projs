@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import javafx.collections.ObservableList;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -223,6 +223,9 @@ public class JobTabMainController implements Initializable {
     private TitledPane varScanPane;
     @FXML
     private TitledPane samtoolsPane;
+
+    public static final ObservableList data =
+            FXCollections.observableArrayList();
 
     private ArrayList<File> selectedFiles;
     private DirectoryChooser dirChooser = new DirectoryChooser();
@@ -499,7 +502,7 @@ public class JobTabMainController implements Initializable {
 
                         //  inputs_pane
                         settings.put("inputPath", inputPath.getText());
-                        //settings.put("inputGenomes", inputGenomes.getItems());
+                        //settings.put("inputGenomes", inputGenomes.getItems().toString());
                         //settings.put("inputRead", inputRead.getText());
                         //settings.put("inputSAM", inputSAM.getText());
                         //settings.put("inputVCF", inputVCF.getText());
@@ -539,178 +542,196 @@ public class JobTabMainController implements Initializable {
                             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
                             fileChooser.getExtensionFilters().add(extFilter);
                             File file = fileChooser.showOpenDialog(dialogStage);
-                            FileReader fileReader = new FileReader(file);
-                            BufferedReader bufferedReader = new BufferedReader(fileReader);
+                            FileReader fileReader = null;
                             StringBuilder sb = new StringBuilder();
-                            String line;
-                            while ((line = bufferedReader.readLine()) != null) {
-                                sb.append(line);
-                            }
-                            fileReader.close();
-                            String delims = "[,]";
-                            String[] entries = sb.toString().split(delims);
-                            entries[entries.length-1] = entries[entries.length-1].substring(0,entries[entries.length-1].length()-1);
-
-                            int j;
-                            // aligner_options_pane
-                            for (int i = 0; i < entries.length; i++) {
-                                j = entries[i].indexOf("=");
-                                if ("altBwaSampPath".equals(entries[i].substring(1, j)))
-                                    altBwaSampPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altBwaSampQueue".equals(entries[i].substring(1, j)))
-                                    altBwaSampQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaSampMem".equals(entries[i].substring(1, j)))
-                                    limitBwaSampMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaSampCpu".equals(entries[i].substring(1, j)))
-                                    limitBwaSampCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaSampRuntime".equals(entries[i].substring(1, j)))
-                                    limitBwaSampRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                if ("altBwaMemPath".equals(entries[i].substring(1, j)))
-                                    altBwaMemPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altBwaMemQueue".equals(entries[i].substring(1, j)))
-                                    altBwaMemQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaMemMem".equals(entries[i].substring(1, j)))
-                                    limitBwaMemMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaMemCpu".equals(entries[i].substring(1, j)))
-                                    limitBwaMemCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBwaMemRuntime".equals(entries[i].substring(1, j)))
-                                    limitBwaMemRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                if ("altNovoalignPath".equals(entries[i].substring(1, j)))
-                                    altNovoalignPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altNovoalignQueue".equals(entries[i].substring(1, j)))
-                                    altNovoalignQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitNovoalignMem".equals(entries[i].substring(1, j)))
-                                    limitNovoalignMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitNovoalignCpu".equals(entries[i].substring(1, j)))
-                                    limitNovoalignCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitNovoalignRuntime".equals(entries[i].substring(1, j)))
-                                    limitNovoalignRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altSnapPath".equals(entries[i].substring(1, j)))
-                                    altSnapPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altSnapQueue".equals(entries[i].substring(1, j)))
-                                    altSnapQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitSnapMem".equals(entries[i].substring(1, j)))
-                                    limitSnapMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitSnapCpu".equals(entries[i].substring(1, j)))
-                                    limitSnapCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitSnapRuntime".equals(entries[i].substring(1, j)))
-                                    limitSnapRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altBowTiePath".equals(entries[i].substring(1, j)))
-                                    altBowTiePath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("altBowTieQueue".equals(entries[i].substring(1, j)))
-                                    altBowTieQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBowTieMem".equals(entries[i].substring(1, j)))
-                                    limitBowTieMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBowTieCpu".equals(entries[i].substring(1, j)))
-                                    limitBowTieCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("limitBowTieRuntime".equals(entries[i].substring(1, j)))
-                                    limitBowTieRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                            if (file != null) {
+                                fileReader = new FileReader(file);
+                                BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 
-                                // general_settings_pane
-
-                                if ("outputDirText".equals(entries[i].substring(1, j)))
-                                    outputDirText.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("jobManagerChoice".equals(entries[i].substring(1, j)))
-                                    jobManagerChoice.setValue(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("jobManagerQueue".equals(entries[i].substring(1, j)))
-                                    jobManagerQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
-                                    jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
-
-
-                                //snp_caller_options_pane
-
-                                if ("GATKPath".equals(entries[i].substring(1, j)))
-                                    GATKPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("GATKArguments".equals(entries[i].substring(1, j)))
-                                    GATKArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("GATKQueue".equals(entries[i].substring(1, j)))
-                                    GATKQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("GATKMemory".equals(entries[i].substring(1, j)))
-                                    GATKMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("GATKCPU".equals(entries[i].substring(1, j)))
-                                    GATKCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("GATKRuntime".equals(entries[i].substring(1, j)))
-                                    GATKRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                if ("solPath".equals(entries[i].substring(1, j)))
-                                    solPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("solArguments".equals(entries[i].substring(1, j)))
-                                    solArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("solQueue".equals(entries[i].substring(1, j)))
-                                    solQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("solMemory".equals(entries[i].substring(1, j)))
-                                    solMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("solCPU".equals(entries[i].substring(1, j)))
-                                    solCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("solRuntime".equals(entries[i].substring(1, j)))
-                                    solRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                if ("varPath".equals(entries[i].substring(1, j)))
-                                    varPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("varArguments".equals(entries[i].substring(1, j)))
-                                    varArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("varQueue".equals(entries[i].substring(1, j)))
-                                    varQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("varMemory".equals(entries[i].substring(1, j)))
-                                    varMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("varCPU".equals(entries[i].substring(1, j)))
-                                    varCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("varRuntime".equals(entries[i].substring(1, j)))
-                                    varRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                if ("SAMPath".equals(entries[i].substring(1, j)))
-                                    SAMPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("SAMArguments".equals(entries[i].substring(1, j)))
-                                    SAMArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("SAMQueue".equals(entries[i].substring(1, j)))
-                                    SAMQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("SAMMemory".equals(entries[i].substring(1, j)))
-                                    SAMMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("SAMCPU".equals(entries[i].substring(1, j)))
-                                    SAMCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("SAMRuntime".equals(entries[i].substring(1, j)))
-                                    SAMRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                //filter_options_pane
-
-                                if ("optionsOutputMatrix".equals(entries[i].substring(1, j))) {
-                                    if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
-                                        optionsOutputMatrix.setSelected(true);
-                                    else
-                                        optionsOutputMatrix.setSelected(false);
+                                String line;
+                                while ((line = bufferedReader.readLine()) != null) {
+                                    sb.append(line);
                                 }
-                                else if ("optionsSkip".equals(entries[i].substring(1, j))) {
-                                    if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
-                                        optionsSkip.setSelected(true);
-                                    else
-                                        optionsSkip.setSelected(false);
+                                fileReader.close();
+
+
+                                String delims = "[,]";
+                                String[] entries = sb.toString().split(delims);
+                                entries[entries.length - 1] = entries[entries.length - 1].substring(0, entries[entries.length - 1].length() - 1);
+
+                                int j;
+                                // aligner_options_pane
+                                for (int i = 0; i < entries.length; i++) {
+                                    j = entries[i].indexOf("=");
+                                    if ("altBwaSampPath".equals(entries[i].substring(1, j)))
+                                        altBwaSampPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altBwaSampQueue".equals(entries[i].substring(1, j)))
+                                        altBwaSampQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaSampMem".equals(entries[i].substring(1, j)))
+                                        limitBwaSampMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaSampCpu".equals(entries[i].substring(1, j)))
+                                        limitBwaSampCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaSampRuntime".equals(entries[i].substring(1, j)))
+                                        limitBwaSampRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    if ("altBwaMemPath".equals(entries[i].substring(1, j)))
+                                        altBwaMemPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altBwaMemQueue".equals(entries[i].substring(1, j)))
+                                        altBwaMemQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaMemMem".equals(entries[i].substring(1, j)))
+                                        limitBwaMemMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaMemCpu".equals(entries[i].substring(1, j)))
+                                        limitBwaMemCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBwaMemRuntime".equals(entries[i].substring(1, j)))
+                                        limitBwaMemRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    if ("altNovoalignPath".equals(entries[i].substring(1, j)))
+                                        altNovoalignPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altNovoalignQueue".equals(entries[i].substring(1, j)))
+                                        altNovoalignQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitNovoalignMem".equals(entries[i].substring(1, j)))
+                                        limitNovoalignMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitNovoalignCpu".equals(entries[i].substring(1, j)))
+                                        limitNovoalignCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitNovoalignRuntime".equals(entries[i].substring(1, j)))
+                                        limitNovoalignRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altSnapPath".equals(entries[i].substring(1, j)))
+                                        altSnapPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altSnapQueue".equals(entries[i].substring(1, j)))
+                                        altSnapQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitSnapMem".equals(entries[i].substring(1, j)))
+                                        limitSnapMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitSnapCpu".equals(entries[i].substring(1, j)))
+                                        limitSnapCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitSnapRuntime".equals(entries[i].substring(1, j)))
+                                        limitSnapRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altBowTiePath".equals(entries[i].substring(1, j)))
+                                        altBowTiePath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("altBowTieQueue".equals(entries[i].substring(1, j)))
+                                        altBowTieQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBowTieMem".equals(entries[i].substring(1, j)))
+                                        limitBowTieMem.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBowTieCpu".equals(entries[i].substring(1, j)))
+                                        limitBowTieCpu.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("limitBowTieRuntime".equals(entries[i].substring(1, j)))
+                                        limitBowTieRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+
+
+                                    // general_settings_pane
+
+                                    if ("outputDirText".equals(entries[i].substring(1, j)))
+                                        outputDirText.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerChoice".equals(entries[i].substring(1, j)))
+                                        jobManagerChoice.setValue(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerQueue".equals(entries[i].substring(1, j)))
+                                        jobManagerQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
+                                        jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
+
+
+                                    //snp_caller_options_pane
+
+                                    if ("GATKPath".equals(entries[i].substring(1, j)))
+                                        GATKPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("GATKArguments".equals(entries[i].substring(1, j)))
+                                        GATKArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("GATKQueue".equals(entries[i].substring(1, j)))
+                                        GATKQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("GATKMemory".equals(entries[i].substring(1, j)))
+                                        GATKMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("GATKCPU".equals(entries[i].substring(1, j)))
+                                        GATKCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("GATKRuntime".equals(entries[i].substring(1, j)))
+                                        GATKRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+
+                                    if ("solPath".equals(entries[i].substring(1, j)))
+                                        solPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("solArguments".equals(entries[i].substring(1, j)))
+                                        solArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("solQueue".equals(entries[i].substring(1, j)))
+                                        solQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("solMemory".equals(entries[i].substring(1, j)))
+                                        solMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("solCPU".equals(entries[i].substring(1, j)))
+                                        solCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("solRuntime".equals(entries[i].substring(1, j)))
+                                        solRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+
+                                    if ("varPath".equals(entries[i].substring(1, j)))
+                                        varPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("varArguments".equals(entries[i].substring(1, j)))
+                                        varArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("varQueue".equals(entries[i].substring(1, j)))
+                                        varQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("varMemory".equals(entries[i].substring(1, j)))
+                                        varMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("varCPU".equals(entries[i].substring(1, j)))
+                                        varCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("varRuntime".equals(entries[i].substring(1, j)))
+                                        varRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+
+                                    if ("SAMPath".equals(entries[i].substring(1, j)))
+                                        SAMPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("SAMArguments".equals(entries[i].substring(1, j)))
+                                        SAMArguments.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("SAMQueue".equals(entries[i].substring(1, j)))
+                                        SAMQueue.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("SAMMemory".equals(entries[i].substring(1, j)))
+                                        SAMMemory.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("SAMCPU".equals(entries[i].substring(1, j)))
+                                        SAMCPU.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("SAMRuntime".equals(entries[i].substring(1, j)))
+                                        SAMRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
+
+                                    //filter_options_pane
+
+                                    if ("optionsOutputMatrix".equals(entries[i].substring(1, j))) {
+                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
+                                            optionsOutputMatrix.setSelected(true);
+                                        else
+                                            optionsOutputMatrix.setSelected(false);
+                                    } else if ("optionsSkip".equals(entries[i].substring(1, j))) {
+                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
+                                            optionsSkip.setSelected(true);
+                                        else
+                                            optionsSkip.setSelected(false);
+                                    }
+
+                                    // inputs_pane
+                                    String genomes = "";
+
+                                    if ("inputPath".equals(entries[i].substring(1, j)))
+                                        inputPath.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    /*else if ("inputGenomes".equals(entries[i].substring(1, j))) {
+                                        genomes = entries[i].substring(j + 1, entries[i].length());
+                                        String delims2 = "[[]]";
+                                        String genomesEntries[] = genomes.split(delims);
+
+                                        for (int w = 0; w < genomesEntries.length; w++) {
+                                            data.add(genomesEntries[w].substring(1, genomesEntries[w].length()));
+
+                                        }
+                                        inputGenomes.setItems(data);
+
+                                    }*/
+                                    //inputGenomes.setItems(entries[i].substring(j + 1, entries[i].length()));
+                                    // else if ("inputRead".equals(entries[i].substring(1, j)))
+                                    // inputRead.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    // else if ("inputSAM".equals(entries[i].substring(1, j)))
+                                    // inputSAM.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    //else if ("inputVCF".equals(entries[i].substring(1, j)))
+                                    // inputVCF.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputNUCMER".equals(entries[i].substring(1, j)))
+                                        inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
+                                    else if ("inputDelta".equals(entries[i].substring(1, j)))
+                                        inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
+
                                 }
-
-                                // inputs_pane
-
-                                if ("inputPath".equals(entries[i].substring(1, j)))
-                                    inputPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                //else if ("inputGenomes".equals(entries[i].substring(1, j)))
-                                    //inputGenomes.setText(entries[i].substring(j + 1, entries[i].length()));
-                               // else if ("inputRead".equals(entries[i].substring(1, j)))
-                                   // inputRead.setText(entries[i].substring(j + 1, entries[i].length()));
-                               // else if ("inputSAM".equals(entries[i].substring(1, j)))
-                                   // inputSAM.setText(entries[i].substring(j + 1, entries[i].length()));
-                                //else if ("inputVCF".equals(entries[i].substring(1, j)))
-                                   // inputVCF.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("inputNUCMER".equals(entries[i].substring(1, j)))
-                                    inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
-                                else if ("inputDelta".equals(entries[i].substring(1, j)))
-                                    inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
-
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("Confirmation");
+                                alert.setHeaderText("");
+                                alert.setContentText("Your template was loaded successfully");
+                                alert.showAndWait();
                             }
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("Confirmation");
-                            alert.setHeaderText("");
-                            alert.setContentText("Your template was loaded successfully");
-                            alert.showAndWait();
                         }
                         catch (IOException w) {
                             w.printStackTrace();

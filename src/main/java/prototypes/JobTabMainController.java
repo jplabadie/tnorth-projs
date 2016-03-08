@@ -605,7 +605,7 @@ public class JobTabMainController implements Initializable {
                                     limitBowTieCpu.setText(entries[i].substring(j + 1, entries[i].length()));
                                 else if ("limitBowTieRuntime".equals(entries[i].substring(1, j)))
                                     limitBowTieRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                
+
 
                                 // general_settings_pane
 

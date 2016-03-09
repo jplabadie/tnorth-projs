@@ -17,6 +17,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
+
+import javax.xml.bind.JAXBContext;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -237,7 +239,7 @@ public class JobTabMainController implements Initializable {
         // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
         TextField[] textFieldArray = {inputPath, outputDirText};
         ListView[] listViewArray = {inputGenomes, inputRead, inputSAM, inputVCF};
-        CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools};
+        CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools, enableAdvNucmerButton};
         TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
 
         initStartJobButton();
@@ -357,8 +359,8 @@ public class JobTabMainController implements Initializable {
                     File file = new File(content);
                     if (file.isDirectory()) {
                         event.acceptTransferModes(TransferMode.ANY);
-                        System.out.println("Contents: " + content);
-                        //textField.setText(content);
+                        //System.out.println("Contents: " + content);
+                        textField.setText(content);
                         //System.out.println("item: " + item.toString());
                     }
                     else {
@@ -396,26 +398,44 @@ public class JobTabMainController implements Initializable {
 
     private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
         for (int i = 0; i < checkArray.length; i++) {
-            setCheckboxToggle(checkArray[i], checkPanes, i);
+            if (i < checkArray.length - 1) {
+                setCheckboxToggle(checkArray[i], checkPanes[i]);
+            }
+            else {
+                TitledPane dummy = new TitledPane();
+                setCheckboxToggle(checkArray[i], dummy);
+            }
         }
     }
 
-    private void setCheckboxToggle (final CheckBox checkBox, TitledPane[] checkPanes,  int paneIndex) {
-        final TitledPane correspondingPane = checkPanes[paneIndex];
+    private void setCheckboxToggle (final CheckBox checkBox, TitledPane checkPane) {
+        //System.out.println("ID: " + checkBox.getId());
+        final TitledPane correspondingPane = checkPane;
         checkBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if (checkBox.isSelected()) {
-                    correspondingPane.setDisable(false);
-                    correspondingPane.setExpanded(true);
+                    System.out.println(checkBox.getId() + "Checkbox toggled");
+                    if (checkBox.getId().equals("enableAdvNucmerButton")) { 
+                        inputNUCMER.setDisable(false);
+                        inputDelta.setDisable(false);
+
+                    }
+                    else {
+                        correspondingPane.setDisable(false);
+                        correspondingPane.setExpanded(true);
+                    }
+
                 }
-                else {
+                else if (!checkBox.isSelected() && checkBox.getId() != "enableAdvNucmerButton"){
                     correspondingPane.setDisable(true);
                     correspondingPane.setExpanded(false);
                 }
             }
         });
     }
+
+
     /*
         capturing users input for template saving functionality
      */

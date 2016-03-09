@@ -112,13 +112,13 @@
                                                        <VBox spacing="10.0">
                                                            <children>
                                                                <CheckBox fx:id="enableAdvNucmerButton" mnemonicParsing="false" text="Enable" />
-                                                               <VBox disable="true" prefHeight="84.0" prefWidth="318.0" spacing="5.0">
+                                                               <VBox prefHeight="84.0" prefWidth="318.0" spacing="5.0">
                                                                    <children>
    
                                                                        <Label text="Additional arguments for NUCMER:" />
-                                                                       <TextField fx:id="inputNUCMER" />
+                                                                       <TextField fx:id="inputNUCMER" disable="true"/>
                                                                        <Label text="Additional arguments for Delta-Filter:" />
-                                                                       <TextField fx:id="inputDelta" />
+                                                                       <TextField fx:id="inputDelta" disable="true"/>
    
                                                                    </children>
                                                                </VBox>
@@ -374,7 +374,7 @@
                                                        <CheckBox fx:id="cbSAMTools" mnemonicParsing="false" text="SAMtools" />
                                                    </children>
                                                </HBox>
-                                               <TitledPane fx:id="gatkOptionsPane" animated="false" text="GATK Advanced Settings">
+                                               <TitledPane fx:id="gatkOptionsPane" expanded="false" animated="false" text="GATK Advanced Settings" disable="true">
                                                    <content>
                                                        <AnchorPane minWidth="0.0" prefWidth="598.0">
                                                            <children>
@@ -414,7 +414,7 @@
                                                        </AnchorPane>
                                                    </content>
                                                </TitledPane>
-                                               <TitledPane fx:id="solSnpPane" animated="false" expanded="false" text="SolSNP Advanced Settings">
+                                               <TitledPane fx:id="solSnpPane" animated="false" expanded="false" text="SolSNP Advanced Settings" disable="true">
                                                    <content>
                                                        <AnchorPane minWidth="0.0" prefWidth="598.0">
                                                            <children>
@@ -454,7 +454,7 @@
                                                        </AnchorPane>
                                                    </content>
                                                </TitledPane>
-                                               <TitledPane fx:id="varScanPane" animated="false" expanded="false" text="VarScan Advanced Settings">
+                                               <TitledPane fx:id="varScanPane" animated="false" expanded="false" text="VarScan Advanced Settings" disable="true">
                                                    <content>
                                                        <AnchorPane minWidth="0.0" prefWidth="598.0">
                                                            <children>
@@ -494,7 +494,7 @@
                                                        </AnchorPane>
                                                    </content>
                                                </TitledPane>
-                                               <TitledPane fx:id="samtoolsPane" animated="false" expanded="false" text="SAMtools">
+                                               <TitledPane fx:id="samtoolsPane" animated="false" expanded="false" text="SAMtools" disable="true">
                                                    <content>
                                                        <AnchorPane minWidth="0.0" prefWidth="598.0">
                                                            <children>

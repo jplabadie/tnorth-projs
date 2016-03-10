@@ -282,7 +282,6 @@ public class JobTabMainController implements Initializable {
             setListDragHandler(listFields[currentListItemIndex]);
             currentListItemIndex++;
         }
-
     }
     // This method sets the drag functionality to a ListView
     private void setListDragHandler (ListView view) {
@@ -848,7 +847,6 @@ public class JobTabMainController implements Initializable {
                                         inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("inputDelta".equals(entries[i].substring(1, j)))
                                         inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
-
                                 }
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                                 alert.setTitle("Confirmation");
@@ -863,7 +861,6 @@ public class JobTabMainController implements Initializable {
                     }
                 });
     }
-
 
     /*
         saving the file into specified location

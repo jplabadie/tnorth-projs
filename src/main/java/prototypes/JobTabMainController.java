@@ -1,17 +1,23 @@
 package prototypes;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import naspxml.NaspInputData;
+import naspxml.ObjectFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -215,6 +221,8 @@ public class JobTabMainController implements Initializable {
     @FXML
     private CheckBox enableAdvNucmerButton;
 
+    private NaspInputData naspData;
+
     private ArrayList<File> selectedFiles;
     private DirectoryChooser dirChooser = new DirectoryChooser();
     private CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck};
@@ -248,6 +256,111 @@ public class JobTabMainController implements Initializable {
                         }
                     }
                 });
+
+        naspData = new ObjectFactory().createNaspInputDataType();
+    }
+
+    // This method calls the setListDragHandler for every ListView in the array passed to it
+    private void initializeListViewDrag (ListView[] listFields) {
+        int currentListItemIndex = 0;
+
+        while (currentListItemIndex < listFields.length) {
+            //System.out.println("Current Index: " + currentListItemIndex);
+            setListDragHandler(listFields[currentListItemIndex]);
+            currentListItemIndex++;
+        }
+    }
+    // This method sets the drag functionality to a ListView
+    private void setListDragHandler (ListView view) {
+        // Get the current items in the ListView passed in
+        final ObservableList listContents = view.getItems();
+        view.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                
+                boolean success = false;
+                if (db.hasString()) {
+                    String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
+                    File file = new File(content);
+                    if (!file.isDirectory()) {
+                        event.acceptTransferModes(TransferMode.ANY);
+                        listContents.add(content);
+                        System.out.println(listContents);
+                    }
+                    else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Incorrect Input Format");
+                        alert.setHeaderText(null);
+                        alert.setContentText("The dragged input is not a file.");
+                        alert.showAndWait();
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+        view.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if(db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+    }
+
+    private void initializeTextFieldDrag(TextField[] textFields) {
+        int currentListItemIndex = 0;
+
+        while (currentListItemIndex < textFields.length) {
+            setTextFieldDragHandler(textFields[currentListItemIndex]);
+            currentListItemIndex++;
+        }
+    }
+
+    private void setTextFieldDragHandler(final TextField textField) {
+
+        textField.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+         textField.setOnDragDropped(new EventHandler<DragEvent>() {
+             @Override
+             public void handle(DragEvent event) {
+                 Dragboard db = event.getDragboard();
+
+                 boolean success = false;
+                 if (db.hasString()) {
+                     String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
+                     File file = new File(content);
+                     if (file.isDirectory()) {
+                         event.acceptTransferModes(TransferMode.ANY);
+                         //System.out.println("Contents: " + content);
+                         textField.setText(content);
+                         //System.out.println("item: " + item.toString());
+                     } else {
+                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                         alert.setTitle("Incorrect Input Format");
+                         alert.setHeaderText(null);
+                         alert.setContentText("The dragged input is not a file path.");
+                         alert.showAndWait();
+                     }
+                 }
+                 event.setDropCompleted(success);
+                 event.consume();
+             }
+         });
     }
 
     private void initStartJobButton() {

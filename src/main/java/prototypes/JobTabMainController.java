@@ -300,7 +300,7 @@ public class JobTabMainController implements Initializable {
                     if (!file.isDirectory()) {
                         event.acceptTransferModes(TransferMode.ANY);
                         listContents.add(content);
-                        System.out.println(listContents);
+                        //System.out.println(listContents);
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -547,7 +547,7 @@ public class JobTabMainController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 if (checkBox.isSelected()) {
-                    System.out.println(checkBox.getId() + "Checkbox toggled");
+                    //System.out.println(checkBox.getId() + "Checkbox toggled");
                     if (checkBox.getId().equals("enableAdvNucmerButton")) { 
                         inputNUCMER.setDisable(false);
                         inputDelta.setDisable(false);
@@ -559,10 +559,17 @@ public class JobTabMainController implements Initializable {
                     }
 
                 }
-                else if (!checkBox.isSelected() && checkBox.getId() != "enableAdvNucmerButton"){
-                    correspondingPane.setDisable(true);
-                    correspondingPane.setExpanded(false);
+                else if (!checkBox.isSelected()){
+                    if (checkBox.getId().equals("enableAdvNucmerButton")) {
+                        inputNUCMER.setDisable(true);
+                        inputDelta.setDisable(true);
+                    }
+                    else {
+                        correspondingPane.setDisable(true);
+                        correspondingPane.setExpanded(false);
+                    }
                 }
+
             }
         });
     }

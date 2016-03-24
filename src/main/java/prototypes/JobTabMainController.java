@@ -1,5 +1,6 @@
 package prototypes;
 
+import com.sun.tools.javac.comp.Check;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -223,6 +224,8 @@ public class JobTabMainController implements Initializable {
     private TitledPane varScanPane;
     @FXML
     private TitledPane samtoolsPane;
+    @FXML
+    private CheckBox useAltBwaSampVer;
 
     private NaspInputData naspData;
 
@@ -249,6 +252,10 @@ public class JobTabMainController implements Initializable {
         initializeTextFieldDrag(textFieldArray);
         saveSettings();
         loadSettings();
+        toggleCheckBoxes();
+
+
+
 
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
@@ -361,7 +368,7 @@ public class JobTabMainController implements Initializable {
                     if (file.isDirectory()) {
                         event.acceptTransferModes(TransferMode.ANY);
                         //System.out.println("Contents: " + content);
-                        textField.setText(content);
+                        //textField.setText(content);
                         //System.out.println("item: " + item.toString());
                     }
                     else {
@@ -558,6 +565,7 @@ public class JobTabMainController implements Initializable {
                         correspondingPane.setExpanded(true);
                     }
 
+
                 }
                 else if (!checkBox.isSelected()){
                     if (checkBox.getId().equals("enableAdvNucmerButton")) {
@@ -568,6 +576,7 @@ public class JobTabMainController implements Initializable {
                         correspondingPane.setDisable(true);
                         correspondingPane.setExpanded(false);
                     }
+
                 }
 
             }
@@ -907,6 +916,74 @@ public class JobTabMainController implements Initializable {
         {
             System.out.println("Error processing file: " + exception);
         }
+    }
+
+    private void toggleCheckBoxes()
+    {
+        useAltBwaSampVer.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (useAltBwaSampVer.isSelected())
+                            altBwaSampPath.setDisable(false);
+                        else
+                            altBwaSampPath.setDisable(true);
+
+                    }
+                }
+        );
+
+        useAltBwaMemVer.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (useAltBwaMemVer.isSelected())
+                            altBwaMemPath.setDisable(false);
+                        else
+                            altBwaMemPath.setDisable(true);
+
+                    }
+                }
+        );
+
+        useAltBowTieVer.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (useAltBowTieVer.isSelected())
+                            altBowTiePath.setDisable(false);
+                        else
+                            altBowTiePath.setDisable(true);
+
+                    }
+                }
+        );
+
+        useAltNovoalignVer.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (useAltNovoalignVer.isSelected())
+                            altNovoalignPath.setDisable(false);
+                        else
+                            altNovoalignPath.setDisable(true);
+
+                    }
+                }
+        );
+
+        useAltSnapVer.setOnAction(
+            new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (useAltSnapVer.isSelected())
+                        altSnapPath.setDisable(false);
+                    else
+                        altSnapPath.setDisable(true);
+
+                }
+            }
+    );
     }
 
 }

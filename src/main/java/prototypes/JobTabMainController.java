@@ -238,6 +238,14 @@ public class JobTabMainController implements Initializable {
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
         // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
         TextField[] textFieldArray = {inputPath, outputDirText};
+        
+        //Input path tooltip
+        Tooltip inputTooltip = new Tooltip("Select your input file");
+        inputPath.setTooltip(inputTooltip);
+        //Output tooltip
+        Tooltip outputTooltip = new Tooltip("Select your output directory");
+        outputDirText.setTooltip(outputTooltip);
+        
         ListView[] listViewArray = {inputGenomes, inputRead, inputSAM, inputVCF};
         CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools, enableAdvNucmerButton};
         TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
@@ -253,6 +261,10 @@ public class JobTabMainController implements Initializable {
         jobManagerChoice.setItems(FXCollections.observableArrayList(
                 "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
         );
+        
+        Tooltip jobTooltip = new Tooltip("Select your desired Job Manager");
+        jobManagerChoice.setTooltip(jobTooltip);
+        
         jobManagerChoice.getSelectionModel().select(0);
 
         outputDirButton.setOnAction(

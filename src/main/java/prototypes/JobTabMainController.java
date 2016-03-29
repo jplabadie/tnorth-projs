@@ -336,7 +336,7 @@ public class JobTabMainController implements Initializable {
         }
     }
 
-    private void setTextFieldDragHandler(TextField textField) {
+    private void setTextFieldDragHandler(final TextField textField) {
 
         textField.setOnDragOver(new EventHandler<DragEvent>() {
             @Override

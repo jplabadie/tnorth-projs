@@ -1,6 +1,5 @@
 package prototypes;
 
-import com.sun.tools.javac.comp.Check;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import naspxml.NaspInputData;
-import naspxml.ObjectFactory;
+import xmlbinds.NaspInputData;
+import xmlbinds.ObjectFactory;
 
 import java.io.*;
 import java.net.URL;

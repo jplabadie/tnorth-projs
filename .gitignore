@@ -29,3 +29,6 @@ proguard/
 #Ignore IDEA files
 .idea/
 *.iml
+
+#ignore Netbeans file
+nb-configuration.xml

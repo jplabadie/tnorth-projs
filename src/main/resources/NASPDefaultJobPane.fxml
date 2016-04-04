@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="jobConfigTabAnchorPane" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="prototypes.JobTabMainController">
+            fx:controller="ctrls.JobTabMainController">
     <VBox prefHeight="600.0" prefWidth="800.0" spacing="2.0">
         <children>
             <Accordion>

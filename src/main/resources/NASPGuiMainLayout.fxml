@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prototypes.MainController">
+<BorderPane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ctrls.MainController">
    <top>
       <MenuBar fx:id="menu_bar">
         <menus>
@@ -39,7 +39,7 @@
       </TabPane>
    </center>
    <left>
-      <TreeView fx:id="mainFileBrowserTree" prefHeight="566.0" prefWidth="248.0">
+      <TreeView fx:id="mainFileBrowserTree" editable="true" opacity="0.48" prefHeight="566.0" prefWidth="248.0">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>

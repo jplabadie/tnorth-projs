@@ -1,4 +1,4 @@
-package prototypes;
+package ctrls;
 
 /**
  * @author Jean-Paul Labadie
@@ -35,10 +35,17 @@ package prototypes;
 
         private boolean dragging;
 
+        /*Constructor that creates and instantiates 
+        the region that we will be clicked and dragged for resizing.*/
         private DragResizerController(Region aRegion) {
             region = aRegion;
         }
 
+        /*
+        Invoked after we validate that a zone is draggable and 
+        then creates an instance listening to the mouse drags 
+        to make the new size of the region.
+        */
         public static void makeResizable(Region region) {
             final DragResizerController resizer = new DragResizerController(region);
 
@@ -64,11 +71,18 @@ package prototypes;
                 }});
         }
 
+        /*
+        Resets the cursor to the default state when released. 
+        */
         protected void mouseReleased(MouseEvent event) {
             dragging = false;
             region.setCursor(Cursor.DEFAULT);
         }
 
+        /*
+        Checks to see if we are dragging in a draggable zone and 
+        then sets the cursor to the new resize value.
+        */
         protected void mouseOver(MouseEvent event) {
             if(isInDraggableZone(event) || dragging) {
                 region.setCursor(Cursor.S_RESIZE);
@@ -78,10 +92,19 @@ package prototypes;
             }
         }
 
+        /*
+        Called on a mouse event, and then checks to see if that mouse click is 
+        inside a valid zone. It essentially checks to see if the thing that 
+        is trying to be dragged is in fact draggable. 
+        */
         protected boolean isInDraggableZone(MouseEvent event) {
             return event.getX() > (region.getWidth() - RESIZE_MARGIN);
         }
 
+        /*
+        Listens for a mouse event and returns a x_axis variable 
+        to which the new window size will be adjusted to.
+        */
         protected void mouseDragged(MouseEvent event) {
             if(!dragging) {
                 return;
@@ -96,6 +119,9 @@ package prototypes;
             x_axis = mouse_x_delta;
         }
 
+        /*
+        Responsible for ignoring clicks outside of a draggable event.
+        */
         protected void mousePressed(MouseEvent event) {
 
             // ignore clicks outside of the draggable margin

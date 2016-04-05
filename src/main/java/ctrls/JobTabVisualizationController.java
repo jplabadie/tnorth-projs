@@ -1,4 +1,4 @@
-package prototypes;
+package ctrls;
 
 import javafx.fxml.Initializable;
 

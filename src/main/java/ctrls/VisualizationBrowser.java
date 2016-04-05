@@ -1,4 +1,4 @@
-package prototypes;
+package ctrls;
 
 /**
  * @author Jean-Paul Labadie
@@ -19,7 +19,9 @@ public class VisualizationBrowser extends Region {
 
     final WebView browser = new WebView();
     final WebEngine webEngine = browser.getEngine();
-
+    
+    /* Method will start by loading a web page, adding the page to the scene, 
+    and applying the styles to the scene */
     public VisualizationBrowser() {
         //apply the styles
         getStyleClass().add("browser");
@@ -31,18 +33,25 @@ public class VisualizationBrowser extends Region {
         getChildren().add(browser);
 
     }
+    
+    /* Required method by Java to control the size of the Browser */
     private Node createSpacer() {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         return spacer;
     }
 
+    /* Needed to get the height and width of the browser 
+    and to set the proper dimensions of the child elements 
+    that are built inside of the browser component*/
     @Override protected void layoutChildren() {
         double w = getWidth();
         double h = getHeight();
         layoutInArea(browser,0,0,w,h,0, HPos.CENTER, VPos.CENTER);
     }
 
+    /* w]Will create the proper size height and width respectively, 
+    to allow the browser to be viewed properly inside the scene of the GUI*/
     @Override protected double computePrefWidth(double height) {
         return 800;
     }

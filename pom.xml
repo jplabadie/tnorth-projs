@@ -19,6 +19,12 @@
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <jsch.version>0.1.53</jsch.version>
+        <jsch-agentproxy.version>0.0.6</jsch-agentproxy.version>
+        <slf4j.version>1.7.5</slf4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -32,6 +38,30 @@
             <version>0.1.53</version>
             <scope>src</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch.agentproxy.connector-factory</artifactId>
+            <version>${jsch-agentproxy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch.agentproxy.jsch</artifactId>
+            <version>${jsch-agentproxy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>com.springsource.slf4j.api</artifactId>
+            <version>1.5.0</version>
+        </dependency>
     </dependencies>
 </project>

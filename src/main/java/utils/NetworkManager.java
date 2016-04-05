@@ -15,11 +15,13 @@ public class NetworkManager {
     private JSch jsch;
     private ChannelSftp sftp_channel;
     private ChannelExec exec_channel;
-    private java.io.InputStream in;
-    private java.io.PrintStream out;
+    private BufferedReader sftp_in;
+    private OutputStream sftp_out;
+    private BufferedReader exec_in;
+    private OutputStream exec_out;
 
     /**
-     *
+     * Initialize the logger and create a new Jsch object
      */
     public NetworkManager() {
         LogManager log = new LogManager();
@@ -63,8 +65,6 @@ public class NetworkManager {
                 }
             });
 
-            //jsch.addIdentity("C:\\Users\\Jean-Paul\\.ssh\\id_rsa");
-
         } catch (JSchException e1) {
             e1.printStackTrace();
         }
@@ -73,8 +73,11 @@ public class NetworkManager {
     /**
      * Start the session, and open relevant channels.
      * Should be called after initSession()
+     *
+     * @throws JSchException
+     * @throws IOException
      */
-    public void openSession() throws JSchException {
+    public void openSession() throws JSchException, IOException {
 
         session.connect();
 
@@ -89,8 +92,11 @@ public class NetworkManager {
             exec_channel.connect();
         }
 
-        in = System.in;
-        out = System.out;
+        sftp_in = new BufferedReader(new InputStreamReader(sftp_channel.getInputStream()));
+        sftp_out = sftp_channel.getOutputStream();
+
+        exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
+        exec_out = exec_channel.getOutputStream();
     }
 
     /**
@@ -107,14 +113,19 @@ public class NetworkManager {
             exec_channel = null;
 
             try {
-                in.close();
-                in = null;
+                sftp_in.close();
+                exec_in.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            out.close();
-            out = null;
+            try {
+                sftp_out.close();
+                exec_out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             session.disconnect();
         }
@@ -129,6 +140,7 @@ public class NetworkManager {
     }
 
     /**
+     * Sends a file over SFTP to the remote service using the current Session
      *
      * @param file the File to be uploaded
      * @param abs_remote_path the absolute path to the file on the remote machine
@@ -181,6 +193,7 @@ public class NetworkManager {
     }
 
     /**
+     * Downloads a file over SFTP from the remote directory to the local directory
      *
      * @param abs_remote_path the absolute path to the file/dir on the remote machine
      * @param abs_local_path the absoulte path to the local directory
@@ -252,9 +265,6 @@ public class NetworkManager {
         }
     }
 
-    public String getDirectoryStructure(String remote_dir_path){
-
-    }
 
     /**
      *  Tests to see if a specified file exists and is a file on the remote server
@@ -288,8 +298,6 @@ public class NetworkManager {
         if (exec_status != -1){
             System.out.println("The directory does not exist or is not a directory.");
         }
-
-
     }
 
 }

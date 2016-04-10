@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
+
 /**
  * Creates XML that represents a NASP job for saving or running.
  *
@@ -29,7 +30,7 @@ public class JobSaveLoadManager {
       * @param xml_path the absolute path to the xml file we will use to create Java objects
      * @return a populated NaspInputData object with references to related classes
      */
-    public NaspInputData jaxbXMLToObject(File xml_path) {
+    public static NaspInputData jaxbXMLToObject(File xml_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -50,7 +51,7 @@ public class JobSaveLoadManager {
      * @param input_for_conversion NaspInputData object which will be converted to XML for output to NASP
      * @param output_path the absolute path desired for the output XML
      */
-    public void jaxbObjectToXML(NaspInputData input_for_conversion, String output_path) {
+    public static void jaxbObjectToXML(NaspInputData input_for_conversion, String output_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(NaspInputData.class);
             Marshaller m = context.createMarshaller();

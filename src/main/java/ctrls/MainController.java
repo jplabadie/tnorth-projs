@@ -68,9 +68,17 @@ public class MainController implements Initializable{
      * directories into containers in a JobTabPane.
      */
     private void initMainFileBrowserTree() {
+        File[] roots = File.listRoots();    // Get a list of all drives attached
+
+        TreeItem<File> dummyRoot = new TreeItem<File>();    // This dummy node is used to that we have multiple drives as roots
+        // Iterate over the list of drives and add them and their children as children to the dummy node
+        for (int i = 0; i < roots.length; i++) {
+            dummyRoot.getChildren().addAll(createNode(roots[i]));
+        }
+
         mainFileBrowserTree.setEditable(true);
-        TreeItem<File> root = createNode(new File("/"));
-        root.setExpanded(true);
+        //TreeItem<File> root = createNode(new File("/"));
+        //root.setExpanded(true);
 
         mainFileBrowserTree.setCellFactory(new Callback<TreeView<File>,TreeCell<File>>(){
             @Override
@@ -78,7 +86,9 @@ public class MainController implements Initializable{
                 return new DraggableTreeCell<File>();
             }
         });
-        mainFileBrowserTree.setRoot(root);
+        mainFileBrowserTree.setRoot(dummyRoot);     // Set dummy node as root of the TreeView
+        mainFileBrowserTree.setShowRoot(false);     // Hide the root so the drives appear as roots
+        //mainFileBrowserTree.setRoot(root);
 
 
     }

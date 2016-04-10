@@ -31,8 +31,15 @@ class DraggableTreeCell<T> extends TreeCell<T> {
     public void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);
         try {
-            this.setText(this.getTreeItem().getValue().toString());
-            name = this.getText();
+            // This makes sure collapsed nodes don't appear in TreeView
+            if (empty) {
+                setText(null);
+                setGraphic(null);
+            }
+            else {
+                this.setText(this.getTreeItem().getValue().toString());
+                name = this.getText();
+            }
         }
         catch (NullPointerException e){
         }

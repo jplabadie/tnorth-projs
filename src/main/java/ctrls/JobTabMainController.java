@@ -30,196 +30,101 @@ import java.util.ResourceBundle;
  *
  */
 public class JobTabMainController implements Initializable {
-    @FXML
-    private AnchorPane jobConfigTabAnchorPane;
-    @FXML
-    private TextArea jobManagerArgs;
-    @FXML
-    private Button outputDirButton;
-    @FXML
-    private TextField outputDirText;
-    @FXML
-    private Button refFastaPathButton;
-    @FXML
-    private TextField refFastaPathText;
-    @FXML
-    private ChoiceBox jobManagerChoice;
-    @FXML
-    private VBox alignerVbox;
-    @FXML
-    private TitledPane bwaSampTitledPane;
-    @FXML
-    private TitledPane bwaMemTitledPane;
-    @FXML
-    private TitledPane bowTieTitledPane;
-    @FXML
-    private TitledPane novoalignTitledPane;
-    @FXML
-    private TitledPane snapTitledPane;
-    @FXML
-    private Button startJobButton;
-    @FXML
-    private Button generateXML;
-    @FXML
-    private CheckBox bwaSampCheck;
-    @FXML
-    private CheckBox bwaMemCheck;
-    @FXML
-    private CheckBox bowtie2Check;
-    @FXML
-    private CheckBox novoalignCheck;
-    @FXML
-    private CheckBox snapCheck;
-    @FXML
-    private Button btnSaveSettings;
-    @FXML
-    private TextField altBwaSampQueue;
-    @FXML
-    private Button btnLoadSettings;
-    @FXML
-    private TextField altBwaSampPath;
-    @FXML
-    private TextField limitBwaSampMem;
-    @FXML
-    private TextField limitBwaSampCpu;
-    @FXML
-    private TextField limitBwaSampRuntime;
-    @FXML
-    private TitledPane aligner_options_pane;
-    @FXML
-    private TitledPane general_settings_pane;
-    @FXML
-    private TitledPane inputs_pane;
-    @FXML
-    private CheckBox useAltBwaMemVer;
-    @FXML
-    private TextField altBwaMemPath;
-    @FXML
-    private TextField altBwaMemQueue;
-    @FXML
-    private TextField limitBwaMemMem;
-    @FXML
-    private TextField limitBwaMemCpu;
-    @FXML
-    private TextField limitBwaMemRuntime;
-    @FXML
-    private CheckBox useAltNovoalignVer;
-    @FXML
-    private TextField altNovoalignPath;
-    @FXML
-    private TextField altNovoalignQueue;
-    @FXML
-    private TextField limitNovoalignMem;
-    @FXML
-    private TextField limitNovoalignCpu;
-    @FXML
-    private TextField limitNovoalignRuntime;
-    @FXML
-    private CheckBox useAltSnapVer;
-    @FXML
-    private TextField altSnapPath;
-    @FXML
-    private TextField altSnapQueue;
-    @FXML
-    private TextField limitSnapMem;
-    @FXML
-    private TextField limitSnapCpu;
-    @FXML
-    private TextField limitSnapRuntime;
-    @FXML
-    private CheckBox useAltBowTieVer;
-    @FXML
-    private TextField altBowTiePath;
-    @FXML
-    private TextField altBowTieQueue;
-    @FXML
-    private TextField limitBowTieMem;
-    @FXML
-    private TextField limitBowTieCpu;
-    @FXML
-    private TextField limitBowTieRuntime;
-    @FXML
-    private TextField jobManagerQueue;
-    @FXML
-    private TextField GATKPath;
-    @FXML
-    private TextField GATKArguments;
-    @FXML
-    private TextField GATKQueue;
-    @FXML
-    private TextField GATKMemory;
-    @FXML
-    private TextField GATKCPU;
-    @FXML
-    private TextField GATKRuntime;
-    @FXML
-    private TextField solPath;
-    @FXML
-    private TextField solArguments;
-    @FXML
-    private TextField solQueue;
-    @FXML
-    private TextField solMemory;
-    @FXML
-    private TextField solCPU;
-    @FXML
-    private TextField solRuntime;
-    @FXML
-    private TextField varPath;
-    @FXML
-    private TextField varArguments;
-    @FXML
-    private TextField varQueue;
-    @FXML
-    private TextField varCPU;
-    @FXML
-    private TextField varMemory;
-    @FXML
-    private TextField varRuntime;
-    @FXML
-    private TextField SAMPath;
-    @FXML
-    private TextField SAMArguments;
-    @FXML
-    private TextField SAMQueue;
-    @FXML
-    private TextField SAMCPU;
-    @FXML
-    private TextField SAMMemory;
-    @FXML
-    private TextField SAMRuntime;
-    @FXML
-    private TitledPane snp_caller_options_pane;
-    @FXML
-    private CheckBox cbGATK;
-    @FXML
-    private CheckBox cbSolSNP;
-    @FXML
-    private CheckBox cbVarScan;
-    @FXML
-    private CheckBox cbSAMTools;
-    @FXML
-    private TitledPane filter_options_pane;
-    @FXML
-    private CheckBox optionsOutputMatrix;
-    @FXML
-    private CheckBox optionsSkip;
-    @FXML
-    private TextField inputPath;
-    @FXML
-    private TextField inputRead;
-    @FXML
-    private TextField inputGenomes;
-    @FXML
-    private TextField inputSAM;
-    @FXML
-    private TextField inputVCF;
-    @FXML
-    private TextField inputNUCMER;
-    @FXML
-    private TextField inputDelta;
-    @FXML
-    private CheckBox enableAdvNucmerButton;
+    @FXML    private AnchorPane jobConfigTabAnchorPane;
+    @FXML    private TextArea jobManagerArgs;
+    @FXML    private Button outputDirButton;
+    @FXML    private TextField outputDirText;
+    @FXML    private Button refFastaPathButton;
+    @FXML    private TextField refFastaPathText;
+    @FXML    private ChoiceBox jobManagerChoice;
+    @FXML    private VBox alignerVbox;
+    @FXML    private TitledPane bwaSampTitledPane;
+    @FXML    private TitledPane bwaMemTitledPane;
+    @FXML    private TitledPane bowTieTitledPane;
+    @FXML    private TitledPane novoalignTitledPane;
+    @FXML    private TitledPane snapTitledPane;
+    @FXML    private Button startJobButton;
+    @FXML    private Button generateXML;
+    @FXML    private CheckBox bwaSampCheck;
+    @FXML    private CheckBox bwaMemCheck;
+    @FXML    private CheckBox bowtie2Check;
+    @FXML    private CheckBox novoalignCheck;
+    @FXML    private CheckBox snapCheck;
+    @FXML    private Button btnSaveSettings;
+    @FXML    private TextField altBwaSampQueue;
+    @FXML    private Button btnLoadSettings;
+    @FXML    private TextField altBwaSampPath;
+    @FXML    private TextField limitBwaSampMem;
+    @FXML    private TextField limitBwaSampCpu;
+    @FXML    private TextField limitBwaSampRuntime;
+    @FXML    private TitledPane aligner_options_pane;
+    @FXML    private TitledPane general_settings_pane;
+    @FXML    private TitledPane inputs_pane;
+    @FXML    private CheckBox useAltBwaMemVer;
+    @FXML    private TextField altBwaMemPath;
+    @FXML    private TextField altBwaMemQueue;
+    @FXML    private TextField limitBwaMemMem;
+    @FXML    private TextField limitBwaMemCpu;
+    @FXML    private TextField limitBwaMemRuntime;
+    @FXML    private CheckBox useAltNovoalignVer;
+    @FXML    private TextField altNovoalignPath;
+    @FXML    private TextField altNovoalignQueue;
+    @FXML    private TextField limitNovoalignMem;
+    @FXML    private TextField limitNovoalignCpu;
+    @FXML    private TextField limitNovoalignRuntime;
+    @FXML    private CheckBox useAltSnapVer;
+    @FXML    private TextField altSnapPath;
+    @FXML    private TextField altSnapQueue;
+    @FXML    private TextField limitSnapMem;
+    @FXML    private TextField limitSnapCpu;
+    @FXML    private TextField limitSnapRuntime;
+    @FXML    private CheckBox useAltBowTieVer;
+    @FXML    private TextField altBowTiePath;
+    @FXML    private TextField altBowTieQueue;
+    @FXML    private TextField limitBowTieMem;
+    @FXML    private TextField limitBowTieCpu;
+    @FXML    private TextField limitBowTieRuntime;
+    @FXML    private TextField jobManagerQueue;
+    @FXML    private TextField GATKPath;
+    @FXML    private TextField GATKArguments;
+    @FXML    private TextField GATKQueue;
+    @FXML    private TextField GATKMemory;
+    @FXML    private TextField GATKCPU;
+    @FXML    private TextField GATKRuntime;
+    @FXML    private TextField solPath;
+    @FXML    private TextField solArguments;
+    @FXML    private TextField solQueue;
+    @FXML    private TextField solMemory;
+    @FXML    private TextField solCPU;
+    @FXML    private TextField solRuntime;
+    @FXML    private TextField varPath;
+    @FXML    private TextField varArguments;
+    @FXML    private TextField varQueue;
+    @FXML    private TextField varCPU;
+    @FXML    private TextField varMemory;
+    @FXML    private TextField varRuntime;
+    @FXML    private TextField SAMPath;
+    @FXML    private TextField SAMArguments;
+    @FXML    private TextField SAMQueue;
+    @FXML    private TextField SAMCPU;
+    @FXML    private TextField SAMMemory;
+    @FXML    private TextField SAMRuntime;
+    @FXML    private TitledPane snp_caller_options_pane;
+    @FXML    private CheckBox cbGATK;
+    @FXML    private CheckBox cbSolSNP;
+    @FXML    private CheckBox cbVarScan;
+    @FXML    private CheckBox cbSAMTools;
+    @FXML    private TitledPane filter_options_pane;
+    @FXML    private CheckBox optionsOutputMatrix;
+    @FXML    private CheckBox optionsSkip;
+    @FXML    private TextField inputPath;
+    @FXML    private TextField inputRead;
+    @FXML    private TextField inputGenomes;
+    @FXML    private TextField inputSAM;
+    @FXML    private TextField inputVCF;
+    @FXML    private TextField inputNUCMER;
+    @FXML    private TextField inputDelta;
+    @FXML    private CheckBox enableAdvNucmerButton;
 
     private NaspInputData naspData;
 

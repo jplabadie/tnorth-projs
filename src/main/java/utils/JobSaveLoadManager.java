@@ -11,7 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 /**
- * Creates a new XML file used for running a NASP job.
+ * Creates XML that represents a NASP job for saving or running.
  *
  * @author Jean-Paul Labadie
  */
@@ -24,7 +24,7 @@ public class JobSaveLoadManager {
 
     public JobSaveLoadManager(){}
 
-    /**\
+    /**
      *
       * @param xml_path the absolute path to the xml file we will use to create Java objects
      * @return a populated NaspInputData object with references to related classes
@@ -54,9 +54,8 @@ public class JobSaveLoadManager {
         try {
             JAXBContext context = JAXBContext.newInstance(NaspInputData.class);
             Marshaller m = context.createMarshaller();
-            //for pretty-print XML in JAXB
+            //for "pretty-print" XML in JAXB
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
 
             // Write to File
             m.marshal(input_for_conversion, new File(output_path));

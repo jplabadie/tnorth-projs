@@ -20,7 +20,7 @@ public class VisualizationBrowser extends Region {
     final WebView browser = new WebView();
     final WebEngine webEngine = browser.getEngine();
     
-    /* Method will start by loading a web page, adding the page to the scene, 
+    /* Method will main by loading a web page, adding the page to the scene,
     and applying the styles to the scene */
     public VisualizationBrowser() {
         //apply the styles

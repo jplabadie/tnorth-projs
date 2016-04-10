@@ -17,6 +17,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
 /**
+ *
+ * This class and its methods are not currently used by the GUI tool.
+ *
  * Provides an optional utility for securing user login to the GUI.
  * Also provides optional 2-way encryption of locally saved user authentication for remote services.
  * No guarantee is given with these optional functions, and security remains the responsibility of the user.

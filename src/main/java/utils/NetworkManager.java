@@ -165,7 +165,7 @@ public class NetworkManager {
 
         try{
             if(abs_remote_path != "") {
-                sftp_channel.cd("/"); //start from root
+                sftp_channel.cd("/"); //main from root
                 sftp_channel.cd(abs_remote_path); //cd to the absolute directory
                 log.info("cd " + abs_remote_path);
                 System.out.println("cd " + abs_remote_path + ": Failed. Insufficient Permissions?");
@@ -253,9 +253,9 @@ public class NetworkManager {
         try {
             assert exec_channel != null;
             exec_in = exec_channel.getInputStream();
-            exec_channel.setCommand("module load nasp"); //start the nasp tool
+            exec_channel.setCommand("module load nasp"); //main the nasp tool
             log.info("module load nasp");
-            exec_channel.setCommand("module load tnorth"); //start the tnorth tool [what does this do??]
+            exec_channel.setCommand("module load tnorth"); //main the tnorth tool [what does this do??]
             log.info("module load tnorth");
             exec_channel.setCommand("nasp --config " + job_XML_abs_path); //run nasp with the xml
             log.info("nasp --config " + job_XML_abs_path);

@@ -22,7 +22,7 @@ package ctrls;
     public class DragResizerController {
 
         /**
-         * The margin around the control that a user can click in to start resizing
+         * The margin around the control that a user can click in to main resizing
          * the region.
          */
         private static final int RESIZE_MARGIN = 5;

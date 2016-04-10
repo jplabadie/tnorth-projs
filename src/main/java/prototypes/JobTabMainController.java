@@ -245,6 +245,24 @@ public class JobTabMainController implements Initializable {
         //Output tooltip
         Tooltip outputTooltip = new Tooltip("Select your output directory");
         outputDirText.setTooltip(outputTooltip);
+        //JobManagerQueue tooltip
+        Tooltip jobQueueTooltip = new Tooltip("Jobs in Queue");
+        jobManagerQueue.setTooltip(jobQueueTooltip);
+        //Read Files tooltip
+        Tooltip inputReadTooltip = new Tooltip("Select your Read files");
+        inputRead.setTooltip(inputReadTooltip);
+        //SAM/BAM Tooltip
+        Tooltip samBamTooltip = new Tooltip("Input your SAM/BAM files here");
+        inputSAM.setTooltip(samBamTooltip);
+        //VCF Tooltip
+        Tooltip VCFTooltip = new Tooltip("Call your VCF files here");
+        inputVCF.setTooltip(VCFTooltip);
+        //NUCMER Tooltip
+        Tooltip NUCMERTooltip = new Tooltip("Add your advanced NUCMER settings here");
+        enableAdvNucmerButton.setTooltip(NUCMERTooltip);
+        //Job Manager Args Tooltip
+        Tooltip jobManagerArgsTooltip = new Tooltip("Additional arguments for Job Manager");
+        jobManagerArgs.setTooltip(jobManagerArgsTooltip);
         
         ListView[] listViewArray = {inputGenomes, inputRead, inputSAM, inputVCF};
         CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools, enableAdvNucmerButton};

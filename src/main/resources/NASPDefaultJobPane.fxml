@@ -5,50 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<<<<<<< HEAD
-<AnchorPane fx:id="jobConfigTabAnchorPane" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ctrls.JobTabMainController">
-    <VBox prefHeight="600.0" prefWidth="800.0" spacing="2.0">
-        <children>
-            <Accordion>
-                <panes>
-                    <TitledPane fx:id="general_settings_pane" animated="false" text="Job Management Options">
-                        <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="420.0" prefWidth="709.0">
-                                <children>
-                                    <ScrollPane layoutX="20.0" layoutY="20.0">
-                                        <HBox prefHeight="359.0" prefWidth="651.0">
-                                            <children>
-                                                <VBox prefHeight="359.0" prefWidth="186.0" spacing="5.0">
-                                                    <children>
-                                                        <Label prefHeight="24.0" prefWidth="182.0"
-                                                               text="Output Target dir:" AnchorPane.bottomAnchor="0.0"
-                                                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                               AnchorPane.topAnchor="0.0"/>
-                                                        <Label prefHeight="32.0" prefWidth="419.0"
-                                                               text="Job Management System:" wrapText="true"/>
-                                                        <Label prefHeight="32.0" prefWidth="420.0"
-                                                               text="Job Management Queue:" textAlignment="CENTER"
-                                                               wrapText="true"/>
-                                                        <Label contentDisplay="CENTER" prefHeight="31.0"
-                                                               prefWidth="242.0" text="Job Management Arguments:"
-                                                               textAlignment="CENTER" wrapText="true"/>
-                                                    </children>
-                                                    <padding>
-                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                    </padding>
-                                                </VBox>
-                                                <VBox prefHeight="359.0" prefWidth="330.0" spacing="5.0">
-                                                    <children>
-                                                        <TextField fx:id="outputDirText" prefHeight="25.0"
-                                                                   prefWidth="360.0"/>
-                                                        <ChoiceBox fx:id="jobManagerChoice"
-                                                                   nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0"
-                                                                   prefWidth="153.0"/>
-=======
->>>>>>> development
-
-<AnchorPane fx:id="jobConfigTabAnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prototypes.JobTabMainController">
+<AnchorPane fx:id="jobConfigTabAnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ctrls.JobTabMainController">
    <children>
        <VBox fillWidth="true" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" >
            <children>

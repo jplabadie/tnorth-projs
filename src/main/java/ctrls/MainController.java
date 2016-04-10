@@ -40,9 +40,9 @@ public class MainController implements Initializable{
     }
     /**
      *  On startup, creates a Handler which monitors the “Create New Job”
-     button in the main menu. When the “Create New Job” button in the
-     main menu is pressed, this Handler will add a new Tab to the
-     JobTabPane with its own Handler.
+     *  button in the main menu. When the “Create New Job” button in the
+     *  main menu is pressed, this Handler will add a new Tab to the
+     *  JobTabPane with its own Handler.
      */
     private void initCreateNewJobHandler() {
         createNewJob.setOnAction(

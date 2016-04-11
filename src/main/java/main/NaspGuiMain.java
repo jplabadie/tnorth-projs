@@ -6,8 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main method which defines the root of the JavaFX application
+ */
 public class NaspGuiMain extends Application {
-
+    /**
+     *
+     * @param primaryStage the root stage of the GUI
+     * @throws Exception multitude of exceptions due to resource loading issues
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("main/NASPGuiMainLayout.fxml"));

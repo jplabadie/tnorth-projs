@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -66,26 +67,29 @@
                            <content>
                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                    <children>
-                              <ScrollPane layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ScrollPane layoutX="18.6" layoutY="19.6" prefHeight="501.0" prefWidth="700.0" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                  <content>
-                                             <VBox spacing="15.0">
+                                             <VBox prefHeight="451.0" prefWidth="702.0" spacing="15.0">
                                                  <children>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
-                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:" />
+                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:">
+                                                   <font>
+                                                      <Font name="Calibri Bold" size="14.0" />
+                                                   </font></Label>
                                                              
                                                              <TextField fx:id="inputRefFastaPath" maxHeight="50.0" prefHeight="100.0" prefWidth="300.0" />
          
                                                          </children>
                                                      </HBox>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
                                                              <Label prefHeight="17.0" prefWidth="156.0" text="FASTA for External Genomes:" textAlignment="CENTER" />
                                                              <TextField fx:id="inputFastaExternalGen" maxHeight="100.0" prefHeight="50.0" prefWidth="300.0" />
          
                                                          </children>
                                                      </HBox>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
          
                                                              <Label prefHeight="17.0" prefWidth="156.0" text="Read Folder:" />
@@ -93,21 +97,21 @@
          
                                                          </children>
                                                      </HBox>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
                                                              <Label prefHeight="17.0" prefWidth="154.0" text="Pre-aligned SAM/BAM Path:" />
          
                                                              <ListView fx:id="inputSamBamFiles" maxHeight="100.0" prefHeight="50.0" prefWidth="300.0" />
                                                          </children>
                                                      </HBox>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
                                                              <Label prefHeight="17.0" prefWidth="154.0" text="Pre-called VCF files:" />
                                                              <ListView fx:id="inputVcfFiles" maxHeight="100.0" prefHeight="50.0" prefWidth="300.0" />
          
                                                          </children>
                                                      </HBox>
-                                                     <HBox spacing="100.0">
+                                                     <HBox prefHeight="126.0" prefWidth="600.0" spacing="100.0">
                                                          <children>
                                                              <Label alignment="CENTER" text="Advanced NUCMER settings:" textAlignment="CENTER" />
                                                              <VBox spacing="10.0">

@@ -73,10 +73,7 @@
                                                  <children>
                                                      <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
-                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:">
-                                                   <font>
-                                                      <Font name="Calibri Bold" size="14.0" />
-                                                   </font></Label>
+                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:"/>
                                                              
                                                              <TextField fx:id="inputRefFastaPath" maxHeight="50.0" prefHeight="100.0" prefWidth="300.0" />
          

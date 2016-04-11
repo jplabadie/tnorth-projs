@@ -14,178 +14,209 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import utils.JobSaveLoadManager;
-import xmlbinds.Files;
-import xmlbinds.NaspInputData;
-import xmlbinds.ObjectFactory;
-import xmlbinds.Options;
+import utils.UserConfigurationManager;
 import xmlbinds.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.ResourceBundle;
 
-
+/**
+ * Controller for the JobTab Pane.
+ *
+ * In future iterations, this controller and perhaps its FXML should be dynamically defined based on XML.
+ * This would allow a high degree of modularity.
+ */
 public class JobTabMainController implements Initializable {
-    @FXML    private AnchorPane jobConfigTabAnchorPane;
-    @FXML    private TextArea jobManagerArgs;
-    @FXML    private Button outputDirButton;
-    @FXML    private TextField outputDirText;
-    @FXML    private Button refFastaPathButton;
-    @FXML    private TextField refFastaPathText;
-    @FXML    private ChoiceBox jobManagerChoice;
-    @FXML    private VBox alignerVbox;
-    @FXML    private TitledPane bwaSampTitledPane;
-    @FXML    private TitledPane bwaMemTitledPane;
-    @FXML    private TitledPane bowTieTitledPane;
-    @FXML    private TitledPane novoalignTitledPane;
-    @FXML    private TitledPane snapTitledPane;
-    @FXML    private Button startJobButton;
-    @FXML    private Button generateXML;
-    @FXML    private CheckBox bwaSampCheck;
-    @FXML    private CheckBox bwaMemCheck;
-    @FXML    private CheckBox bowtie2Check;
-    @FXML    private CheckBox novoalignCheck;
-    @FXML    private CheckBox snapCheck;
-    @FXML    private Button btnSaveSettings;
-    @FXML    private TextField altBwaSampQueue;
-    @FXML    private Button btnLoadSettings;
-    @FXML    private TextField altBwaSampPath;
-    @FXML    private TextField limitBwaSampMem;
-    @FXML    private TextField limitBwaSampCpu;
-    @FXML    private TextField limitBwaSampRuntime;
-    @FXML    private TitledPane aligner_options_pane;
-    @FXML    private TitledPane general_settings_pane;
-    @FXML    private TitledPane inputs_pane;
-    @FXML    private CheckBox useAltBwaSampVer;
-    @FXML    private CheckBox useAltBwaMemVer;
-    @FXML    private TextField altBwaMemPath;
-    @FXML    private TextField altBwaMemQueue;
-    @FXML    private TextField limitBwaMemMem;
-    @FXML    private TextField limitBwaMemCpu;
-    @FXML    private TextField limitBwaMemRuntime;
-    @FXML    private CheckBox useAltNovoalignVer;
-    @FXML    private TextField altNovoalignPath;
-    @FXML    private TextField altNovoalignQueue;
-    @FXML    private TextField limitNovoalignMem;
-    @FXML    private TextField limitNovoalignCpu;
-    @FXML    private TextField limitNovoalignRuntime;
-    @FXML    private CheckBox useAltSnapVer;
-    @FXML    private TextField altSnapPath;
-    @FXML    private TextField altSnapQueue;
-    @FXML    private TextField limitSnapMem;
-    @FXML    private TextField limitSnapCpu;
-    @FXML    private TextField limitSnapRuntime;
-    @FXML    private CheckBox useAltBowTieVer;
-    @FXML    private TextField altBowTiePath;
-    @FXML    private TextField altBowTieQueue;
-    @FXML    private TextField limitBowTieMem;
-    @FXML    private TextField limitBowTieCpu;
-    @FXML    private TextField limitBowTieRuntime;
-    @FXML    private TextField jobManagerQueue;
-    @FXML    private TextField GATKPath;
-    @FXML    private TextField GATKArguments;
-    @FXML    private TextField GATKQueue;
-    @FXML    private TextField GATKMemory;
-    @FXML    private TextField GATKCPU;
-    @FXML    private TextField GATKRuntime;
-    @FXML    private TextField solPath;
-    @FXML    private TextField solArguments;
-    @FXML    private TextField solQueue;
-    @FXML    private TextField solMemory;
-    @FXML    private TextField solCPU;
-    @FXML    private TextField solRuntime;
-    @FXML    private TextField varPath;
-    @FXML    private TextField varArguments;
-    @FXML    private TextField varQueue;
-    @FXML    private TextField varCPU;
-    @FXML    private TextField varMemory;
-    @FXML    private TextField varRuntime;
-    @FXML    private TextField SAMPath;
-    @FXML    private TextField SAMArguments;
-    @FXML    private TextField SAMQueue;
-    @FXML    private TextField SAMCPU;
-    @FXML    private TextField SAMMemory;
-    @FXML    private TextField SAMRuntime;
-    @FXML    private TitledPane snp_caller_options_pane;
-    @FXML    private CheckBox cbGATK;
-    @FXML    private CheckBox cbSolSNP;
-    @FXML    private CheckBox cbVarScan;
-    @FXML    private CheckBox cbSAMTools;
-    @FXML    private TitledPane filter_options_pane;
-    @FXML    private CheckBox optionsOutputMatrix;
-    @FXML    private CheckBox optionsSkip;
-    @FXML    private TextField inputPath;
-    @FXML    private ListView inputRead;
-    @FXML    private ListView inputGenomes;
-    @FXML    private ListView inputSAM;
-    @FXML    private ListView inputVCF;
-    @FXML    private TextField inputNUCMER;
-    @FXML    private TextField inputDelta;
-    @FXML    private CheckBox enableAdvNucmerButton;
+
+    // Panes and other Containers
+    @FXML   private AnchorPane jobConfigTabAnchorPane;
+    @FXML   private TitledPane general_settings_pane;
+    @FXML   private TitledPane inputs_pane;
+    @FXML   private TitledPane aligner_options_pane;
+    @FXML   private VBox alignerVbox;
+    @FXML   private TitledPane bwaSampTitledPane;
+    @FXML   private TitledPane bwaMemTitledPane;
+    @FXML   private TitledPane bowTieTitledPane;
+    @FXML   private TitledPane novoalignTitledPane;
+    @FXML   private TitledPane snapTitledPane;
+    @FXML   private TitledPane snp_caller_options_pane;
     @FXML   private TitledPane gatkOptionsPane;
     @FXML   private TitledPane solSnpPane;
     @FXML   private TitledPane varScanPane;
     @FXML   private TitledPane samtoolsPane;
+    @FXML   private TitledPane filter_options_pane;
 
+    // JobManagerOptions Fields and Buttons
+    @FXML   private TextField jobOutputDir;
+    @FXML   private ChoiceBox<String> jobManagerSystem;
+    @FXML   private TextField jobManagerQueue;
+    @FXML   private TextArea jobManagerArgs;
+    @FXML   private Button outputDirButton;
 
+    // Inputs Fields and Buttons
+    @FXML   private TextField inputRefFastaPath;
+    @FXML   private TextField inputFastaExternalGen;
+    @FXML   private ListView<String> inputReadFiles;
+    @FXML   private ListView<?> inputSamBamFiles;
+    @FXML   private ListView<String> inputVcfFiles;
+    @FXML   private CheckBox cbInputAdvNucmer;
+    @FXML   private TextField inputNucmerArgs;
+    @FXML   private TextField inputDeltaArgs;
+
+    // Aligners Fields and Buttons
+    // Aligners Toggle Buttoms
+    @FXML   private CheckBox cbAlignersBwaSamp;
+    @FXML   private CheckBox cbAlignersBwaMem;
+    @FXML   private CheckBox cbAlignersBowtie;
+    @FXML   private CheckBox cbAlignersNovoalign;
+    @FXML   private CheckBox cbAlignersSnap;
+    // Aligners BWA SAMP/SE Fields and Buttons
+    @FXML   private CheckBox useAltBwaSampVer;
+    @FXML   private TextField altBwaSampPath;
+    @FXML   private TextField altBwaSampQueue;
+    @FXML   private TextField limitBwaSampMem;
+    @FXML   private TextField limitBwaSampCpu;
+    @FXML   private TextField limitBwaSampRuntime;
+    @FXML   private TextArea bwaSampArgs;
+    // Aligners BWA MEM Fields and Buttons
+    @FXML   private CheckBox useAltBwaMemVer;
+    @FXML   private TextField altBwaMemPath;
+    @FXML   private TextField altBwaMemQueue;
+    @FXML   private TextField limitBwaMemMem;
+    @FXML   private TextField limitBwaMemCpu;
+    @FXML   private TextField limitBwaMemRuntime;
+    @FXML   private TextArea bwaMemArgs;
+    // Aligners Bowtie Fields and Buttons
+    @FXML   private CheckBox useAltBowtieVer;
+    @FXML   private TextField altBowtiePath;
+    @FXML   private TextField altBowtieQueue;
+    @FXML   private TextField limitBowtieMem;
+    @FXML   private TextField limitBowtieCpu;
+    @FXML   private TextField limitBowtieRuntime;
+    @FXML   private TextArea bowtieArgs;
+    // Aligners Novoalign Fields and Buttons
+    @FXML   private CheckBox useAltNovoalignVer;
+    @FXML   private TextField altNovoalignPath;
+    @FXML   private TextField altNovoalignQueue;
+    @FXML   private TextField limitNovoalignMem;
+    @FXML   private TextField limitNovoalignCpu;
+    @FXML   private TextField limitNovoalignRuntime;
+    @FXML   private TextArea novoalignArgs;
+    // Aligners SNAP Fields and Buttons
+    @FXML   private CheckBox useAltSnapVer;
+    @FXML   private TextField altSnapPath;
+    @FXML   private TextField altSnapQueue;
+    @FXML   private TextField limitSnapMem;
+    @FXML   private TextField limitSnapCpu;
+    @FXML   private TextField limitSnapRuntime;
+    @FXML   private TextArea snapArgs;
+
+    // SNP Callers Buttons and Fields
+    // SNP Callers Toggle Buttons
+    @FXML   private CheckBox cbSnpCallerGATK;
+    @FXML   private CheckBox cbSnpCallerSolSNP;
+    @FXML   private CheckBox cbSnpCallerVarScan;
+    @FXML   private CheckBox cbSnpCallerSAMTools;
+    // SNP Callers GATK Fields and Buttons
+    @FXML   private TextField GATKPath;
+    @FXML   private TextField GATKArguments;
+    @FXML   private TextField GATKQueue;
+    @FXML   private TextField GATKMemory;
+    @FXML   private TextField GATKCPU;
+    @FXML   private TextField GATKRuntime;
+    @FXML   private TextArea gatkArgs;
+    // SNP Callers Sol Fields and Buttons
+    @FXML   private TextField solPath;
+    @FXML   private TextField solArguments;
+    @FXML   private TextField solQueue;
+    @FXML   private TextField solMemory;
+    @FXML   private TextField solCPU;
+    @FXML   private TextField solRuntime;
+    @FXML   private TextArea solArgs;
+    // SNP Callers VarScan Fields and Buttons
+    @FXML   private TextField varPath;
+    @FXML   private TextField varArguments;
+    @FXML   private TextField varQueue;
+    @FXML   private TextField varMemory;
+    @FXML   private TextField varCPU;
+    @FXML   private TextField varRuntime;
+    @FXML   private TextArea varArgs;
+    // SNP Callers SAM Fields and Buttons
+    @FXML   private TextField SAMPath;
+    @FXML   private TextField SAMArguments;
+    @FXML   private TextField SAMQueue;
+    @FXML   private TextField SAMMemory;
+    @FXML   private TextField SAMCPU;
+    @FXML   private TextField SAMRuntime;
+    @FXML   private TextArea samArgs;
+
+    // Outputs Fields and Buttons
+    @FXML   private CheckBox outputFindDuplicates;
+    @FXML   private CheckBox outputSkipDuplicateRegions;
+    @FXML   private CheckBox outputMaskLowQualityCalls;
+
+    // Save/Load/Start Buttons
+    @FXML   private Button btnStartJob;
+    @FXML   private Button btnSaveSettings;
+    @FXML   private Button btnLoadSettings;
+
+    private ResourceBundle resources;
+    /**
+     * This is the root Object which represents the Job XML
+     */
     private NaspInputData naspData;
 
-    public static final ObservableList data =
-            FXCollections.observableArrayList();
-
-    private ArrayList<File> selectedFiles;
     private DirectoryChooser dirChooser = new DirectoryChooser();
-    private CheckBox[] checkArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck};
-    private TitledPane[] panes = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane};
 
+    /**
+     * Initializes the new JobPane.
+     *
+     * @param fxmlFileLocation a URL representing the FXML layout to be used for this pane
+     * @param resources the ResourceBundle from which to call other resources
+     */
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
-        // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
-        TextField[] textFieldArray = {inputPath, outputDirText};
-        ListView[] listViewArray = {inputGenomes, inputRead, inputSAM, inputVCF};
-        CheckBox[] checkBoxArray = {bwaSampCheck, bwaMemCheck, bowtie2Check, novoalignCheck, snapCheck, cbGATK, cbSolSNP, cbVarScan, cbSAMTools, enableAdvNucmerButton};
-        TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane, snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
 
+        this.resources = resources;
+
+        // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
+        TextField[] textFieldArray = {inputFastaExternalGen, jobOutputDir};
+        ListView[] listViewArray = {inputReadFiles, inputSamBamFiles, inputSamBamFiles};
+        CheckBox[] checkBoxArray = {cbAlignersSnap,cbInputAdvNucmer,cbAlignersNovoalign,cbAlignersBowtie,
+                cbAlignersBwaMem,cbAlignersBwaSamp,cbSnpCallerGATK,cbSnpCallerSAMTools,cbSnpCallerSolSNP,
+                cbSnpCallerVarScan};
+        TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane,
+                snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
+
+        //
         initStartJobButton();
         // Drag and drop is initialized for all the fields that need it
         initializeCheckBoxToggle(checkBoxArray, checkPaneArray);
         initializeListViewDrag(listViewArray);
         initializeTextFieldDrag(textFieldArray);
-        saveSettings();
-        loadSettings();
         toggleCheckBoxes();
 
+        // Config file Candidate
+        // Define the options for observableArrayList
+        ObservableList items =FXCollections.observableArrayList(
+                "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*");
+        jobManagerSystem.setItems(items);
+        jobManagerSystem.getSelectionModel().select(0);
 
-
-
-        jobManagerChoice.setItems(FXCollections.observableArrayList(
-                "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*")
-        );
-        jobManagerChoice.getSelectionModel().select(0);
-
-        outputDirButton.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        File file = dirChooser.showDialog(outputDirButton.getContextMenu());
-                        if (file != null) {
-                            //action using non-null file input here
-                            try {
-                                outputDirText.setText(file.getCanonicalPath());
-                            } catch (IOException ioe) {
-                                ioe.printStackTrace();
-                            }
-                        }
-                    }
-                });
-
+        //Create a new NaspInputData Object which represents a blank job request
         naspData = new ObjectFactory().createNaspInputDataType();
     }
 
-    // This method calls the setListDragHandler for every ListView in the array passed to it
+    /**
+     * This method calls the setListDragHandler for every ListView in the given ArrayList
+     * @param listFields
+     */
     private void initializeListViewDrag (ListView[] listFields) {
         int currentListItemIndex = 0;
 
@@ -195,11 +226,16 @@ public class JobTabMainController implements Initializable {
             currentListItemIndex++;
         }
     }
-    // This method sets the drag functionality to a ListView
-    private void setListDragHandler (ListView view) {
+
+    /**
+     * Adds Drag-and-Drop functionality to the ListView
+     *
+     * @param list_view the ListView which will gain DnD
+     */
+    private void setListDragHandler (ListView list_view) {
         // Get the current items in the ListView passed in
-        final ObservableList listContents = view.getItems();
-        view.setOnDragDropped(new EventHandler<DragEvent>() {
+        final ObservableList listContents = list_view.getItems();
+        list_view.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -228,7 +264,7 @@ public class JobTabMainController implements Initializable {
             }
         });
 
-        view.setOnDragOver(new EventHandler<DragEvent>() {
+        list_view.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -240,6 +276,10 @@ public class JobTabMainController implements Initializable {
         });
     }
 
+    /**
+     * This method calls the setTextFieldDragHandler for every textField in the given ArrayList
+     * @param textFields
+     */
     private void initializeTextFieldDrag(TextField[] textFields) {
         int currentListItemIndex = 0;
 
@@ -249,6 +289,10 @@ public class JobTabMainController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param textField
+     */
     private void setTextFieldDragHandler(final TextField textField) {
 
         textField.setOnDragOver(new EventHandler<DragEvent>() {
@@ -272,7 +316,7 @@ public class JobTabMainController implements Initializable {
                 if (db.hasString()) {
                     String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
                     File file = new File(content);
-                    if (file.isDirectory()) {
+                    if (file.isDirectory() || file.isFile()) {
                         event.acceptTransferModes(TransferMode.ANY);
                         //System.out.println("Contents: " + content);
                         //textField.setText(content);
@@ -293,14 +337,48 @@ public class JobTabMainController implements Initializable {
 
     }
 
+    /**
+     *
+     */
+    private void initSaveButton(){
+        btnSaveSettings.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        saveFormState();
+                    }
+                });
+    }
+
+    /**
+     *
+     */
+    private void initLoadButton(){
+        btnLoadSettings.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        loadFormState(btnLoadSettings.getText());
+                    }
+                });
+    }
+
+    /**
+     *
+     */
     private void initStartJobButton() {
-        startJobButton.setOnAction(
+        btnStartJob.setOnAction(
                 new EventHandler<ActionEvent>() {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
                             saveFormState();
-                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("NASPJobMonitorPane.fxml"));
+                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
+
+                            // Testing only, remove from production builds
+                            AnchorPane test = (AnchorPane)resources.getObject("NASPJobMonitorPane.fxml");
+                            test.setVisible(true);
+
                             jobConfigTabAnchorPane.getChildren().clear();
                             jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
 
@@ -311,6 +389,9 @@ public class JobTabMainController implements Initializable {
                 });
     }
 
+    /**
+     *
+     */
     private void saveFormState(){
 
         ExternalApplications exapps = new ExternalApplications();
@@ -322,9 +403,15 @@ public class JobTabMainController implements Initializable {
         Files files = new Files();
         naspData.setFiles(files);
 
-        opts.setOutputFolder(outputDirText.getText());
-        opts.setJobSubmitter(jobManagerChoice.getValue().toString());
-        opts.setRunName("jp-"+ Calendar.DATE);
+        String ref_path = inputRefFastaPath.getText();
+        String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[1];
+        Reference ref = new Reference();
+        ref.setName(ref_name.substring(0, ref_name.indexOf(".")));
+        ref.setPath(ref_path);
+        opts.setReference(ref);
+        opts.setOutputFolder(jobOutputDir.getText());
+        opts.setJobSubmitter(jobManagerSystem.getValue().toString());
+        opts.setRunName( UserConfigurationManager.getUsername()+"_"+Calendar.DATE);
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();
@@ -339,6 +426,7 @@ public class JobTabMainController implements Initializable {
         bwa_samp_param.setMemRequested(limitBwaSampMem.getText());
         bwa_samp_param.setNumCPUs(limitBwaSampCpu.getText());
         bwa_samp_param.setWalltime(limitBwaSampRuntime.getText());
+        bwa_samp.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner bwa_mem = new Aligner();
         aligners.add(bwa_mem);
@@ -349,6 +437,7 @@ public class JobTabMainController implements Initializable {
         bwa_mem_param.setMemRequested(limitBwaMemMem.getText());
         bwa_mem_param.setNumCPUs(limitBwaMemCpu.getText());
         bwa_mem_param.setWalltime(limitBwaMemRuntime.getText());
+        bwa_mem.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner novo = new Aligner();
         aligners.add(novo);
@@ -359,6 +448,7 @@ public class JobTabMainController implements Initializable {
         novo_param.setMemRequested(limitNovoalignMem.getText());
         novo_param.setNumCPUs(limitNovoalignCpu.getText());
         novo_param.setWalltime(limitNovoalignRuntime.getText());
+        novo.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner snap = new Aligner();
         aligners.add(snap);
@@ -369,16 +459,18 @@ public class JobTabMainController implements Initializable {
         snap_param.setMemRequested(limitSnapMem.getText());
         snap_param.setNumCPUs(limitSnapCpu.getText());
         snap_param.setWalltime(limitSnapRuntime.getText());
+        snap.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner bow = new Aligner();
         aligners.add(bow);
         JobParameters bow_param = new JobParameters();
         bow.setJobParameters(bow_param);
-        bow.setPath(altBowTiePath.getText());
-        bow_param.setQueue(altBowTieQueue.getText());
-        bow_param.setMemRequested(limitBowTieMem.getText());
-        bow_param.setNumCPUs(limitBowTieCpu.getText());
-        bow_param.setWalltime(limitBowTieRuntime.getText());
+        bow.setPath(altBowtiePath.getText());
+        bow_param.setQueue(altBowtieQueue.getText());
+        bow_param.setMemRequested(limitBowtieMem.getText());
+        bow_param.setNumCPUs(limitBowtieCpu.getText());
+        bow_param.setWalltime(limitBowtieRuntime.getText());
+        bow.setAdditionalArgs(bwaSampArgs.getText());
 
         SNPCaller gatk = new SNPCaller();
         snpcallers.add(gatk);
@@ -434,12 +526,156 @@ public class JobTabMainController implements Initializable {
         ReadFolder read = new ReadFolder();
             files.setReadFolder(read);
 
-        alignment.setPath(inputPath.getText());
+        alignment.setPath(inputFastaExternalGen.getText());
         //read.setPath(inputRead.getItems().get(0).toString());
 
-        JobSaveLoadManager.jaxbObjectToXML(naspData, outputDirText.getText());
+        JobSaveLoadManager.jaxbObjectToXML(naspData, jobOutputDir.getText());
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("");
+        alert.setContentText("Your template was saved successfully");
+        alert.showAndWait();
 
     }
+
+    private void loadFormState(String save_file_path){
+
+        naspData = JobSaveLoadManager.jaxbXMLToObject(new File(save_file_path));
+
+        ExternalApplications exapps = naspData.getExternalApplications();
+        Options opts = naspData.getOptions();
+        Files files = naspData.getFiles();
+        Filters filters = opts.getFilters();
+
+        // Inputs
+
+        ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
+        inputVcfFiles.setItems(vcf);
+        ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
+        inputReadFiles.setItems(read);
+        ObservableList<String> assembly = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
+        inputReadFiles.setItems(read);
+
+        inputRefFastaPath.setText(opts.getReference().getPath());
+
+        jobOutputDir.setText(opts.getOutputFolder());
+        opts.setJobSubmitter(jobManagerSystem.getValue().toString());
+        opts.setRunName(UserConfigurationManager.getUsername()+"_"+ Calendar.DATE);
+
+        // aligner_options_pane
+        List<Aligner> aligners = exapps.getAligner();
+        List<SNPCaller> snpcallers = exapps.getSNPCaller();
+
+        for(Aligner aligner : aligners){
+            JobParameters job_params = aligner.getJobParameters();
+            String name = aligner.getName().toLowerCase();
+            String args = aligner.getAdditionalArgs();
+            String path = aligner.getPath();
+
+            if(name.contains("sampe")){
+                cbAlignersBwaSamp.setSelected(true);
+                altBwaSampPath.setText(path);
+                altBwaSampQueue.setText(job_params.getQueue());
+                limitBwaSampCpu.setText(job_params.getNumCPUs());
+                limitBwaSampMem.setText(job_params.getMemRequested());
+                limitBwaSampRuntime.setText(job_params.getWalltime());
+                bwaSampArgs.setText(args);
+            }
+            else if(name.contains("mem")){
+                cbAlignersBwaMem.setSelected(true);
+                altBwaMemPath.setText(path);
+                altBwaMemQueue.setText(job_params.getQueue());
+                limitBwaMemCpu.setText(job_params.getNumCPUs());
+                limitBwaMemMem.setText(job_params.getMemRequested());
+                limitBwaMemRuntime.setText(job_params.getWalltime());
+                bwaMemArgs.setText(args);
+            }
+            else if(name.contains("novo")){
+                cbAlignersNovoalign.setSelected(true);
+                altNovoalignPath.setText(path);
+                altNovoalignQueue.setText(job_params.getQueue());
+                limitNovoalignCpu.setText(job_params.getNumCPUs());
+                limitNovoalignMem.setText(job_params.getMemRequested());
+                limitNovoalignRuntime.setText(job_params.getWalltime());
+                novoalignArgs.setText(args);
+            }
+            else if(name.contains("snap")){
+                cbAlignersSnap.setSelected(true);
+                altSnapPath.setText(path);
+                altSnapQueue.setText(job_params.getQueue());
+                limitSnapCpu.setText(job_params.getNumCPUs());
+                limitSnapMem.setText(job_params.getMemRequested());
+                limitSnapRuntime.setText(job_params.getWalltime());
+                snapArgs.setText(args);
+            }
+            else if(name.contains("bow")){
+                cbAlignersBowtie.setSelected(true);
+                altBowtiePath.setText(path);
+                altBowtieQueue.setText(job_params.getQueue());
+                limitBowtieCpu.setText(job_params.getNumCPUs());
+                limitBowtieMem.setText(job_params.getMemRequested());
+                limitBowtieRuntime.setText(job_params.getWalltime());
+                bowtieArgs.setText(args);
+            }
+        }
+
+        for(SNPCaller caller: snpcallers){
+            JobParameters job_params = caller.getJobParameters();
+            String name = caller.getName().toLowerCase();
+            String args = caller.getAdditionalArgs();
+            String path = caller.getPath();
+            if(name.contains("gatk")){
+                cbSnpCallerGATK.setSelected(true);
+                GATKPath.setText(path);
+                GATKQueue.setText(job_params.getQueue());
+                GATKCPU.setText(job_params.getNumCPUs());
+                GATKMemory.setText(job_params.getMemRequested());
+                GATKRuntime.setText(job_params.getWalltime());
+                GATKArguments.setText(args);
+            }
+            else if(name.contains("sol")){
+                cbSnpCallerSolSNP.setSelected(true);
+                solPath.setText(path);
+                solQueue.setText(job_params.getQueue());
+                solCPU.setText(job_params.getNumCPUs());
+                solMemory.setText(job_params.getMemRequested());
+                solRuntime.setText(job_params.getWalltime());
+                solArgs.setText(args);
+            }
+            else if(name.contains("var")){
+                cbSnpCallerVarScan.setSelected(true);
+                varPath.setText(path);
+                varQueue.setText(job_params.getQueue());
+                varCPU.setText(job_params.getNumCPUs());
+                varMemory.setText(job_params.getMemRequested());
+                varRuntime.setText(job_params.getWalltime());
+                varArgs.setText(args);
+            }
+            else if(name.contains("sam")){
+                cbSnpCallerSAMTools.setSelected(true);
+                SAMPath.setText(path);
+                SAMQueue.setText(job_params.getQueue());
+                SAMCPU.setText(job_params.getNumCPUs());
+                SAMMemory.setText(job_params.getMemRequested());
+                SAMRuntime.setText(job_params.getWalltime());
+                SAMArguments.setText(args);
+            }
+        }
+
+        //output and filter settings
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("");
+        alert.setContentText("Your template was loaded successfully");
+        alert.showAndWait();
+    }
+
+    /**
+     *
+     * @param checkArray
+     * @param checkPanes
+     */
     private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
         for (int i = 0; i < checkArray.length; i++) {
             if (i < checkArray.length - 1) {
@@ -452,6 +688,11 @@ public class JobTabMainController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param checkBox
+     * @param checkPane
+     */
     private void setCheckboxToggle (final CheckBox checkBox, TitledPane checkPane) {
         //System.out.println("ID: " + checkBox.getId());
         final TitledPane correspondingPane = checkPane;
@@ -461,357 +702,30 @@ public class JobTabMainController implements Initializable {
                 if (checkBox.isSelected()) {
                     //System.out.println(checkBox.getId() + "Checkbox toggled");
                     if (checkBox.getId().equals("enableAdvNucmerButton")) { 
-                        inputNUCMER.setDisable(false);
-                        inputDelta.setDisable(false);
-
+                        cbInputAdvNucmer.setDisable(false);
+                        inputDeltaArgs.setDisable(false);
                     }
                     else {
                         correspondingPane.setDisable(false);
                         correspondingPane.setExpanded(true);
                     }
-
-
                 }
                 else if (!checkBox.isSelected()){
                     if (checkBox.getId().equals("enableAdvNucmerButton")) {
-                        inputNUCMER.setDisable(true);
-                        inputDelta.setDisable(true);
+                        cbInputAdvNucmer.setDisable(true);
+                        inputDeltaArgs.setDisable(true);
                     }
                     else {
                         correspondingPane.setDisable(true);
                         correspondingPane.setExpanded(false);
                     }
-
                 }
-
             }
         });
     }
 
 
-    /*
-        capturing users input for template saving functionality
-     */
-    private void saveSettings() {
-        btnSaveSettings.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
 
-                        final Hashtable<String, String> settings
-                                = new Hashtable<String, String>();
-
-                        //general_settings_pane
-                        settings.put("outputDirText", outputDirText.getText());
-                        settings.put("jobManagerChoice", jobManagerChoice.getValue().toString());
-                        settings.put("jobManagerQueue", jobManagerQueue.getText());
-                        settings.put("jobManagerArgs", jobManagerArgs.getText());
-
-                        // aligner_options_pane
-
-                        settings.put("altBwaSampPath", altBwaSampPath.getText());
-                        settings.put("altBwaSampQueue", altBwaSampQueue.getText());
-                        settings.put("limitBwaSampMem", limitBwaSampMem.getText());
-                        settings.put("limitBwaSampCpu", limitBwaSampCpu.getText());
-                        settings.put("limitBwaSampRuntime", limitBwaSampRuntime.getText());
-                        settings.put("altBwaMemPath", altBwaMemPath.getText());
-                        settings.put("altBwaMemQueue", altBwaMemQueue.getText());
-                        settings.put("limitBwaMemMem", limitBwaMemMem.getText());
-                        settings.put("limitBwaMemCpu", limitBwaMemCpu.getText());
-                        settings.put("limitBwaMemRuntime", limitBwaMemRuntime.getText());
-                        settings.put("altNovoalignPath", altNovoalignPath.getText());
-                        settings.put("altNovoalignQueue", altNovoalignQueue.getText());
-                        settings.put("limitNovoalignMem", limitNovoalignMem.getText());
-                        settings.put("limitNovoalignCpu", limitNovoalignCpu.getText());
-                        settings.put("limitNovoalignRuntime", limitNovoalignRuntime.getText());
-                        settings.put("altSnapPath", altSnapPath.getText());
-                        settings.put("altSnapQueue", altSnapQueue.getText());
-                        settings.put("limitSnapMem", limitSnapMem.getText());
-                        settings.put("limitSnapCpu", limitSnapCpu.getText());
-                        settings.put("limitSnapRuntime", limitSnapRuntime.getText());
-                        settings.put("altBowTiePath", altBowTiePath.getText());
-                        settings.put("altBowTieQueue", altBowTieQueue.getText());
-                        settings.put("limitBowTieMem", limitBowTieMem.getText());
-                        settings.put("limitBowTieCpu", limitBowTieCpu.getText());
-                        settings.put("limitBowTieRuntime", limitBowTieRuntime.getText());
-
-                        //snp_caller_options_pane
-                        settings.put("GATKPath", GATKPath.getText());
-                        settings.put("GATKArguments", GATKArguments.getText());
-                        settings.put("GATKQueue", GATKQueue.getText());
-                        settings.put("GATKMemory", GATKMemory.getText());
-                        settings.put("GATKCPU", GATKCPU.getText());
-                        settings.put("GATKRuntime", GATKRuntime.getText());
-                        settings.put("solPath", solPath.getText());
-                        settings.put("solArguments", solArguments.getText());
-                        settings.put("solQueue", solQueue.getText());
-                        settings.put("solMemory", solMemory.getText());
-                        settings.put("solCPU", solCPU.getText());
-                        settings.put("solRuntime", solRuntime.getText());
-                        settings.put("varPath", varPath.getText());
-                        settings.put("varArguments", varArguments.getText());
-                        settings.put("varQueue", varQueue.getText());
-                        settings.put("varMemory", varMemory.getText());
-                        settings.put("varCPU", varCPU.getText());
-                        settings.put("varRuntime", varRuntime.getText());
-                        settings.put("SAMPath", SAMPath.getText());
-                        settings.put("SAMArguments", SAMArguments.getText());
-                        settings.put("SAMQueue", SAMQueue.getText());
-                        settings.put("SAMMemory", SAMMemory.getText());
-                        settings.put("SAMCPU", SAMCPU.getText());
-                        settings.put("SAMRuntime", SAMRuntime.getText());
-
-                        //filter_options_pane
-                        if (optionsOutputMatrix.isSelected())
-                            settings.put("optionsOutputMatrix", "True");
-                        else
-                            settings.put("optionsOutputMatrix", "False");
-
-                        if (optionsSkip.isSelected())
-                            settings.put("optionsSkip", "True");
-                        else
-                            settings.put("optionsSkip", "False");
-
-                        //  inputs_pane
-                        settings.put("inputPath", inputPath.getText());
-                        //settings.put("inputGenomes", inputGenomes.getItems().toString());
-                        //settings.put("inputRead", inputRead.getText());
-                        //settings.put("inputSAM", inputSAM.getText());
-                        //settings.put("inputVCF", inputVCF.getText());
-                        settings.put("inputNUCMER", inputPath.getText());
-                        settings.put("inputDelta", inputDelta.getText());
-
-                        // saving all the inputs
-                        final Stage dialogStage = new Stage();
-
-                        FileChooser fileChooser = new FileChooser();
-                        fileChooser.setTitle("Save Template");
-                        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
-                        fileChooser.getExtensionFilters().add(extFilter);
-                        File file = fileChooser.showSaveDialog(dialogStage);
-                        if (file != null) {
-                            saveTempFile(settings.toString(), file);
-                        }
-                    }
-                });
-    }
-
-    /*
-        Loading the users input for loading template functionality
-     */
-    void loadSettings() {
-        btnLoadSettings.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                        try {
-                            final Stage dialogStage = new Stage();
-                            FileChooser fileChooser = new FileChooser();
-                            fileChooser.setTitle("Save Template");
-                            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
-                            fileChooser.getExtensionFilters().add(extFilter);
-                            File file = fileChooser.showOpenDialog(dialogStage);
-
-                            FileReader fileReader;
-                            try {
-                                fileReader = new FileReader(file);
-                            }
-                            catch(NullPointerException no_file_chosen){
-                                //The user declined to choose a saved template
-                                //thus we should quit the load action
-                                return;
-                            }
-                            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                            StringBuilder sb = new StringBuilder();
-                            if (file != null) {
-                                fileReader = new FileReader(file);
-                                bufferedReader = new BufferedReader(fileReader);
-
-                                String line;
-                                while ((line = bufferedReader.readLine()) != null) {
-                                    sb.append(line);
-                                }
-                                fileReader.close();
-
-                                String delims = "[,]";
-                                String[] entries = sb.toString().split(delims);
-                                entries[entries.length - 1] = entries[entries.length - 1].substring(0, entries[entries.length - 1].length() - 1);
-
-                                int j;
-                                // aligner_options_pane
-                                for (int i = 0; i < entries.length; i++) {
-                                    j = entries[i].indexOf("=");
-                                    if ("altBwaSampPath".equals(entries[i].substring(1, j)))
-                                        altBwaSampPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altBwaSampQueue".equals(entries[i].substring(1, j)))
-                                        altBwaSampQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaSampMem".equals(entries[i].substring(1, j)))
-                                        limitBwaSampMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaSampCpu".equals(entries[i].substring(1, j)))
-                                        limitBwaSampCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaSampRuntime".equals(entries[i].substring(1, j)))
-                                        limitBwaSampRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    if ("altBwaMemPath".equals(entries[i].substring(1, j)))
-                                        altBwaMemPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altBwaMemQueue".equals(entries[i].substring(1, j)))
-                                        altBwaMemQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaMemMem".equals(entries[i].substring(1, j)))
-                                        limitBwaMemMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaMemCpu".equals(entries[i].substring(1, j)))
-                                        limitBwaMemCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBwaMemRuntime".equals(entries[i].substring(1, j)))
-                                        limitBwaMemRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    if ("altNovoalignPath".equals(entries[i].substring(1, j)))
-                                        altNovoalignPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altNovoalignQueue".equals(entries[i].substring(1, j)))
-                                        altNovoalignQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitNovoalignMem".equals(entries[i].substring(1, j)))
-                                        limitNovoalignMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitNovoalignCpu".equals(entries[i].substring(1, j)))
-                                        limitNovoalignCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitNovoalignRuntime".equals(entries[i].substring(1, j)))
-                                        limitNovoalignRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altSnapPath".equals(entries[i].substring(1, j)))
-                                        altSnapPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altSnapQueue".equals(entries[i].substring(1, j)))
-                                        altSnapQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitSnapMem".equals(entries[i].substring(1, j)))
-                                        limitSnapMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitSnapCpu".equals(entries[i].substring(1, j)))
-                                        limitSnapCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitSnapRuntime".equals(entries[i].substring(1, j)))
-                                        limitSnapRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altBowTiePath".equals(entries[i].substring(1, j)))
-                                        altBowTiePath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("altBowTieQueue".equals(entries[i].substring(1, j)))
-                                        altBowTieQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBowTieMem".equals(entries[i].substring(1, j)))
-                                        limitBowTieMem.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBowTieCpu".equals(entries[i].substring(1, j)))
-                                        limitBowTieCpu.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("limitBowTieRuntime".equals(entries[i].substring(1, j)))
-                                        limitBowTieRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    // general_settings_pane
-
-                                    if ("outputDirText".equals(entries[i].substring(1, j)))
-                                        outputDirText.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("jobManagerChoice".equals(entries[i].substring(1, j)))
-                                        jobManagerChoice.setValue(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("jobManagerQueue".equals(entries[i].substring(1, j)))
-                                        jobManagerQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("jobManagerArgs".equals(entries[i].substring(1, j)))
-                                        jobManagerArgs.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    //snp_caller_options_pane
-                                    if ("GATKPath".equals(entries[i].substring(1, j)))
-                                        GATKPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("GATKArguments".equals(entries[i].substring(1, j)))
-                                        GATKArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("GATKQueue".equals(entries[i].substring(1, j)))
-                                        GATKQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("GATKMemory".equals(entries[i].substring(1, j)))
-                                        GATKMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("GATKCPU".equals(entries[i].substring(1, j)))
-                                        GATKCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("GATKRuntime".equals(entries[i].substring(1, j)))
-                                        GATKRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    if ("solPath".equals(entries[i].substring(1, j)))
-                                        solPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("solArguments".equals(entries[i].substring(1, j)))
-                                        solArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("solQueue".equals(entries[i].substring(1, j)))
-                                        solQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("solMemory".equals(entries[i].substring(1, j)))
-                                        solMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("solCPU".equals(entries[i].substring(1, j)))
-                                        solCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("solRuntime".equals(entries[i].substring(1, j)))
-                                        solRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    if ("varPath".equals(entries[i].substring(1, j)))
-                                        varPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("varArguments".equals(entries[i].substring(1, j)))
-                                        varArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("varQueue".equals(entries[i].substring(1, j)))
-                                        varQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("varMemory".equals(entries[i].substring(1, j)))
-                                        varMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("varCPU".equals(entries[i].substring(1, j)))
-                                        varCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("varRuntime".equals(entries[i].substring(1, j)))
-                                        varRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    if ("SAMPath".equals(entries[i].substring(1, j)))
-                                        SAMPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("SAMArguments".equals(entries[i].substring(1, j)))
-                                        SAMArguments.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("SAMQueue".equals(entries[i].substring(1, j)))
-                                        SAMQueue.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("SAMMemory".equals(entries[i].substring(1, j)))
-                                        SAMMemory.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("SAMCPU".equals(entries[i].substring(1, j)))
-                                        SAMCPU.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("SAMRuntime".equals(entries[i].substring(1, j)))
-                                        SAMRuntime.setText(entries[i].substring(j + 1, entries[i].length()));
-
-                                    //filter_options_pane
-
-                                    if ("optionsOutputMatrix".equals(entries[i].substring(1, j))) {
-                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
-                                            optionsOutputMatrix.setSelected(true);
-                                        else
-                                            optionsOutputMatrix.setSelected(false);
-                                    } else if ("optionsSkip".equals(entries[i].substring(1, j))) {
-                                        if (entries[i].substring(j + 1, entries[i].length()).equals("True"))
-                                            optionsSkip.setSelected(true);
-                                        else
-                                            optionsSkip.setSelected(false);
-                                    }
-
-                                    // inputs_pane
-                                    String genomes = "";
-
-                                    if ("inputPath".equals(entries[i].substring(1, j)))
-                                        inputPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    /*else if ("inputGenomes".equals(entries[i].substring(1, j))) {
-                                        genomes = entries[i].substring(j + 1, entries[i].length());
-                                        String delims2 = "[[]]";
-                                        String genomesEntries[] = genomes.split(delims);
-
-                                        for (int w = 0; w < genomesEntries.length; w++) {
-                                            data.add(genomesEntries[w].substring(1, genomesEntries[w].length()));
-                                        }
-                                        inputGenomes.setItems(data);
-
-                                    }*/
-                                    //inputGenomes.setItems(entries[i].substring(j + 1, entries[i].length()));
-                                    // else if ("inputRead".equals(entries[i].substring(1, j)))
-                                    // inputRead.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    // else if ("inputSAM".equals(entries[i].substring(1, j)))
-                                    // inputSAM.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    //else if ("inputVCF".equals(entries[i].substring(1, j)))
-                                    // inputVCF.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("inputNUCMER".equals(entries[i].substring(1, j)))
-                                        inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    else if ("inputDelta".equals(entries[i].substring(1, j)))
-                                        inputDelta.setText(entries[i].substring(j + 1, entries[i].length()));
-                                }
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                                alert.setTitle("Confirmation");
-                                alert.setHeaderText("");
-                                alert.setContentText("Your template was loaded successfully");
-                                alert.showAndWait();
-                            }
-                        }
-                        catch (IOException w) {
-                            w.printStackTrace();
-                        }
-                    }
-                });
-    }
 
     /*
         saving the file into specified location
@@ -844,7 +758,6 @@ public class JobTabMainController implements Initializable {
                             altBwaSampPath.setDisable(false);
                         else
                             altBwaSampPath.setDisable(true);
-
                     }
                 }
         );
@@ -857,20 +770,18 @@ public class JobTabMainController implements Initializable {
                             altBwaMemPath.setDisable(false);
                         else
                             altBwaMemPath.setDisable(true);
-
                     }
                 }
         );
 
-        useAltBowTieVer.setOnAction(
+        useAltBowtieVer.setOnAction(
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if (useAltBowTieVer.isSelected())
-                            altBowTiePath.setDisable(false);
+                        if (useAltBowtieVer.isSelected())
+                            altBowtiePath.setDisable(false);
                         else
-                            altBowTiePath.setDisable(true);
-
+                            altBowtiePath.setDisable(true);
                     }
                 }
         );
@@ -883,23 +794,22 @@ public class JobTabMainController implements Initializable {
                             altNovoalignPath.setDisable(false);
                         else
                             altNovoalignPath.setDisable(true);
-
                     }
                 }
         );
 
         useAltSnapVer.setOnAction(
-            new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (useAltSnapVer.isSelected())
-                        altSnapPath.setDisable(false);
-                    else
-                        altSnapPath.setDisable(true);
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (useAltSnapVer.isSelected())
+                            altSnapPath.setDisable(false);
+                        else
+                            altSnapPath.setDisable(true);
 
+                    }
                 }
-            }
-    );
+        );
     }
 
 }

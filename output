@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<NaspInputData>
+    <Options>
+        <OutputFolder>output</OutputFolder>
+        <RunName>jp-5</RunName>
+        <JobSubmitter>PBS/TORQUE</JobSubmitter>
+    </Options>
+    <Files>
+        <ReadFolder/>
+        <AssemblyFolder/>
+        <AlignmentFolder path="/scratch/dlemmer/MRSA252.fasta"/>
+    </Files>
+    <ExternalApplications>
+        <Aligner path="">
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </Aligner>
+        <Aligner path="">
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </Aligner>
+        <Aligner path="">
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </Aligner>
+        <Aligner path="">
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </Aligner>
+        <Aligner path="">
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </Aligner>
+        <SNPCaller path="">
+            <AdditionalArgs></AdditionalArgs>
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </SNPCaller>
+        <SNPCaller path="">
+            <AdditionalArgs></AdditionalArgs>
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </SNPCaller>
+        <SNPCaller path="">
+            <AdditionalArgs></AdditionalArgs>
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </SNPCaller>
+        <SNPCaller path="">
+            <AdditionalArgs></AdditionalArgs>
+            <JobParameters>
+                <MemRequested></MemRequested>
+                <NumCPUs></NumCPUs>
+                <Walltime></Walltime>
+                <Queue></Queue>
+            </JobParameters>
+        </SNPCaller>
+    </ExternalApplications>
+</NaspInputData>

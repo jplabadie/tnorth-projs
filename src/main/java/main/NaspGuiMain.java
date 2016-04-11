@@ -10,7 +10,7 @@ public class NaspGuiMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("NASPGuiMainLayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main/NASPGuiMainLayout.fxml"));
         primaryStage.setTitle("NASP GUI Prototype");
         primaryStage.setScene(new Scene(root, 1024, 800));
         primaryStage.show();

@@ -10,10 +10,11 @@ import org.junit.Test;
  * @author Jean-Paul Labadie
  */
 public class LogManagerTest {
+    private static LogManager lm;
 
     @Before
     public void setUp() throws Exception {
-
+        lm = new LogManager();
     }
 
     @After
@@ -33,7 +34,7 @@ public class LogManagerTest {
 
     @Test
     public void testInfo() throws Exception {
-
+        lm.info("Testing Info");
     }
 
     @Test

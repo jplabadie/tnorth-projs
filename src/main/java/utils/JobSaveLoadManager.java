@@ -58,10 +58,32 @@ public class JobSaveLoadManager {
             //for "pretty-print" XML in JAXB
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
+            //Ensure correct .xml tag is added
+            output_path = setFileTagsToXml(output_path);
             // Write to File
             m.marshal(input_for_conversion, new File(output_path));
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Helper method to add the .xml tag to the chosen output path
+     *
+     * @param path the user-provided path for output
+     * @return the newly edited path as a String
+     */
+    private static String setFileTagsToXml(String path){
+        String xmltag = ".xml";
+        int done = path.lastIndexOf(".xml");
+        int dot = path.lastIndexOf(".");
+
+        if(done>=0) return path;
+
+        else if(dot>=0){
+            path = path.substring(0,dot);
+            path += ".xml";
+        }
+        return path;
     }
 }

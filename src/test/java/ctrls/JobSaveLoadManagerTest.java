@@ -28,7 +28,7 @@ public class JobSaveLoadManagerTest {
         NaspInputData naspInputData = null;
         try {
 
-            File nip = new File(getClass().getClassLoader().getResource("NaspInputExample_Aspen.xml").getPath());
+            File nip = new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getPath());
 
             naspInputData = tempparser.jaxbXMLToObject(nip);
 

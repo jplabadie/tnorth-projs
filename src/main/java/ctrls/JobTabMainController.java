@@ -200,7 +200,7 @@ public class JobTabMainController implements Initializable {
         initStartJobButton();
         initSaveButton();
         initLoadButton();
-        
+
         // Drag and drop is initialized for all the fields that need it
         initializeCheckBoxToggle(checkBoxArray, checkPaneArray);
         initializeListViewDrag(listViewArray);

@@ -14,6 +14,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import utils.JobSaveLoadManager;
 import utils.UserConfigurationManager;
 import xmlbinds.*;
@@ -194,8 +196,11 @@ public class JobTabMainController implements Initializable {
         TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane,
                 snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
 
-        //
+        //Initialize Buttons
         initStartJobButton();
+        initSaveButton();
+        initLoadButton();
+        
         // Drag and drop is initialized for all the fields that need it
         initializeCheckBoxToggle(checkBoxArray, checkPaneArray);
         initializeListViewDrag(listViewArray);
@@ -358,7 +363,7 @@ public class JobTabMainController implements Initializable {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(final ActionEvent e) {
-                        loadFormState(btnLoadSettings.getText());
+                        loadFormState();
                     }
                 });
     }
@@ -539,9 +544,15 @@ public class JobTabMainController implements Initializable {
 
     }
 
-    private void loadFormState(String save_file_path){
+    private void loadFormState(){
+        final Stage dialogStage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Template");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(dialogStage);
 
-        naspData = JobSaveLoadManager.jaxbXMLToObject(new File(save_file_path));
+        naspData = JobSaveLoadManager.jaxbXMLToObject(file);
 
         ExternalApplications exapps = naspData.getExternalApplications();
         Options opts = naspData.getOptions();

@@ -1,7 +1,6 @@
 package utils;
 
 import com.jcraft.jsch.Logger;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
@@ -32,9 +31,8 @@ public class LogManager implements Logger{
     static{
         name.put(DEBUG, "DEBUG");
         name.put(INFO, "INFO");
-        name.put(WARN, "WARN");
-        name.put(ERROR, "ERROR");
-        name.put(FATAL, "FATAL");
+        name.put(WARN, "WARNING");
+        name.put(ERROR, "SEVERE");
     }
 
     public LogManager(){
@@ -106,22 +104,24 @@ public class LogManager implements Logger{
     }
 
     @SuppressWarnings("unchecked")
-    public void logJob(DispatchConfiguration dc) throws IOException {
+    public void logJob(DispatchConfiguration dc) {
         JSONObject obj = new JSONObject();
         obj.put("User Name", dc.getUsername());
-        obj.put("Job Name", dc.getJobname());
-
-        JSONArray company = new JSONArray();
-        company.add("Compnay: eBay");
-        company.add("Compnay: Paypal");
-        company.add("Compnay: Google");
-        obj.put("Company List", company);
+        obj.put("Job Name", dc.getJobName());
+        obj.put("Host",dc.getServer());
+        obj.put("Port",dc.getPort());
+        obj.put("XML Path",dc.getXmlPath());
+        obj.put("NaspInputData",dc.getData());
 
         // try-with-resources statement based on post comment below :)
-        try (FileWriter file = new FileWriter("/out\\joblog"+getTimestamp()+".txt")) {
+        String path = "out\\joblog\\"+getTimestamp()+".json";
+        try (FileWriter file = new FileWriter(path)) {
             file.write(obj.toJSONString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + obj);
+
+            info("Job Dispatch Configuration logged to file: "+ path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            error("Failed to log Job Dispatch Configuration to file: "+ path +"\nReason:\n"+e.getMessage());
         }
     }
 
@@ -132,7 +132,7 @@ public class LogManager implements Logger{
     private String getTimestamp(){
 
         Date date = new Date(System.currentTimeMillis());
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yy-HH:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH_mm_ss");
 
         return formatter.format(date);
     }

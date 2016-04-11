@@ -2,9 +2,6 @@ package utils;
 
 import xmlbinds.NaspInputData;
 
-import java.net.URL;
-import java.nio.file.Path;
-
 /**
  * Simple object for holding details regarding a job submission
  *
@@ -13,18 +10,16 @@ import java.nio.file.Path;
 public class DispatchConfiguration {
     private String username;
     private String jobname;
-    private URL server;
+    private String server;
     private int port;
     private NaspInputData data;
-    private String xml_name;
-    private Path xml_path;
+    private String xml_path;
 
-    public DispatchConfiguration(String username, String jobname, URL server, int port, NaspInputData data, String xml_name, Path xml_path) {
+    public DispatchConfiguration(String username, String jobname, String server, int port, NaspInputData data, String xml_path) {
         this.username = username;
         this.server = server;
         this.port = port;
         this.data = data;
-        this.xml_name = xml_name;
         this.xml_path = xml_path;
     }
 
@@ -36,11 +31,11 @@ public class DispatchConfiguration {
         this.username = username;
     }
 
-    public URL getServer() {
+    public String getServer() {
         return server;
     }
 
-    public void setServer(URL server) {
+    public void setServer(String server) {
         this.server = server;
     }
 
@@ -52,35 +47,19 @@ public class DispatchConfiguration {
         this.port = port;
     }
 
-    public NaspInputData getData() {
-        return data;
-    }
-
-    public void setData(NaspInputData data) {
-        this.data = data;
-    }
-
-    public String getXml_name() {
-        return xml_name;
-    }
-
-    public void setXml_name(String xml_name) {
-        this.xml_name = xml_name;
-    }
-
-    public Path getXml_path() {
+    public String getXmlPath() {
         return xml_path;
     }
 
-    public void setXml_path(Path xml_path) {
+    public void setXmlPath(String xml_path) {
         this.xml_path = xml_path;
     }
 
-    public String getJobname() {
+    public String getJobName() {
         return jobname;
     }
 
-    public void setJobname(String jobname) {
+    public void setJobName(String jobname) {
         this.jobname = jobname;
     }
 }

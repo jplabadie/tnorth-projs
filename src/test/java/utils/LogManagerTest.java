@@ -3,6 +3,8 @@ package utils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import xmlbinds.NaspInputData;
+import xmlbinds.ObjectFactory;
 
 /**
  * Unit tests for the LogManager utility class
@@ -44,6 +46,16 @@ public class LogManagerTest {
 
     @Test
     public void testError() throws Exception {
+
+    }
+
+    @Test
+    public void testLogJob() throws Exception {
+        ObjectFactory of = new ObjectFactory();
+        NaspInputData nid = of.createNaspInputDataType();
+        DispatchConfiguration dc = new DispatchConfiguration("Bob","TestJob","aspen.tgen.org"
+                ,22,nid, "/home/Bob");
+        lm.logJob(dc);
 
     }
 }

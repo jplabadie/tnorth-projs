@@ -26,7 +26,7 @@ public class VisualizationBrowser extends Region {
         //apply the styles
         getStyleClass().add("browser");
         // load the web page
-        String local_path = this.getClass().getResource("/flare_d3/tree.html").toExternalForm();
+        String local_path = this.getClass().getResource("/test/flare_d3/tree.html").toExternalForm();
         System.out.println(local_path);
         webEngine.load(local_path);
         //add the web view to the scene

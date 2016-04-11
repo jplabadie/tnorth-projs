@@ -50,7 +50,7 @@ public class MainController implements Initializable{
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
-                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("NASPDefaultJobPane.fxml"));
+                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
                             Tab new_tab = new Tab("New Tab");
                             new_tab.setContent(new_job_pane);
                             jobTabPane.getTabs().add(new_tab);

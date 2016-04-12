@@ -12,13 +12,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="createNewJob" mnemonicParsing="false" text="New Job" />
-                  <MenuItem mnemonicParsing="false" text="New Job from Template" />
+              <MenuItem fx:id="newJobBtn" mnemonicParsing="false" text="New Job" />
+                  <MenuItem fx:id="loadJobBtn" mnemonicParsing="false" text="Load Job as Template" />
+                  <MenuItem fx:id="settingsBtn" mnemonicParsing="false" text="Settings" />
+                  <MenuItem fx:id="quitBtn" mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="View">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="activeJobsBtn" mnemonicParsing="false" text="Active Jobs" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -39,13 +41,18 @@
       </TabPane>
    </center>
    <left>
-      <TreeView fx:id="mainFileBrowserTree" editable="true" opacity="0.48" prefHeight="566.0" prefWidth="248.0">
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
+      <VBox>
          <BorderPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </BorderPane.margin>
-      </TreeView>
+         <children>
+            <TreeView fx:id="remotePathBrowserTree" editable="true" prefWidth="200.0" />
+            <TreeView fx:id="localFileBrowserTree" editable="true" opacity="0.78" prefWidth="248.0">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </TreeView>
+         </children>
+      </VBox>
    </left>
 </BorderPane>

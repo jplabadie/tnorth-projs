@@ -10,9 +10,7 @@ import java.util.Vector;
  */
 public class NetworkManager {
 
-    private LogManager log;
     private Session session;
-    private JSch jsch;
     private ChannelSftp sftp_channel;
     private ChannelExec exec_channel;
     private BufferedReader sftp_in;
@@ -20,13 +18,14 @@ public class NetworkManager {
     private BufferedReader exec_in;
     private OutputStream exec_out;
 
+    private LogManager log = LogManager.getInstance();
+    private JSch jsch = new JSch();
+
     /**
      * Initialize the logger and create a new Jsch object
      */
     public NetworkManager() {
-        LogManager log = new LogManager();
         JSch.setLogger(log);
-        jsch = new JSch();
     }
 
     /**
@@ -247,7 +246,7 @@ public class NetworkManager {
      *
      * @param job_XML_abs_path the absolute path to the XML job file on the remote server
      */
-    public void runNaspJob(String job_XML_abs_path) {
+    public String runNaspJob(String job_XML_abs_path) {
 
         InputStream exec_in;
         try {
@@ -263,6 +262,8 @@ public class NetworkManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return "The ID of the started Job";
     }
 
 
@@ -299,7 +300,6 @@ public class NetworkManager {
             System.out.println("The directory does not exist or is not a directory.");
         }
     }
-
 }
 
 

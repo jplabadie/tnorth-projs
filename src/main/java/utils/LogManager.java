@@ -25,6 +25,8 @@ public class LogManager implements Logger{
     private static FileHandler fh;
     private static Hashtable<Integer, String> name=new Hashtable<>();
 
+    private static final LogManager instance = new LogManager();
+
     /**
      * Define log types
      */
@@ -35,7 +37,7 @@ public class LogManager implements Logger{
         name.put(ERROR, "SEVERE");
     }
 
-    public LogManager(){
+    private LogManager(){
 
         try {
             // This block configure the logger with handler and formatter
@@ -128,7 +130,7 @@ public class LogManager implements Logger{
      *
      * @return the current time as a formatted string
      */
-    private String getTimestamp(){
+    protected static String getTimestamp(){
 
         Date date = new Date(System.currentTimeMillis());
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH_mm_ss");
@@ -136,7 +138,7 @@ public class LogManager implements Logger{
         return formatter.format(date);
     }
 
-    private String getDate(){
+    protected static String getDate(){
 
         Date date = new Date(System.currentTimeMillis());
         DateFormat formatter = new SimpleDateFormat("dd-MMM-YYYY");
@@ -144,4 +146,7 @@ public class LogManager implements Logger{
         return formatter.format(date);
     }
 
+    public static LogManager getInstance() {
+        return instance;
+    }
 }

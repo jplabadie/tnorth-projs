@@ -5,7 +5,7 @@ package utils;
  *
  * @author Jean-Paul Labadie
  */
-public class UserConfigurationManager {
+public class UserSettingsManager {
 
     private static String username = "";
 

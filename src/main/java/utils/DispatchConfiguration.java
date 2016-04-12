@@ -1,7 +1,5 @@
 package utils;
 
-import xmlbinds.NaspInputData;
-
 /**
  * Simple object for holding details regarding a job submission
  *
@@ -9,18 +7,17 @@ import xmlbinds.NaspInputData;
  */
 public class DispatchConfiguration {
     private String username;
-    private String jobname;
+    private String timestamp;
     private String server;
     private int port;
-    private NaspInputData data;
     private String xml_path;
 
-    public DispatchConfiguration(String username, String jobname, String server, int port, NaspInputData data, String xml_path) {
+    public DispatchConfiguration(String username, String server, String timestamp, int port, String xml_path) {
         this.username = username;
         this.server = server;
         this.port = port;
-        this.data = data;
         this.xml_path = xml_path;
+        this.timestamp = timestamp;
     }
 
     public String getUsername() {
@@ -55,11 +52,11 @@ public class DispatchConfiguration {
         this.xml_path = xml_path;
     }
 
-    public String getJobName() {
-        return jobname;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setJobName(String jobname) {
-        this.jobname = jobname;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

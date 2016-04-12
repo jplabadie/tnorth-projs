@@ -1,10 +1,8 @@
 package utils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 
@@ -46,5 +44,18 @@ public class RemoteFileSystemManagerTest {
         for(Path x : paths){
             System.out.println(x.toString());
         }
+    }
+
+    @Test
+    public void testIsConnected()throws IOException{
+
+    }
+
+    @Test
+    public void testGetRootAsFile() throws IOException {
+        Path root = rfsm.getRootAsPath();
+        System.out.println(root.toString());
+        Assert.assertFalse(root.toFile().isFile());
+        Assert.assertEquals("/",root.toFile().getPath());
     }
 }

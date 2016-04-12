@@ -11,16 +11,18 @@ import javafx.scene.input.TransferMode;
  *
  */
 class DraggableTreeCell<T> extends TreeCell<T> {
-    private String name = "";
+    private String text = super.getText();
 
     public DraggableTreeCell() {
         setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+
                 Dragboard db = startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
+
                 // Store node ID in order to know what is dragged.
-                content.putString(event.getSource().toString());
+                content.putString(text);
                 db.setContent(content);
                 event.consume();
             }
@@ -38,7 +40,7 @@ class DraggableTreeCell<T> extends TreeCell<T> {
             }
             else {
                 this.setText(this.getTreeItem().getValue().toString());
-                name = this.getText();
+                text = this.getText();
             }
         }
         catch (NullPointerException e){

@@ -17,7 +17,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utils.JobSaveLoadManager;
-import utils.UserConfigurationManager;
+import utils.UserSettingsManager;
 import xmlbinds.*;
 
 import java.io.File;
@@ -318,28 +318,25 @@ public class JobTabMainController implements Initializable {
                 Dragboard db = event.getDragboard();
 
                 boolean success = false;
+
                 if (db.hasString()) {
-                    String content = db.getString().substring(db.getString().indexOf('\'') + 1, db.getString().length() - 1);
-                    File file = new File(content);
-                    if (file.isDirectory() || file.isFile()) {
-                        event.acceptTransferModes(TransferMode.ANY);
-                        //System.out.println("Contents: " + content);
-                        //textField.setText(content);
-                        //System.out.println("item: " + item.toString());
-                    }
-                    else {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Incorrect Input Format");
-                        alert.setHeaderText(null);
-                        alert.setContentText("The dragged input is not a file path.");
-                        alert.showAndWait();
-                    }
+                    String content = db.getString();
+                    System.out.println(content);
+
+                    event.acceptTransferModes(TransferMode.ANY);
+                    textField.setText(content);
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Incorrect Input Format");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The dragged input is not a file path.");
+                    alert.showAndWait();
                 }
                 event.setDropCompleted(success);
                 event.consume();
             }
         });
-
     }
 
     /**
@@ -416,7 +413,7 @@ public class JobTabMainController implements Initializable {
         opts.setReference(ref);
         opts.setOutputFolder(jobOutputDir.getText());
         opts.setJobSubmitter(jobManagerSystem.getValue().toString());
-        opts.setRunName( UserConfigurationManager.getUsername()+"_"+Calendar.DATE);
+        opts.setRunName( UserSettingsManager.getUsername()+"_"+Calendar.DATE);
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();
@@ -572,7 +569,7 @@ public class JobTabMainController implements Initializable {
 
         jobOutputDir.setText(opts.getOutputFolder());
         opts.setJobSubmitter(jobManagerSystem.getValue().toString());
-        opts.setRunName(UserConfigurationManager.getUsername()+"_"+ Calendar.DATE);
+        opts.setRunName(UserSettingsManager.getUsername()+"_"+ Calendar.DATE);
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();

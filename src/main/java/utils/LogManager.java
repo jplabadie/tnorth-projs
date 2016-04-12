@@ -111,7 +111,6 @@ public class LogManager implements Logger{
         obj.put("Host",dc.getServer());
         obj.put("Port",dc.getPort());
         obj.put("XML Path",dc.getXmlPath());
-        obj.put("NaspInputData",dc.getData());
 
         // try-with-resources statement based on post comment below :)
         String path = "out\\joblog\\"+getTimestamp()+".json";

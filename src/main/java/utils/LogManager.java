@@ -109,7 +109,7 @@ public class LogManager implements Logger{
     public void logJob(DispatchConfiguration dc) {
         JSONObject obj = new JSONObject();
         obj.put("User Name", dc.getUsername());
-        obj.put("Job Name", dc.getJobName());
+        obj.put("Timestamp", dc.getTimestamp());
         obj.put("Host",dc.getServer());
         obj.put("Port",dc.getPort());
         obj.put("XML Path",dc.getXmlPath());

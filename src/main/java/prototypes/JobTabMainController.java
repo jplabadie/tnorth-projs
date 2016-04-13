@@ -668,16 +668,13 @@ public class JobTabMainController implements Initializable {
 
                         //  inputs_pane
                         settings.put("inputPath", inputPath.getText());
-                        //settings.put("inputGenomes", inputGenomes.getItems().toString());
-                        //settings.put("inputRead", inputRead.getText());
-                        //settings.put("inputSAM", inputSAM.getText());
-                        //settings.put("inputVCF", inputVCF.getText());
                         settings.put("inputNUCMER", inputPath.getText());
                         settings.put("inputDelta", inputDelta.getText());
 
                         // saving all the inputs
                         final Stage dialogStage = new Stage();
 
+                        // dialog prompt for saving
                         FileChooser fileChooser = new FileChooser();
                         fileChooser.setTitle("Save Template");
                         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
@@ -699,9 +696,12 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
+
+                            // dialog prompt for loading
                             final Stage dialogStage = new Stage();
                             FileChooser fileChooser = new FileChooser();
                             fileChooser.setTitle("Save Template");
+                            // filter load files into only .dat
                             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
                             fileChooser.getExtensionFilters().add(extFilter);
                             File file = fileChooser.showOpenDialog(dialogStage);
@@ -917,6 +917,8 @@ public class JobTabMainController implements Initializable {
         }
     }
 
+
+    // toggle checkboxed to enable or disable textfields 
     private void toggleCheckBoxes()
     {
         useAltBwaSampVer.setOnAction(

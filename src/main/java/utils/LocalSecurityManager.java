@@ -27,6 +27,8 @@ import java.util.Base64;
 public class LocalSecurityManager
 {
 
+    private static LocalSecurityManager instance = new LocalSecurityManager();
+
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     // These constants may be changed without breaking existing hashes.
@@ -41,6 +43,9 @@ public class LocalSecurityManager
     public static final int HASH_SIZE_INDEX = 2;
     public static final int SALT_INDEX = 3;
     public static final int PBKDF2_INDEX = 4;
+
+    private static String username;
+    private static String password;
 
     private static KeyStore initKeyStore(String keystoreFileOrPath, String password) throws Exception {
 
@@ -57,6 +62,30 @@ public class LocalSecurityManager
         }
 
         return keyStore;
+    }
+
+    /**
+     *
+     * @return Singleton instance
+     */
+    public static LocalSecurityManager getInstance(){
+        return instance;
+    }
+
+    public static String getUsername(){
+        return username;
+    }
+
+    public static String getPassword(){
+        return password;
+    }
+
+    public static void setUsername(String usr){
+        username = usr;
+    }
+
+    public static void setPassword(String pass){
+        password = pass;
     }
 
     /**

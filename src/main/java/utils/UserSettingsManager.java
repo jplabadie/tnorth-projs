@@ -28,7 +28,9 @@ public class UserSettingsManager {
     private UserSettingsManager(){
         remote_settings = readSettings(local_save_dir+"remote_settings.json");
         general_settings = readSettings(local_save_dir+"general_settings.json");
-        username = (String) general_settings.get("Username");
+        if (general_settings != null) {
+            username = (String) general_settings.get("Username");
+        }
     }
 
     /**
@@ -41,21 +43,16 @@ public class UserSettingsManager {
 
     /**
      *
-     * @param settings_name
      * @return
      */
-    public static JSONObject getCurrentRemoteSettings(String settings_name){
-        if(settings_name == null) {
-            log.error("Failed to set Current Remote: given remote settings name was null");
-            return null;
-        }
-        else if (!remote_settings.containsKey(settings_name))
+    public static JSONObject getCurrentRemoteSettings(){
+        if (!remote_settings.containsKey("Current Remote"))
         {
             log.error("Failed to set Current Remote: specified remote settings not found");
             return null;
         }
-        log.info("Current Remote Settings successfully returned: " + settings_name);
-        return (JSONObject) remote_settings.get(settings_name);
+        log.info("Current Remote Settings successfully returned.");
+        return (JSONObject) remote_settings.get("Current Remote");
     }
 
     /**
@@ -125,7 +122,10 @@ public class UserSettingsManager {
             return;
         }
 
-        try{JSONObject json = (JSONObject) remote_settings.remove(settings_name);}
+        try{
+            JSONObject json = (JSONObject) remote_settings.remove(settings_name);
+            assert json != null;
+        }
         catch (Exception e){
             log.error("Failed to remove Remote Settings: given path was null");
             return;
@@ -184,5 +184,15 @@ public class UserSettingsManager {
      */
     public static String getUsername() {
         return username;
+    }
+
+    public static String getCurrentServerUrl() {
+
+        JSONObject current = getCurrentRemoteSettings();
+
+        if (current != null) {
+            return (String) current.get("URL");
+        }
+        return "";
     }
 }

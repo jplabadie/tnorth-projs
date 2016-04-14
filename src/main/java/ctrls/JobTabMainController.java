@@ -283,7 +283,7 @@ public class JobTabMainController implements Initializable {
 
     /**
      * This method calls the setTextFieldDragHandler for every textField in the given ArrayList
-     * @param textFields
+     * @param textFields an array of all textFields to be initialized
      */
     private void initializeTextFieldDrag(TextField[] textFields) {
         int currentListItemIndex = 0;
@@ -296,7 +296,7 @@ public class JobTabMainController implements Initializable {
 
     /**
      *
-     * @param textField
+     * @param textField a single TextField that will be initialized with a DnD handler
      */
     private void setTextFieldDragHandler(final TextField textField) {
 
@@ -340,7 +340,7 @@ public class JobTabMainController implements Initializable {
     }
 
     /**
-     *
+     * Initializes the Save button in the Bottom Menu
      */
     private void initSaveButton(){
         btnSaveSettings.setOnAction(
@@ -353,7 +353,7 @@ public class JobTabMainController implements Initializable {
     }
 
     /**
-     *
+     * Initializes the Load button in the Bottom Menu
      */
     private void initLoadButton(){
         btnLoadSettings.setOnAction(
@@ -366,7 +366,7 @@ public class JobTabMainController implements Initializable {
     }
 
     /**
-     *
+     * Initializes the Start Job button in the Bottom Menu
      */
     private void initStartJobButton() {
         btnStartJob.setOnAction(
@@ -531,20 +531,39 @@ public class JobTabMainController implements Initializable {
         alignment.setPath(inputFastaExternalGen.getText());
         //read.setPath(inputRead.getItems().get(0).toString());
 
-        JobSaveLoadManager.jaxbObjectToXML(naspData, jobOutputDir.getText());
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("");
-        alert.setContentText("Your template was saved successfully");
-        alert.showAndWait();
-
-    }
-
-    private void loadFormState(){
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Template");
+        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(dialogStage);
+
+        try {
+            JobSaveLoadManager.jaxbObjectToXML(naspData, file.getPath());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Successfully Saved");
+            alert.setHeaderText("");
+            alert.setContentText("Your job was saved successfully.");
+            alert.showAndWait();
+        }
+        catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Saving Failed");
+            alert.setHeaderText("");
+            alert.setContentText("Your job could not be saved!");
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     *
+     */
+    private void loadFormState(){
+        final Stage dialogStage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Saved Job");
+        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(dialogStage);
@@ -556,19 +575,22 @@ public class JobTabMainController implements Initializable {
         Files files = naspData.getFiles();
         Filters filters = opts.getFilters();
 
-        // Inputs
+        //Options
+        inputRefFastaPath.setText(opts.getReference().getPath());
 
+        // Inputs
         ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
         inputVcfFiles.setItems(vcf);
         ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
         inputReadFiles.setItems(read);
         ObservableList<String> assembly = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
-        inputReadFiles.setItems(read);
+        inputReadFiles.setItems(assembly);
 
         inputRefFastaPath.setText(opts.getReference().getPath());
 
         jobOutputDir.setText(opts.getOutputFolder());
-        opts.setJobSubmitter(jobManagerSystem.getValue().toString());
+        jobManagerSystem.getSelectionModel().select(opts.getJobSubmitter());
+        outputFindDuplicates.setSelected(opts.getReference().getFindDups().equals("true"));
         opts.setRunName(UserSettingsManager.getUsername()+"_"+ Calendar.DATE);
 
         // aligner_options_pane
@@ -672,10 +694,11 @@ public class JobTabMainController implements Initializable {
         }
 
         //output and filter settings
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText("");
-        alert.setContentText("Your template was loaded successfully");
+        alert.setContentText("Your template was successfully loaded.");
         alert.showAndWait();
     }
 

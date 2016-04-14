@@ -698,16 +698,13 @@ public class JobTabMainController implements Initializable {
 
                         //  inputs_pane
                         settings.put("inputPath", inputPath.getText());
-                        //settings.put("inputGenomes", inputGenomes.getItems().toString());
-                        //settings.put("inputRead", inputRead.getText());
-                        //settings.put("inputSAM", inputSAM.getText());
-                        //settings.put("inputVCF", inputVCF.getText());
                         settings.put("inputNUCMER", inputPath.getText());
                         settings.put("inputDelta", inputDelta.getText());
 
                         // saving all the inputs
                         final Stage dialogStage = new Stage();
 
+                        // dialog prompt for saving
                         FileChooser fileChooser = new FileChooser();
                         fileChooser.setTitle("Save Template");
                         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
@@ -729,9 +726,12 @@ public class JobTabMainController implements Initializable {
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
+
+                            // dialog prompt for loading
                             final Stage dialogStage = new Stage();
                             FileChooser fileChooser = new FileChooser();
-                            fileChooser.setTitle("Save Template");
+                            fileChooser.setTitle("Load Template");
+                            // filter load files into only .dat
                             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("dat files (*.dat)", "*.dat");
                             fileChooser.getExtensionFilters().add(extFilter);
                             File file = fileChooser.showOpenDialog(dialogStage);
@@ -889,24 +889,7 @@ public class JobTabMainController implements Initializable {
 
                                     if ("inputPath".equals(entries[i].substring(1, j)))
                                         inputPath.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    /*else if ("inputGenomes".equals(entries[i].substring(1, j))) {
-                                        genomes = entries[i].substring(j + 1, entries[i].length());
-                                        String delims2 = "[[]]";
-                                        String genomesEntries[] = genomes.split(delims);
 
-                                        for (int w = 0; w < genomesEntries.length; w++) {
-                                            data.add(genomesEntries[w].substring(1, genomesEntries[w].length()));
-                                        }
-                                        inputGenomes.setItems(data);
-
-                                    }*/
-                                    //inputGenomes.setItems(entries[i].substring(j + 1, entries[i].length()));
-                                    // else if ("inputRead".equals(entries[i].substring(1, j)))
-                                    // inputRead.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    // else if ("inputSAM".equals(entries[i].substring(1, j)))
-                                    // inputSAM.setText(entries[i].substring(j + 1, entries[i].length()));
-                                    //else if ("inputVCF".equals(entries[i].substring(1, j)))
-                                    // inputVCF.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("inputNUCMER".equals(entries[i].substring(1, j)))
                                         inputNUCMER.setText(entries[i].substring(j + 1, entries[i].length()));
                                     else if ("inputDelta".equals(entries[i].substring(1, j)))
@@ -947,6 +930,8 @@ public class JobTabMainController implements Initializable {
         }
     }
 
+
+    // toggle checkboxed to enable or disable textfields
     private void toggleCheckBoxes()
     {
         useAltBwaSampVer.setOnAction(

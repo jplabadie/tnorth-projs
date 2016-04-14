@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 public class RemoteFileSystemManager {
 
+    private static RemoteFileSystemManager instance = new RemoteFileSystemManager();
     private FileSystem sshfs;
     private LogManager log;
 
@@ -54,6 +56,9 @@ public class RemoteFileSystemManager {
             try (InputStream inputStream = path.getFileSystem().provider().newInputStream(path)) {
                 String fileContents = IOUtils.copyToString(inputStream);
             }
+        }
+        catch (UnknownHostException h){
+            log.error("Host could not be reached:" +"\n"+ h.getMessage());
         }
         // Try to start the FileSystem explicitly using the jsch-nio UnixSSH Provider
         catch(ProviderNotFoundException e){
@@ -114,5 +119,9 @@ public class RemoteFileSystemManager {
      */
     public boolean isConnected() {
         return  sshfs.isOpen();
+    }
+
+    public static RemoteFileSystemManager getInstance(){
+        return instance;
     }
 }

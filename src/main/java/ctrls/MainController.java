@@ -1,5 +1,6 @@
 package ctrls;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,12 +11,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import utils.JobSaveLoadManager;
 import utils.RemoteFileSystemManager;
+import xmlbinds.NaspInputData;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
@@ -28,13 +32,14 @@ public class MainController implements Initializable{
     @FXML    private MenuItem newJobBtn;
     @FXML    private MenuItem loadJobBtn;
     @FXML    private MenuItem settingsBtn;
-    @FXML    private MenuItem quitBtn;
+    @FXML    private MenuItem menuItemQuit;
     @FXML    private MenuItem activeJobsBtn;
+    @FXML    private AnchorPane centerPane;
     @FXML    private TabPane jobTabPane;
     @FXML    private TreeView<File> localFileBrowserTree;
     @FXML    private TreeView<Path> remotePathBrowserTree;
 
-    private RemoteFileSystemManager rfsm;
+    private static RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
 
     /**
      *
@@ -43,22 +48,66 @@ public class MainController implements Initializable{
      */
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources){
-
-        rfsm = new RemoteFileSystemManager();
-        try {
-            rfsm.init("jlabadie","C00kiemnstr!","aspen.tgen.org",22);
-            initLocalFileBrowserTree();
-            initRemotePathBrowserTree(rfsm);
-
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
+        LoginDialog temp;
+        while(true) {
+            temp = new LoginDialog();
+            temp.show();
+            if(rfsm.isConnected()) {
+                initLocalFileBrowserTree();
+                initRemotePathBrowserTree(rfsm);
+                temp.close();
+                break;
+            }
         }
-
+        //initMenuItemQuit();
         initCreateNewJobHandler();
+        //initUserSettingsPaneHandler();
 
         DragResizerController.makeResizable(localFileBrowserTree);
         DragResizerController.makeResizable(remotePathBrowserTree);
     }
+
+    private void initMenuItemQuit() {
+            menuItemQuit.setOnAction(
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(final ActionEvent e) {
+                            Platform.exit();
+                        }
+                    });
+    }
+
+    private void initMenuItemLoad(){
+
+        newJobBtn.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    //@Override
+                    public void handle(final ActionEvent e) {
+
+                        final Stage dialogStage = new Stage();
+                        FileChooser fileChooser = new FileChooser();
+                        fileChooser.setTitle("Load Template");
+                        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+                        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+                        fileChooser.getExtensionFilters().add(extFilter);
+                        File file = fileChooser.showOpenDialog(dialogStage);
+
+                        try {
+                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
+                            Tab new_tab = new Tab("New Tab");
+                            new_tab.setContent(new_job_pane);
+                            jobTabPane.getTabs().add(new_tab);
+
+                            NaspInputData naspData = JobSaveLoadManager.jaxbXMLToObject(file);
+
+
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
+    }
+
     /**
      *  On startup, creates a Handler which monitors the “Create New Job”
      *  button in the main menu. When the “Create New Job” button in the
@@ -75,6 +124,23 @@ public class MainController implements Initializable{
                             Tab new_tab = new Tab("New Tab");
                             new_tab.setContent(new_job_pane);
                             jobTabPane.getTabs().add(new_tab);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void initUserSettingsPaneHandler() {
+        settingsBtn.setOnAction(
+                new EventHandler<ActionEvent>() {
+                    //@Override
+                    public void handle(final ActionEvent e) {
+                        try {
+                            jobTabPane.setVisible(false);
+                            AnchorPane user_settings = FXMLLoader.load(getClass().getClassLoader().getResource("main/UserSettingsPane.fxml"));
+                            centerPane = user_settings;
+
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

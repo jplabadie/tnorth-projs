@@ -19,6 +19,7 @@ public class NetworkManager {
     private OutputStream exec_out;
 
     private LogManager log = LogManager.getInstance();
+    private static NetworkManager instance = new NetworkManager();
     private JSch jsch = new JSch();
 
     /**
@@ -299,6 +300,10 @@ public class NetworkManager {
         if (exec_status != -1){
             System.out.println("The directory does not exist or is not a directory.");
         }
+    }
+
+    public static NetworkManager getInstance(){
+        return instance;
     }
 }
 

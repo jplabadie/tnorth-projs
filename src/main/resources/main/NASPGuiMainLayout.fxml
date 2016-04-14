@@ -15,7 +15,7 @@
               <MenuItem fx:id="newJobBtn" mnemonicParsing="false" text="New Job" />
                   <MenuItem fx:id="loadJobBtn" mnemonicParsing="false" text="Load Job as Template" />
                   <MenuItem fx:id="settingsBtn" mnemonicParsing="false" text="Settings" />
-                  <MenuItem fx:id="quitBtn" mnemonicParsing="false" text="Quit" />
+                  <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">
@@ -32,13 +32,15 @@
       </MenuBar>
    </top>
    <center>
-      <TabPane fx:id="jobTabPane" prefHeight="600.0" prefWidth="800.0" tabMaxHeight="50.0" tabMaxWidth="2000.0" BorderPane.alignment="CENTER">
+       <AnchorPane fx:id="centerPane" prefHeight="600.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <TabPane fx:id="jobTabPane" prefHeight="600.0" prefWidth="800.0" tabMaxHeight="50.0" tabMaxWidth="2000.0">
          <tabs>
          </tabs>
          <BorderPane.margin>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </BorderPane.margin>
       </TabPane>
+       </AnchorPane>
    </center>
    <left>
       <VBox>

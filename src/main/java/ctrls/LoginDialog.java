@@ -5,7 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import utils.LocalSecurityManager;
+import utils.RemoteFileSystemManager;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 /**
@@ -38,10 +42,19 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
 
+        TextField host = new TextField();
+        host.setPromptText("Host");
+        TextField port = new TextField();
+        port.setText("22");
+
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(new Label("Password:"), 0, 1);
         grid.add(password, 1, 1);
+        grid.add(new Label("Host:"), 0, 2);
+        grid.add(host, 1, 2);
+        grid.add(new Label("Port:"), 0, 3);
+        grid.add(port, 1, 3);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
@@ -60,6 +73,17 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         // Convert the result to a username-password-pair when the login button is clicked.
         this.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
+                try {
+                    RemoteFileSystemManager.getInstance().init(username.getText(),password.getText(),
+                            host.getText(),Integer.valueOf(port.getText()));
+                } catch (URISyntaxException | IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Connection Failed");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The connection failed.");
+                    alert.showAndWait();
+
+                }
                 return new Pair<>(username.getText(), password.getText());
             }
             return null;
@@ -67,8 +91,9 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
 
         Optional<Pair<String, String>> result = this.showAndWait();
 
-        result.ifPresent(usernamePassword -> {
-            System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+        result.ifPresent((Pair<String, String> usernamePassword) -> {
+            LocalSecurityManager.setUsername(usernamePassword.getKey());
+            LocalSecurityManager.setPassword(usernamePassword.getKey());
         });
     }
 }

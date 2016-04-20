@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import utils.LogManager;
 
 /**
  * Main method which defines the root of the JavaFX application
@@ -19,11 +20,11 @@ public class NaspGuiMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
+
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main/NASPGuiMainLayout.fxml"));
         primaryStage.setTitle("NASP GUI Beta");
         Scene scene = new Scene(root, 1024, 800);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("css/default.css").toExternalForm());
-
 
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
@@ -38,10 +39,11 @@ public class NaspGuiMain extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
+        LogManager lm = LogManager.getInstance();
+        lm.info("started");
 
         Application.launch(args);
     }

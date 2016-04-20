@@ -15,6 +15,7 @@
               <MenuItem fx:id="newJobBtn" mnemonicParsing="false" text="New Job" />
                   <MenuItem fx:id="loadJobBtn" mnemonicParsing="false" text="Load Job as Template" />
                   <MenuItem fx:id="settingsBtn" mnemonicParsing="false" text="Settings" />
+                  <MenuItem fx:id="menuItemLogin" mnemonicParsing="false" text="Login" />
                   <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit" />
             </items>
           </Menu>

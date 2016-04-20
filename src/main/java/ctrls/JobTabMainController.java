@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
@@ -17,7 +16,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utils.JobSaveLoadManager;
-import utils.UserSettingsManager;
+import utils.NetworkManager;
 import xmlbinds.*;
 
 import java.io.File;
@@ -167,6 +166,8 @@ public class JobTabMainController implements Initializable {
     @FXML   private Button btnStartJob;
     @FXML   private Button btnSaveSettings;
     @FXML   private Button btnLoadSettings;
+
+    private File nasp_xml;
 
     private ResourceBundle resources;
     /**
@@ -373,20 +374,23 @@ public class JobTabMainController implements Initializable {
                 new EventHandler<ActionEvent>() {
                     //@Override
                     public void handle(final ActionEvent e) {
-                        try {
+                       // try {
                             saveFormState();
-                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
+                        File temp = new File(String.valueOf(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml")));
+                        NetworkManager.getInstance().upload(temp,"/home/jlabadie");
+                        NetworkManager.getInstance().runNaspJob("/home/jlabadie/NaspInputExample_Aspen.xml");
+//                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
+//
+//                            // Testing only, remove from production builds
+//                            AnchorPane test = (AnchorPane)resources.getObject("NASPJobMonitorPane.fxml");
+//                            test.setVisible(true);
+//
+//                            jobConfigTabAnchorPane.getChildren().clear();
+//                            jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
 
-                            // Testing only, remove from production builds
-                            AnchorPane test = (AnchorPane)resources.getObject("NASPJobMonitorPane.fxml");
-                            test.setVisible(true);
-
-                            jobConfigTabAnchorPane.getChildren().clear();
-                            jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
-
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
+//                        } catch (IOException e1) {
+//                            e1.printStackTrace();
+//                        }
                     }
                 });
     }
@@ -406,14 +410,15 @@ public class JobTabMainController implements Initializable {
         naspData.setFiles(files);
 
         String ref_path = inputRefFastaPath.getText();
-        String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[1];
+        String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[0];
         Reference ref = new Reference();
-        ref.setName(ref_name.substring(0, ref_name.indexOf(".")));
+        System.out.println();
+        ref.setName(ref_name);
         ref.setPath(ref_path);
         opts.setReference(ref);
         opts.setOutputFolder(jobOutputDir.getText());
         opts.setJobSubmitter(jobManagerSystem.getValue().toString());
-        opts.setRunName( UserSettingsManager.getUsername()+"_"+Calendar.DATE);
+        opts.setRunName( "test"+"_"+Calendar.DATE);
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();
@@ -537,6 +542,7 @@ public class JobTabMainController implements Initializable {
         fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
+
         File file = fileChooser.showOpenDialog(dialogStage);
 
         try {
@@ -579,19 +585,23 @@ public class JobTabMainController implements Initializable {
         inputRefFastaPath.setText(opts.getReference().getPath());
 
         // Inputs
-        ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
-        inputVcfFiles.setItems(vcf);
-        ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
-        inputReadFiles.setItems(read);
-        ObservableList<String> assembly = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
-        inputReadFiles.setItems(assembly);
-
+        try {
+            ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
+            inputVcfFiles.setItems(vcf);
+            ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
+            inputReadFiles.setItems(read);
+            ObservableList<String> assembly = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
+            inputReadFiles.setItems(assembly);
+        }
+        catch (Exception e){
+            System.out.println("?");
+        }
         inputRefFastaPath.setText(opts.getReference().getPath());
 
         jobOutputDir.setText(opts.getOutputFolder());
         jobManagerSystem.getSelectionModel().select(opts.getJobSubmitter());
         outputFindDuplicates.setSelected(opts.getReference().getFindDups().equals("true"));
-        opts.setRunName(UserSettingsManager.getUsername()+"_"+ Calendar.DATE);
+        opts.setRunName("test"+"_"+ Calendar.DATE);
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();

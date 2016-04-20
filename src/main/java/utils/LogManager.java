@@ -25,7 +25,7 @@ public class LogManager implements Logger{
     private static FileHandler fh;
     private static Hashtable<Integer, String> name=new Hashtable<>();
 
-    private static final LogManager instance = new LogManager();
+    private static LogManager instance = null;
 
     /**
      * Define log types
@@ -37,7 +37,7 @@ public class LogManager implements Logger{
         name.put(ERROR, "SEVERE");
     }
 
-    private LogManager(){
+    protected LogManager(){
 
         try {
             // This block configure the logger with handler and formatter
@@ -147,6 +147,9 @@ public class LogManager implements Logger{
     }
 
     public static LogManager getInstance() {
+        if(instance == null) {
+            instance = new LogManager();
+        }
         return instance;
     }
 }

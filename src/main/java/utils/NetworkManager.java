@@ -18,8 +18,9 @@ public class NetworkManager {
     private BufferedReader exec_in;
     private OutputStream exec_out;
 
+
+    private static NetworkManager instance = null;
     private LogManager log = LogManager.getInstance();
-    private static NetworkManager instance = new NetworkManager();
     private JSch jsch = new JSch();
 
     /**
@@ -66,7 +67,7 @@ public class NetworkManager {
             });
 
         } catch (JSchException e1) {
-            e1.printStackTrace();
+            log.error("Unable to initialize a new session: \n" + e1.getMessage());
         }
     }
 
@@ -77,26 +78,38 @@ public class NetworkManager {
      * @throws JSchException
      * @throws IOException
      */
-    public void openSession() throws JSchException, IOException {
+    public void openSession(){
 
-        session.connect();
+        try {
+            session.connect();
+        } catch (JSchException e) {
+            log.error("NM - Unable to Open the Session: \n" + e.getMessage());
+            return;
+        }
 
-        sftp_channel = (ChannelSftp)session.openChannel("sftp");
-        exec_channel = (ChannelExec)session.openChannel("exec");
-
-
-        if (sftp_channel != null) {
+        try {
+            sftp_channel = (ChannelSftp)session.openChannel("sftp");
+            exec_channel = (ChannelExec)session.openChannel("exec");
             sftp_channel.connect();
-        }
-        if (exec_channel != null) {
             exec_channel.connect();
+        } catch (JSchException e) {
+            log.error("NM - Unable to Open and Connect to SFTP/EXEC Channels: \n" + e.getMessage());
+            session.disconnect();
+            log.warn("NM - Session failed : Closing Session.");
+            return;
         }
 
-        sftp_in = new BufferedReader(new InputStreamReader(sftp_channel.getInputStream()));
-        sftp_out = sftp_channel.getOutputStream();
+        try {
+            sftp_in = new BufferedReader(new InputStreamReader(sftp_channel.getInputStream()));
+            sftp_out = sftp_channel.getOutputStream();
+            exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
+            exec_out = exec_channel.getOutputStream();
+        } catch (IOException e) {
+            log.error("NM - Unable to Get SFTP/EXEC I/O Streams: \n" + e.getMessage());
+            session.disconnect();
+            log.warn("NM - Session failed : Closing Session.");
+        }
 
-        exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
-        exec_out = exec_channel.getOutputStream();
     }
 
     /**
@@ -104,30 +117,37 @@ public class NetworkManager {
      */
     public void closeSession(){
 
+        try{
+            session.isConnected();
+        }
+        catch (NullPointerException e){
+            log.warn("NM - Could Not Close Session: the Session instance was null.");
+            return;
+        }
         if(session.isConnected()) {
 
             sftp_channel.disconnect();
             exec_channel.disconnect();
-
             sftp_channel = null;
             exec_channel = null;
+            log.info("NM - Session Channels Disconnected." );
 
             try {
                 sftp_in.close();
                 exec_in.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn("NM - Could Not Close Input Streams: \n" + e.getMessage());
             }
 
             try {
                 sftp_out.close();
                 exec_out.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn("NM - Could Not Close Output Streams: \n" + e.getMessage());
             }
 
-
             session.disconnect();
+            log.info("NM - Session Disconnected." );
         }
     }
 
@@ -148,18 +168,19 @@ public class NetworkManager {
     public void upload(File file, String abs_remote_path){
 
         if (sftp_channel == null){
-            log.error("Error: SFTP Channel is null. Cannot upload.");
+            log.error("NM - Upload Step Fail: SFTP Channel is null. Cannot upload.");
             return;
         }
         else if(file == null){
-            log.error("Error: File for SFTP Upload is null. Cannot upload.");
+            log.error("NM - Upload Step Fail: File for SFTP Upload is null. Cannot upload.");
             return;
         }
         try {
             testDirExists(abs_remote_path);
         }
         catch (IOException e){
-            log.error("Error: Connection failed or remote path is not a valid path for SFTP Upload. Cannot upload.");
+            log.error("NM - Upload Step Fail: Connection failed or remote path " +
+                    "is not a valid path for SFTP Upload. Cannot upload.");
             return;
         }
 
@@ -168,27 +189,29 @@ public class NetworkManager {
                 sftp_channel.cd("/"); //main from root
                 sftp_channel.cd(abs_remote_path); //cd to the absolute directory
                 log.info("cd " + abs_remote_path);
-                System.out.println("cd " + abs_remote_path + ": Failed. Insufficient Permissions?");
+                log.info("NM - Upload Step Successful: cd " + abs_remote_path);
             }
         }
         catch (SftpException e){
             //the directory cannot be visited
-            log.error("cd " + abs_remote_path +": Failed. Insufficient Permissions?");
-            System.out.println("cd " + abs_remote_path +": Failed. Insufficient Permissions?");
-            log.error(e.getMessage());
+            log.error("NM - Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
+                    + e.getMessage());
+
         }
 
         try {
-
             try {
                 sftp_channel.put(new FileInputStream(file), file.getName());
+                log.info("NM - Upload Step Successful: file uploaded to " + abs_remote_path );
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
-                System.out.println("Could not load File given into FileInputStream ");
+                log.error("NM - Upload Step Fail: File Not Found. " +
+                        "Insufficient Permissions? \n" + e.getMessage());
             }
 
         } catch (SftpException e) {
-            e.printStackTrace();
+            log.error("NM - Upload Step Fail: SFTP Failed. " +
+                    "Insufficient Permissions? \n" + e.getMessage());
         }
     }
 
@@ -249,18 +272,16 @@ public class NetworkManager {
      */
     public String runNaspJob(String job_XML_abs_path) {
 
-        InputStream exec_in;
         try {
             assert exec_channel != null;
-            exec_in = exec_channel.getInputStream();
-            exec_channel.setCommand("module load nasp"); //main the nasp tool
+            exec_channel.setCommand("module load nasp"); //main nasp tool
             log.info("module load nasp");
             exec_channel.setCommand("module load tnorth"); //main the tnorth tool [what does this do??]
             log.info("module load tnorth");
             exec_channel.setCommand("nasp --config " + job_XML_abs_path); //run nasp with the xml
             log.info("nasp --config " + job_XML_abs_path);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -303,7 +324,25 @@ public class NetworkManager {
     }
 
     public static NetworkManager getInstance(){
+
+        if(instance == null)
+            return new NetworkManager();
         return instance;
+    }
+
+    public boolean isInitialized() {
+        if(session == null)
+            return false;
+        try{
+            session.connect();
+            if(session.isConnected())
+                return true;
+            else
+                return false;
+        }
+        catch (JSchException e) {
+            return false;
+        }
     }
 }
 

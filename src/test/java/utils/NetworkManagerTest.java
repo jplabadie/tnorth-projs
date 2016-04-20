@@ -1,8 +1,9 @@
 package utils;
 
 import com.jcraft.jsch.Session;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -17,8 +18,8 @@ public class NetworkManagerTest {
 
     private static NetworkManager nm;
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         nm = new NetworkManager();
         String usr;
         String pwd;
@@ -37,7 +38,10 @@ public class NetworkManagerTest {
 
     }
 
-
+    @After
+    public void teardown(){
+        nm.closeSession();
+    }
 
 
     @Test
@@ -51,8 +55,8 @@ public class NetworkManagerTest {
 
     @Test
     public void testUpload() throws Exception {
-        File file = new File(getClass().getClassLoader().getResource("NASPInputExample_Aspen.xml").getPath());
-        nm.upload(file,"");
+        File file = new File(getClass().getClassLoader().getResource("test/NASPInputExample_Aspen.xml").toString());
+        nm.upload(file,"/home/jlabadie/test.xml");
     }
 
     @Test

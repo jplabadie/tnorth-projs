@@ -18,7 +18,7 @@ public class RemoteFileSystemManagerTest {
 
     @BeforeClass
     public static void init() throws Exception{
-        rfsm = new RemoteFileSystemManager();
+        rfsm = RemoteFileSystemManager.getInstance();
         rfsm.init("usrname", "password", "aspen.tgen.org", 22);
     }
 
@@ -57,5 +57,25 @@ public class RemoteFileSystemManagerTest {
         System.out.println(root.toString());
         Assert.assertFalse(root.toFile().isFile());
         Assert.assertEquals("/",root.toFile().getPath());
+    }
+
+    @Test
+    public void testGetRootAsPath() throws Exception {
+
+    }
+
+    @Test
+    public void testGetDirAsPath() throws Exception {
+
+    }
+
+    @Test
+    public void testIsConnected1() throws Exception {
+
+    }
+
+    @Test
+    public void testGetInstance() throws Exception {
+
     }
 }

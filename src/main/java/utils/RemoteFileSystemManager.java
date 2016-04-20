@@ -1,18 +1,14 @@
 package utils;
 
 import com.pastdev.jsch.DefaultSessionFactory;
-import com.pastdev.jsch.IOUtils;
 import com.pastdev.jsch.nio.file.UnixSshFileSystemProvider;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  *
@@ -23,20 +19,21 @@ import java.util.Map;
  */
 public class RemoteFileSystemManager {
 
-    private static RemoteFileSystemManager instance = new RemoteFileSystemManager();
+    private static RemoteFileSystemManager instance ;
     private FileSystem sshfs;
     private LogManager log;
 
+    private RemoteFileSystemManager(){
+        log = LogManager.getInstance();
+    }
     /**
      *
      * @param usrname a valid username on the remote service
      * @param pass the password for the username given
      * @param hosturl the url of the remote service
      * @param port the port to be used for ssh (typically = 22)
-     * @throws URISyntaxException
-     * @throws IOException
      */
-    public void init(String usrname, String pass, String hosturl, int port) throws URISyntaxException, IOException {
+    public void init(String usrname, String pass, String hosturl, int port) {
         String str = "";
 
         DefaultSessionFactory dsf = new DefaultSessionFactory(usrname, hosturl, port);
@@ -46,32 +43,39 @@ public class RemoteFileSystemManager {
         environment.put("defaultSessionFactory", dsf);
 
         //Start the session URI looking in the user's home directory
-        URI uri = new URI("ssh.unix://" + dsf.getUsername() + "@" + dsf.getHostname() + ":"
-                + dsf.getPort() + "/home/" + dsf.getUsername());
+        URI uri;
+        try {
+            uri = new URI("ssh.unix://" + dsf.getUsername() + "@" + dsf.getHostname() + ":"
+                    + dsf.getPort() + "/home/" + dsf.getUsername());
+        } catch (URISyntaxException e) {
+            log.error("RFSM - Init Failed: Cannot Initialize - Bad URI: \n" + e.getMessage());
+            return;
+        }
 
         // Try to start the FileSystem with the default providers
         try {
             sshfs = FileSystems.newFileSystem(uri, environment);
-            Path path = sshfs.getPath("/"); // refers to /home/joe/afile
-            try (InputStream inputStream = path.getFileSystem().provider().newInputStream(path)) {
-                String fileContents = IOUtils.copyToString(inputStream);
-            }
-        }
-        catch (UnknownHostException h){
-            log.error("Host could not be reached:" +"\n"+ h.getMessage());
-        }
-        // Try to start the FileSystem explicitly using the jsch-nio UnixSSH Provider
-        catch(ProviderNotFoundException e){
+        } catch (IOException e) {
+            log.warn("RFSM - Init Step Failed: Could Not Load Default Provider. \n" + e.getMessage());
+            log.info("RFSM - Init Step Recovery: Attempting to Load UNIX Provider.");
 
-            try{
-                UnixSshFileSystemProvider ussh = new UnixSshFileSystemProvider();
-                System.out.println(ussh.getScheme());
-                sshfs = FileSystems.newFileSystem(uri,environment,ussh.getClass().getClassLoader());
+            try {
+                FileSystems.getFileSystem(uri).close();
+            } catch (IOException ioe) {
+                log.info("RFSM - Optional Init Recovery Step Failed: " +
+                        "Cannot Close FileSystem - Never Initialized: \n" + ioe.getMessage());
             }
-            catch (Exception f)
-            {
-                System.out.println("Fuck!");
-                f.printStackTrace();
+
+            // Try to start the FileSystem explicitly using the jsch-nio UnixSSH Provider
+            try {
+                UnixSshFileSystemProvider ussh = new UnixSshFileSystemProvider();
+                sshfs = FileSystems.newFileSystem(uri, environment, ussh.getClass().getClassLoader());
+                log.info("RFSM - Init Recovery Successful.");
+
+            } catch (IOException ioe2) {
+                log.error("RFSM - Init Recovery Failed: Loading UNIX Provider Failed or Other Failure:" +
+                        " \n" + ioe2.getMessage());
+
             }
         }
     }
@@ -115,13 +119,47 @@ public class RemoteFileSystemManager {
 
     /**
      *
+     * @param dir the absolute path, as a String, of the desired directory
+     * @return a Path object representing the directory, or null
+     * @throws IOException
+     */
+    public Path getDirAsPath(String dir) throws IOException{
+        if(sshfs == null || !sshfs.isOpen()){
+            throw new ClosedDirectoryStreamException();
+        }
+
+        Path specific_path = sshfs.getPath(dir);
+
+        return specific_path;
+    }
+
+    /**
+     *
      * @return the state of the remote FileSystem, true for connected, false for disconnected
      */
     public boolean isConnected() {
-        return  sshfs.isOpen();
+        if(!sshfs.isOpen())
+            return false;
+        try {
+            sshfs.getPath("/").getFileSystem().isOpen();
+            return true;
+        }
+        catch(NullPointerException npe){
+            return false;
+        }
     }
 
     public static RemoteFileSystemManager getInstance(){
+        if(instance == null)
+            instance = new RemoteFileSystemManager();
         return instance;
+    }
+
+    public void close() {
+        try {
+            sshfs.close();
+        } catch (IOException e) {
+            log.info("FileSystemManager - Closing FileSystem Failed: \n" + e.getMessage());
+        }
     }
 }

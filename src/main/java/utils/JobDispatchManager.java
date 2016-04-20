@@ -1,9 +1,6 @@
 package utils;
 
-import com.jcraft.jsch.JSchException;
-
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Runs a finalized Job XML on NASP.
@@ -45,12 +42,7 @@ public class JobDispatchManager {
         log.logJob(dc);
 
         net_mgr.initSession(usrname,password,url,port);
-        try {
-            net_mgr.openSession();
-        } catch (JSchException | IOException e) {
-            log.error("Failed to open Session.");
-            e.printStackTrace();
-        }
+        net_mgr.openSession();
 
         net_mgr.upload(nasp_xml,remote_path);
 

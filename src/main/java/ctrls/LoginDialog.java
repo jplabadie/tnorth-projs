@@ -5,17 +5,18 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import utils.LocalSecurityManager;
+import utils.LogManager;
+import utils.NetworkManager;
 import utils.RemoteFileSystemManager;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * @author Jean-Paul Labadie
  */
 public class LoginDialog extends Dialog<Pair<String,String>>{
+
+    private RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
+    private NetworkManager nm = NetworkManager.getInstance();
+    LogManager log = LogManager.getInstance();
 
     /**
      * Creates a custom JavaFX Dialog for capturing a login
@@ -70,30 +71,35 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         // Request focus on the username field by default.
         Platform.runLater(() -> username.requestFocus());
 
-        // Convert the result to a username-password-pair when the login button is clicked.
-        this.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                try {
-                    RemoteFileSystemManager.getInstance().init(username.getText(),password.getText(),
-                            host.getText(),Integer.valueOf(port.getText()));
-                } catch (URISyntaxException | IOException e) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Connection Failed");
-                    alert.setHeaderText(null);
-                    alert.setContentText("The connection failed.");
-                    alert.showAndWait();
 
+        /**
+         * Convert the result to an Optional username-password-pair when the login button is clicked
+         */
+        this.setResultConverter((ButtonType dialogButton) -> {
+
+            if (dialogButton == loginButtonType) {
+
+                //make sure we aren't already connected, then try to connect with given credentials
+                try {
+                    rfsm.init(username.getText(), password.getText(),
+                            host.getText(), Integer.valueOf(port.getText()));
+                    nm.initSession(username.getText(), password.getText(),
+                            host.getText(), Integer.valueOf(port.getText()));
                 }
+                catch(RuntimeException re){
+                    log.error("Login Failed - Unable to connect or authenticate: \n"+ re.getMessage());
+                    return null;
+                }
+
+                if(!rfsm.isConnected() || !nm.isInitialized()){
+                    log.error("Login Failed: RFSM and/or NM failed to initialize.");
+                    return null;
+                }
+
                 return new Pair<>(username.getText(), password.getText());
             }
             return null;
         });
 
-        Optional<Pair<String, String>> result = this.showAndWait();
-
-        result.ifPresent((Pair<String, String> usernamePassword) -> {
-            LocalSecurityManager.setUsername(usernamePassword.getKey());
-            LocalSecurityManager.setPassword(usernamePassword.getKey());
-        });
     }
 }

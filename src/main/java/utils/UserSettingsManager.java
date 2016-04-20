@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,29 +16,42 @@ import java.io.IOException;
  */
 public class UserSettingsManager {
 
-    private static final UserSettingsManager instance = new UserSettingsManager();
-    private static final LogManager log = LogManager.getInstance();
+    private static UserSettingsManager instance;
+    private static LogManager log;
 
     private static JSONObject general_settings;
+    private static JSONObject usr_settings;
     private static JSONObject remote_settings;
 
-    private static String local_save_dir = "";
+    private static String general_config_dir ;
+    private static String usr_config_dir;
+    private static String remote_config_dir;
 
     private static String username;
 
     private UserSettingsManager(){
-        remote_settings = readSettings(local_save_dir+"remote_settings.json");
-        general_settings = readSettings(local_save_dir+"general_settings.json");
+
+        log = LogManager.getInstance();
+
+        general_config_dir = new File(getClass().getResource("/configs/general_settings.json").getPath()).toString();
+        remote_config_dir = new File(getClass().getResource("/configs/remote_settings.json").getPath()).toString();
+        System.out.println(general_config_dir);
+
+
+        general_settings = readSettings(general_config_dir);
+        remote_settings = readSettings(remote_config_dir);
         if (general_settings != null) {
-            username = (String) general_settings.get("Username");
+            usr_config_dir = (String)general_settings.get("usersettingsdir");
         }
     }
 
     /**
      *
-     * @return
+     * @return UserSettingsManager Singleton
      */
     public static UserSettingsManager getInstance(){
+        if(instance == null)
+            instance = new UserSettingsManager();
         return instance;
     }
 
@@ -75,7 +89,7 @@ public class UserSettingsManager {
         }
 
         general_settings.put("Current Remote",settings_name);
-        writeSettings(local_save_dir+"general_settings.json",general_settings);
+        writeSettings(general_config_dir +"general_settings.json",general_settings);
         log.info("Current Remote Settings successfully modified in runtime and local media: " + settings_name);
     }
 
@@ -101,12 +115,14 @@ public class UserSettingsManager {
         json.put("Job Manager", jobmngr);
 
         JSONArray dirs = new JSONArray();
-            dirs.add(remote_dirs);
 
+        for(String dir : remote_dirs){
+            dirs.add(dir);
+        }
         json.put("Remote Directories", dirs);
 
         remote_settings.put(settings_name,json);
-        writeSettings(local_save_dir+"remote_settings.json",remote_settings);
+        writeSettings(remote_config_dir ,remote_settings);
         log.info("Remote Settings successfully added to runtime and local media: " + settings_name);
     }
 
@@ -131,7 +147,7 @@ public class UserSettingsManager {
             return;
         }
 
-        writeSettings(local_save_dir+"remote_settings.json",remote_settings);
+        writeSettings(remote_config_dir ,remote_settings);
         log.info("Remote Settings successfully removed: " + settings_name);
     }
 
@@ -168,7 +184,7 @@ public class UserSettingsManager {
         JSONParser parser = new JSONParser();
 
         try {
-            Object obj = parser.parse(new FileReader(local_save_dir));
+            Object obj = parser.parse(new FileReader(path));
             log.info("Settings successfully loaded from local file: " + path);
             return (JSONObject) obj;
         } catch (Exception e) {

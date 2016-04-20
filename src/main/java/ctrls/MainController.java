@@ -14,7 +14,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import utils.JobSaveLoadManager;
+import utils.LogManager;
+import utils.NetworkManager;
 import utils.RemoteFileSystemManager;
 import xmlbinds.NaspInputData;
 
@@ -23,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable{
@@ -32,6 +36,7 @@ public class MainController implements Initializable{
     @FXML    private MenuItem newJobBtn;
     @FXML    private MenuItem loadJobBtn;
     @FXML    private MenuItem settingsBtn;
+    @FXML   private MenuItem menuItemLogin;
     @FXML    private MenuItem menuItemQuit;
     @FXML    private MenuItem activeJobsBtn;
     @FXML    private AnchorPane centerPane;
@@ -39,7 +44,9 @@ public class MainController implements Initializable{
     @FXML    private TreeView<File> localFileBrowserTree;
     @FXML    private TreeView<Path> remotePathBrowserTree;
 
-    private static RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
+    private static RemoteFileSystemManager rfsm;
+    private static LogManager log;
+    private static NetworkManager nm;
 
     /**
      *
@@ -48,18 +55,16 @@ public class MainController implements Initializable{
      */
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources){
-        LoginDialog temp;
-        while(true) {
-            temp = new LoginDialog();
-            temp.show();
-            if(rfsm.isConnected()) {
-                initLocalFileBrowserTree();
-                initRemotePathBrowserTree(rfsm);
-                temp.close();
-                break;
-            }
-        }
-        //initMenuItemQuit();
+
+        rfsm = RemoteFileSystemManager.getInstance();
+        log = LogManager.getInstance();
+        nm = NetworkManager.getInstance();
+
+        gracefulLogin();
+        initLogin();
+        initLocalFileBrowserTree();
+
+        initMenuItemQuit();
         initCreateNewJobHandler();
         //initUserSettingsPaneHandler();
 
@@ -67,16 +72,43 @@ public class MainController implements Initializable{
         DragResizerController.makeResizable(remotePathBrowserTree);
     }
 
-    private void initMenuItemQuit() {
-            menuItemQuit.setOnAction(
-                    new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(final ActionEvent e) {
-                            Platform.exit();
-                        }
-                    });
+    private void initLogin() {
+        menuItemLogin.setOnAction(
+                event -> gracefulLogin());
     }
 
+    private void gracefulLogin(){
+        LoginDialog ld = new LoginDialog();
+        Optional<Pair<String, String>> output = ld.showAndWait();
+        if (output.isPresent() && rfsm.isConnected()) {
+            initRemotePathBrowserTree(rfsm);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Login Failed");
+            alert.setHeaderText("Login Failed");
+            alert.setContentText("You are not logged in.");
+            alert.showAndWait();
+            log.warn("MainController: Login Failed");
+        }
+        ld.close();
+    }
+
+    private void initMenuItemQuit() {
+            menuItemQuit.setOnAction(
+                    event -> gracefulQuit());
+    }
+
+    private void gracefulQuit(){
+        log.info("Quiting: Application Closing By Request.");
+        rfsm.close();
+        nm.closeSession();
+        Platform.exit();
+    }
+
+    /**
+     *
+     */
     private void initMenuItemLoad(){
 
         newJobBtn.setOnAction(
@@ -131,6 +163,9 @@ public class MainController implements Initializable{
                 });
     }
 
+    /**
+     *
+     */
     private void initUserSettingsPaneHandler() {
         settingsBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -283,6 +318,9 @@ public class MainController implements Initializable{
         };
     }
 
+    /**
+     *
+     */
     private class RemoteTreeItem extends TreeItem<Path>{
         public RemoteTreeItem(){
 
@@ -336,8 +374,9 @@ public class MainController implements Initializable{
                     DirectoryStream<Path> ds = rfsm.getDirectory(f.toString());
                     ObservableList<TreeItem<Path>> children = FXCollections.observableArrayList();
                     for(Path path : ds){
-                        children.add(new TreeItem<>(path));
-                        System.out.println(path.toString());
+                        TreeItem<Path> temp = new TreeItem<>(path);
+                        temp.getChildren();
+                        children.add(temp);
                     }
                     return children;
 

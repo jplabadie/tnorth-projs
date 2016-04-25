@@ -1,4 +1,4 @@
 {"Settings":[
-  {"outputxmldir":"/jobs"},
-  {"usersettingsdir":"/usr"}
+  {"localsavedir":"/jobs"},
+  {"usrsettingssdir":"/usr"}
 ]}

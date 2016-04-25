@@ -7,17 +7,23 @@ package utils;
  */
 public class JobRecord {
     private String username;
-    private String timestamp;
     private String server;
     private int port;
-    private String xml_path;
+    private String remote_xml_path;
 
-    public JobRecord(String username, String server, String timestamp, int port, String xml_path) {
+    private String local_xml_path;
+
+    private String start_timestamp;
+    private String end_timestamp;
+    private boolean completed;
+
+    public JobRecord(String username, String server, int port, String remote_xml_path, String local_xml_path) {
         this.username = username;
         this.server = server;
         this.port = port;
-        this.xml_path = xml_path;
-        this.timestamp = timestamp;
+        this.remote_xml_path = remote_xml_path;
+        this.local_xml_path = local_xml_path;
+
     }
 
     public String getUsername() {
@@ -45,18 +51,42 @@ public class JobRecord {
     }
 
     public String getXmlPath() {
-        return xml_path;
+        return remote_xml_path;
     }
 
     public void setXmlPath(String xml_path) {
-        this.xml_path = xml_path;
+        this.remote_xml_path = xml_path;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getStart_timestamp() {
+        return start_timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setStart_timestamp(String start_timestamp) {
+        this.start_timestamp = start_timestamp;
+    }
+
+    public String getEnd_timestamp() {
+        return end_timestamp;
+    }
+
+    public void setEnd_timestamp(String end_timestamp) {
+        this.end_timestamp = end_timestamp;
+    }
+
+    public String getLocal_xml_path() {
+        return local_xml_path;
+    }
+
+    public void setLocal_xml_path(String local_xml_path) {
+        this.local_xml_path = local_xml_path;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

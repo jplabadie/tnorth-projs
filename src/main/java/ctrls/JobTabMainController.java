@@ -15,13 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import utils.JobSaveLoadManager;
-import utils.DefaultRemoteNetworking;
+import utils.*;
 import xmlbinds.*;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
@@ -168,6 +165,8 @@ public class JobTabMainController implements Initializable {
     @FXML   private Button btnLoadSettings;
 
     private File nasp_xml;
+    private JobRecord jobrec;
+    private RemoteNetUtil rem_network;
 
     private ResourceBundle resources;
     /**
@@ -196,6 +195,10 @@ public class JobTabMainController implements Initializable {
                 cbSnpCallerVarScan};
         TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane,
                 snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
+
+        AbstractRemoteNetUtilFactory arnuf = RemoteNetUtilFactoryMaker.getFactory();
+        rem_network = arnuf.createRemoteNetUtil();
+
 
         //Initialize Buttons
         initStartJobButton();
@@ -372,27 +375,36 @@ public class JobTabMainController implements Initializable {
     private void initStartJobButton() {
         btnStartJob.setOnAction(
                 new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                       // try {
-                            saveFormState();
-                        File temp = new File(String.valueOf(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml")));
-                        DefaultRemoteNetworking.getInstance().upload(temp,"/home/jlabadie");
-                        DefaultRemoteNetworking.getInstance().runNaspJob("/home/jlabadie/NaspInputExample_Aspen.xml");
-//                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
-//
-//                            // Testing only, remove from production builds
-//                            AnchorPane test = (AnchorPane)resources.getObject("NASPJobMonitorPane.fxml");
-//                            test.setVisible(true);
-//
-//                            jobConfigTabAnchorPane.getChildren().clear();
-//                            jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
 
-//                        } catch (IOException e1) {
-//                            e1.printStackTrace();
-//                        }
+                    public void handle(final ActionEvent e) {
+                        if(!gracefulJobStart()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Incorrect Input Format");
+                            alert.setHeaderText(null);
+                            alert.setContentText("The dragged input is not a file path.");
+                            alert.showAndWait();
+                        }
+
+
+                        //else open the job tab pane here
                     }
                 });
+    }
+
+    private boolean gracefulJobStart() {
+        saveFormState();
+        jobrec = new JobRecord(
+                UserSettingsManager.getUsername(),
+                UserSettingsManager.getCurrentServerUrl(),
+                UserSettingsManager.getCurrentServerPort(),
+                naspData.getOptions().getOutputFolder(),
+                UserSettingsManager.getDefaultLocalSaveDir()
+        );
+
+        File temp = new File(String.valueOf(getClass().getClassLoader().getResource(jobrec.getLocalXmlPath())));
+        rem_network.upload(temp, jobrec.getRemoteXmlPath());
+        rem_network.runNaspJob(jobrec.getRemoteXmlPath());
+        return true; //should also return false if any checks fail
     }
 
     /**
@@ -539,7 +551,7 @@ public class JobTabMainController implements Initializable {
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Template");
-        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+        fileChooser.setInitialDirectory(new File(UserSettingsManager.getDefaultLocalSaveDir()));
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
 
@@ -763,30 +775,6 @@ public class JobTabMainController implements Initializable {
                 }
             }
         });
-    }
-
-
-
-
-    /*
-        saving the file into specified location
-     */
-    private void saveTempFile(String content,File file){
-        try {
-            FileWriter fileWriter = null;
-            fileWriter = new FileWriter(file);
-            fileWriter.write(content);
-            fileWriter.close();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("");
-            alert.setContentText("Your template was saved successfully");
-            alert.showAndWait();
-        }
-        catch (IOException exception)
-        {
-            System.out.println("Error processing file: " + exception);
-        }
     }
 
     private void toggleCheckBoxes()

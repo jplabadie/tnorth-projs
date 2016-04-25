@@ -8,7 +8,7 @@ import java.util.Vector;
 /**
  * @author Jean-Paul Labadie
  */
-public class DefaultRemoteNetUtil implements RemoteNetworkUtil {
+public class DefaultRemoteNetUtil implements RemoteNetUtil {
 
     private Session session;
     private ChannelSftp sftp_channel;
@@ -324,6 +324,27 @@ public class DefaultRemoteNetUtil implements RemoteNetworkUtil {
         return exec_status != -1; //returns false only if the remote system returned -1
     }
 
+    public String getUsername(){
+        if(isInitialized())
+            return session.getUserName();
+        log.warn("RN: Cannot get username, session is not active.");
+        return null;
+    }
+
+    public int getPort(){
+        if(isInitialized())
+            return session.getPort();
+        log.warn("RN: Cannot get port, session is not active.");
+        return -1;
+    }
+
+    public String getHost(){
+        if(isInitialized())
+            return session.getHost();
+        log.warn("RN: Cannot get hostname, session is not active.");
+        return null;
+    }
+
     public boolean isInitialized() {
         if(session == null)
             return false;
@@ -338,6 +359,7 @@ public class DefaultRemoteNetUtil implements RemoteNetworkUtil {
             return false;
         }
     }
+
 }
 
 

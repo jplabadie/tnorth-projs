@@ -46,7 +46,7 @@ public class LogManager implements Logger{
             fh.setFormatter(formatter);
 
             // the following statement is used to log any messages
-            this.info("Logger initialized.");
+            this.info("LM: Logger initialized.");
 
         } catch (SecurityException | IOException e) {
             e.printStackTrace();

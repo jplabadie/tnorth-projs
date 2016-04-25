@@ -1,5 +1,6 @@
 package utils;
 
+
 import com.pastdev.jsch.DefaultSessionFactory;
 import com.pastdev.jsch.nio.file.UnixSshFileSystemProvider;
 
@@ -149,12 +150,19 @@ public class RemoteFileSystemManager {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static RemoteFileSystemManager getInstance(){
         if(instance == null)
             instance = new RemoteFileSystemManager();
         return instance;
     }
 
+    /**
+     *
+     */
     public void close() {
         try {
             sshfs.close();

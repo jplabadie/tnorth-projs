@@ -5,5 +5,5 @@ package utils;
  * @date 8/11/2015
  */
 public interface AbstractRemoteNetworkingFactory {
-    public DefaultRemoteNetworkingWrapper createJschWrapper();
+    public DefaultRemoteNetworking createJschWrapper();
 }

@@ -36,15 +36,27 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         grid.setVgap(10);
         //grid.setPadding(new Insets(20, 150, 10, 10));
 
+        // Enable/Disable login button depending on whether a username was entered.
+        Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
         TextField username = new TextField();
         username.setPromptText("Username");
+        // Do some validation (using the Java 8 lambda syntax).
+        username.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty());
+        });
+        username.setText(UserSettingsManager.getUsername());
+
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
 
         TextField host = new TextField();
         host.setPromptText("Host");
+        host.setText(UserSettingsManager.getCurrentServerUrl());
+
         TextField port = new TextField();
-        port.setText("22");
+        port.setText(String.valueOf(UserSettingsManager.getCurrentServerPort()));
 
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
@@ -55,14 +67,7 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         grid.add(new Label("Port:"), 0, 3);
         grid.add(port, 1, 3);
 
-        // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
-        loginButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
-        });
 
         this.getDialogPane().setContent(grid);
 

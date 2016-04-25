@@ -53,7 +53,6 @@ public class LogManager implements Logger{
         }
     }
 
-
     /**
      * Check what level of logging has been enabled.
      * !!! Unimplemented !!!
@@ -102,8 +101,6 @@ public class LogManager implements Logger{
     public void error(String message){
         log(ERROR,message);
     }
-
-
 
     /**
      *

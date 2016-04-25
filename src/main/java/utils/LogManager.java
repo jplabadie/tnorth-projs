@@ -106,10 +106,10 @@ public class LogManager implements Logger{
     }
 
     @SuppressWarnings("unchecked")
-    public void logJob(DispatchConfiguration dc) {
+    public void logJob(JobRecord dc) {
         JSONObject obj = new JSONObject();
         obj.put("User Name", dc.getUsername());
-        obj.put("Timestamp", dc.getTimestamp());
+        obj.put("Timestamp", dc.getStart_timestamp());
         obj.put("Host",dc.getServer());
         obj.put("Port",dc.getPort());
         obj.put("XML Path",dc.getXmlPath());

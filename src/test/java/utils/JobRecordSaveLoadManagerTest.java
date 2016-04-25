@@ -1,6 +1,5 @@
 package utils;
 
-import utils.JobSaveLoadManager;
 import xmlbinds.NaspInputData;
 
 import java.io.File;
@@ -14,7 +13,7 @@ public class JobRecordSaveLoadManagerTest {
 
     @org.junit.BeforeClass
     public static void onlyOnce(){
-        tempparser = new JobSaveLoadManager();
+        tempparser =JobSaveLoadManager.getInstance();
     }
 
     @org.junit.Test

@@ -53,8 +53,8 @@ public class LogManagerTest {
     public void testLogJob() throws Exception {
         ObjectFactory of = new ObjectFactory();
         NaspInputData nid = of.createNaspInputDataType();
-        DispatchConfiguration dc = new DispatchConfiguration("Bob","aspen.tgen.org",LogManager.getTimestamp()
-                ,22,"/home/Bob");
+        JobRecord dc = new JobRecord("Bob","aspen.tgen.org",
+                22,"/home/Bob","test");
         lm.logJob(dc);
 
     }

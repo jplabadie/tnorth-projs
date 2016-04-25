@@ -58,28 +58,37 @@ public class JobRecord {
         this.remote_xml_path = xml_path;
     }
 
-    public String getStart_timestamp() {
+    public String getStartTimestamp() {
         return start_timestamp;
     }
 
-    public void setStart_timestamp(String start_timestamp) {
+    public void setStartTimestamp(String start_timestamp) {
         this.start_timestamp = start_timestamp;
     }
 
-    public String getEnd_timestamp() {
+    public String getEndTimestamp() {
         return end_timestamp;
     }
 
-    public void setEnd_timestamp(String end_timestamp) {
+    public void setEndTimestamp(String end_timestamp) {
         this.end_timestamp = end_timestamp;
     }
 
-    public String getLocal_xml_path() {
+
+    public String getLocalXmlPath() {
         return local_xml_path;
     }
 
-    public void setLocal_xml_path(String local_xml_path) {
+    public void setLocalXmlPath(String local_xml_path) {
         this.local_xml_path = local_xml_path;
+    }
+
+    public String getRemoteXmlPath() {
+        return remote_xml_path;
+    }
+
+    public void setRemoteXmlPath(String remote_xml_path) {
+        this.remote_xml_path = remote_xml_path;
     }
 
     public boolean isCompleted() {

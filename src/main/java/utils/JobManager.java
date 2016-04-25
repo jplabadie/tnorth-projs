@@ -1,6 +1,10 @@
 package utils;
 
+import org.json.simple.JSONObject;
+
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Runs a finalized Job XML on NASP.
@@ -14,9 +18,7 @@ public class JobManager {
     private static JobSaveLoadManager jslm = JobSaveLoadManager.getInstance();
 
     private JobManager(){
-
     }
-
 
     /**
      *
@@ -29,9 +31,9 @@ public class JobManager {
      */
     public void startNewRemoteJob(File nasp_xml, String usrname, String password, String url, int port, String remote_path){
 
-        log.info("Remote Job Requested:");
+        log.info("JM: Remote Job Requested by "+ usrname +" at " +url+":"+port+" using "+remote_path);
         JobRecord dc = new JobRecord(usrname,url, port,remote_path,remote_path );
-        log.logJob(dc);
+        saveJobRecord(dc);
 
 //        net_mgr.initSession(usrname,password,url,port);
 //        net_mgr.openSession();
@@ -39,5 +41,26 @@ public class JobManager {
 //        net_mgr.upload(nasp_xml,remote_path);
 //
 //        net_mgr.runNaspJob(remote_path);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void saveJobRecord(JobRecord dc) {
+        JSONObject obj = new JSONObject();
+        obj.put("User Name", dc.getUsername());
+        obj.put("Timestamp", dc.getStart_timestamp());
+        obj.put("Host",dc.getServer());
+        obj.put("Port",dc.getPort());
+        obj.put("XML Path",dc.getXmlPath());
+
+        // try-with-resources statement based on post comment below :)
+        String path = "out\\joblog\\"+ LogManager.getTimestamp()+".json";
+        try (FileWriter file = new FileWriter(path)) {
+            file.write(obj.toJSONString());
+
+            log.info("JM: Job Dispatch Configuration logged to file: " + path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("JM: Failed to log Job Dispatch Configuration to file: "+ path +"\nReason:\n"+e.getMessage());
+        }
     }
 }

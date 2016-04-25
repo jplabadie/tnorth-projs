@@ -75,8 +75,6 @@ public class DefaultRemoteNetworking implements RemoteNetworking {
      * Start the session, and open relevant channels.
      * Should be called after initSession()
      *
-     * @throws JSchException
-     * @throws IOException
      */
     public void openSession(){
 
@@ -175,10 +173,8 @@ public class DefaultRemoteNetworking implements RemoteNetworking {
             log.error("NM - Upload Step Fail: File for SFTP Upload is null. Cannot upload.");
             return;
         }
-        try {
-            testDirExists(abs_remote_path);
-        }
-        catch (IOException e){
+
+        if(!isRemoteDir(abs_remote_path)){
             log.error("NM - Upload Step Fail: Connection failed or remote path " +
                     "is not a valid path for SFTP Upload. Cannot upload.");
             return;
@@ -293,41 +289,39 @@ public class DefaultRemoteNetworking implements RemoteNetworking {
      *  Tests to see if a specified file exists and is a file on the remote server
      *
      * @param remote_file_abs_path the absolute path to the file on the remote server
+     * @return true if the file exists on the remote system, false otherwise
      */
-    private void testFileExists(String remote_file_abs_path) throws IOException {
+    public boolean isRemoteFile(String remote_file_abs_path){
 
         InputStream exec_in;
+        int exec_status =-1;
         assert exec_channel != null;
-        exec_in = exec_channel.getInputStream();
+        try {
+            exec_in = exec_channel.getInputStream();
+            exec_status = exec_in.read();
+        } catch (IOException e) {
+            log.error("RN: Could not determine if remote file exists. Failed due to:\n" +e.getMessage());
+            return false;
+        }
         exec_channel.setCommand("test -f " + remote_file_abs_path);
 
-        if (exec_in.read() != 1){
-            System.out.println("The file does not exist or is not a file.");
-        }
+        return exec_status != -1; //returns false only if the remote system returned -1
     }
 
     /**
      *  Tests to see if a specified directory exists and is a directory on the remote server
      *
      * @param remote_dir_abs_path the absolute path to the file on the remote server
+     * @return true if the directory exists on the remote system, false otherwise
      */
-    private void testDirExists(String remote_dir_abs_path) throws IOException {
+    public boolean isRemoteDir(String remote_dir_abs_path) {
         int exec_status;
 
         assert exec_channel != null;
         exec_status = exec_channel.getExitStatus();
         exec_channel.setCommand("test -d " + remote_dir_abs_path);
 
-        if (exec_status != -1){
-            System.out.println("The directory does not exist or is not a directory.");
-        }
-    }
-
-    public static DefaultRemoteNetworking getInstance(){
-
-        if(instance == null)
-            return new DefaultRemoteNetworking();
-        return instance;
+        return exec_status != -1; //returns false only if the remote system returned -1
     }
 
     public boolean isInitialized() {

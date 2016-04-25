@@ -26,6 +26,7 @@ public class UserSettingsManager {
     private static String general_config_dir ;
     private static String usr_config_dir;
     private static String remote_config_dir;
+    private static String local_save_dir;
 
     private static String username;
 
@@ -199,7 +200,12 @@ public class UserSettingsManager {
      * @return the local username
      */
     public static String getUsername() {
+
         return username;
+    }
+
+    public static void setUsername(String new_username) {
+        username = new_username;
     }
 
     public static String getCurrentServerUrl() {
@@ -210,5 +216,20 @@ public class UserSettingsManager {
             return (String) current.get("URL");
         }
         return "";
+    }
+
+    public static String getDefaultLocalSaveDir() {
+        return local_save_dir;
+    }
+
+    public static void setDefaultLocalSaveDir(String new_dir) {
+        local_save_dir = new_dir;
+    }
+
+    public static int getCurrentServerPort() {
+        return 0;
+
+    }
+    public static void setCurrentServerPort(int port) {
     }
 }

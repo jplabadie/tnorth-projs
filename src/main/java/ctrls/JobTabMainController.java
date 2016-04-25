@@ -16,7 +16,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utils.JobSaveLoadManager;
-import utils.NetworkManager;
+import utils.DefaultRemoteNetworking;
 import xmlbinds.*;
 
 import java.io.File;
@@ -377,8 +377,8 @@ public class JobTabMainController implements Initializable {
                        // try {
                             saveFormState();
                         File temp = new File(String.valueOf(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml")));
-                        NetworkManager.getInstance().upload(temp,"/home/jlabadie");
-                        NetworkManager.getInstance().runNaspJob("/home/jlabadie/NaspInputExample_Aspen.xml");
+                        DefaultRemoteNetworking.getInstance().upload(temp,"/home/jlabadie");
+                        DefaultRemoteNetworking.getInstance().runNaspJob("/home/jlabadie/NaspInputExample_Aspen.xml");
 //                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
 //
 //                            // Testing only, remove from production builds

@@ -15,10 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import utils.JobSaveLoadManager;
-import utils.LogManager;
-import utils.DefaultRemoteNetworking;
-import utils.RemoteFileSystemManager;
+import utils.*;
 import xmlbinds.NaspInputData;
 
 import java.io.File;
@@ -46,7 +43,7 @@ public class MainController implements Initializable{
 
     private static RemoteFileSystemManager rfsm;
     private static LogManager log;
-    private static DefaultRemoteNetworking nm;
+    private static DefaultRemoteNetUtil nm;
 
     /**
      *
@@ -58,7 +55,6 @@ public class MainController implements Initializable{
 
         rfsm = RemoteFileSystemManager.getInstance();
         log = LogManager.getInstance();
-        nm = DefaultRemoteNetworking.getInstance();
 
         gracefulLogin();
         initLogin();

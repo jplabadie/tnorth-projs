@@ -5,9 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import utils.LogManager;
-import utils.DefaultRemoteNetworking;
-import utils.RemoteFileSystemManager;
+import utils.*;
 
 /**
  * @author Jean-Paul Labadie
@@ -15,7 +13,7 @@ import utils.RemoteFileSystemManager;
 public class LoginDialog extends Dialog<Pair<String,String>>{
 
     private RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
-    private DefaultRemoteNetworking nm = DefaultRemoteNetworking.getInstance();
+    private RemoteNetUtil nm = RemoteNetUtilFactoryMaker.getFactory().createRemoteNetUtil();
     LogManager log = LogManager.getInstance();
 
     /**
@@ -23,7 +21,7 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
      */
     public LoginDialog(){
 
-        this.setTitle("Login Dialog");
+        this.setTitle("Login");
         this.setHeaderText("NASP GUI Login");
         // Set the icon (must be included in the project).
         //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));

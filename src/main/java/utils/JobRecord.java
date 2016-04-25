@@ -5,14 +5,14 @@ package utils;
  *
  * @author Jean-Paul Labadie
  */
-public class DispatchConfiguration {
+public class JobRecord {
     private String username;
     private String timestamp;
     private String server;
     private int port;
     private String xml_path;
 
-    public DispatchConfiguration(String username, String server, String timestamp, int port, String xml_path) {
+    public JobRecord(String username, String server, String timestamp, int port, String xml_path) {
         this.username = username;
         this.server = server;
         this.port = port;

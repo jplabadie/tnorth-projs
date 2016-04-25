@@ -1,4 +1,4 @@
-package ctrls;
+package utils;
 
 import utils.JobSaveLoadManager;
 import xmlbinds.NaspInputData;
@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * @author Jean-Paul Labadie
  */
-public class JobSaveLoadManagerTest {
+public class JobRecordSaveLoadManagerTest {
 
     private static JobSaveLoadManager tempparser;
 

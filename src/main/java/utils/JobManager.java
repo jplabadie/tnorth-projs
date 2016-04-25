@@ -8,13 +8,13 @@ import java.io.File;
  *
  * @author Jean-Paul Labadie
  */
-public class JobDispatchManager {
+public class JobManager {
 
     private static LogManager log = LogManager.getInstance();
-    private static JobDispatchManager instance = new JobDispatchManager();
+    private static JobManager instance = new JobManager();
     private NetworkManager net_mgr = new NetworkManager();
 
-    private JobDispatchManager(){
+    private JobManager(){
 
     }
 
@@ -22,7 +22,7 @@ public class JobDispatchManager {
      *
      * @return JobDispatchManager Singleton
      */
-    public static JobDispatchManager getInstance(){
+    public static JobManager getInstance(){
         return instance;
     }
 

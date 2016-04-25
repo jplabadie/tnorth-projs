@@ -6,6 +6,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import utils.LogManager;
 
 /**
  *
@@ -34,19 +35,20 @@ class DraggableTreeCell<T> extends TreeCell<T> {
         super.updateItem(item, empty);
         try {
             // This makes sure collapsed nodes don't appear in TreeView
-            if (empty) {
+            if (empty || item == null) {
                 setText(null);
                 setGraphic(null);
             }
             else {
                 this.setText(this.getTreeItem().getValue().toString());
                 text = this.getText();
+
             }
         }
         catch (NullPointerException e){
+            LogManager.getInstance().error("DTC: TreeCell Item: "+text+ ", was null: " +e);
+
+            e.printStackTrace();
         }
-
     }
-
-
 }

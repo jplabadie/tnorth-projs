@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * @author Jean-Paul Labadie
  */
-public interface RemoteNetworking {
+public interface RemoteNetUtil {
     /**
      *
      * @param username

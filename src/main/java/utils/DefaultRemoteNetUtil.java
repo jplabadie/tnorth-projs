@@ -8,7 +8,7 @@ import java.util.Vector;
 /**
  * @author Jean-Paul Labadie
  */
-public class DefaultRemoteNetworking implements RemoteNetworking {
+public class DefaultRemoteNetUtil implements RemoteNetworkUtil {
 
     private Session session;
     private ChannelSftp sftp_channel;
@@ -19,14 +19,14 @@ public class DefaultRemoteNetworking implements RemoteNetworking {
     private OutputStream exec_out;
 
 
-    private static DefaultRemoteNetworking instance = null;
+    private static DefaultRemoteNetUtil instance = null;
     private LogManager log = LogManager.getInstance();
     private JSch jsch = new JSch();
 
     /**
      * Initialize the logger and create a new Jsch object
      */
-    public DefaultRemoteNetworking() {
+    public DefaultRemoteNetUtil() {
         JSch.setLogger(log);
     }
 

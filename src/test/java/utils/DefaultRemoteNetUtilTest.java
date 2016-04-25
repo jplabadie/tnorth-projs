@@ -14,13 +14,13 @@ import java.io.InputStreamReader;
  * @author Jean-Paul Labadie
  * @date 8/11/2015
  */
-public class DefaultRemoteNetworkingTest {
+public class DefaultRemoteNetUtilTest {
 
-    private static DefaultRemoteNetworking nm;
+    private static DefaultRemoteNetUtil nm;
 
     @Before
     public void setup() {
-        nm = new DefaultRemoteNetworking();
+        nm = new DefaultRemoteNetUtil();
         String usr;
         String pwd;
         System.out.println("Enter your username:");

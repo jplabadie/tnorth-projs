@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import utils.LogManager;
-import utils.NetworkManager;
+import utils.DefaultRemoteNetworking;
 import utils.RemoteFileSystemManager;
 
 /**
@@ -15,7 +15,7 @@ import utils.RemoteFileSystemManager;
 public class LoginDialog extends Dialog<Pair<String,String>>{
 
     private RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
-    private NetworkManager nm = NetworkManager.getInstance();
+    private DefaultRemoteNetworking nm = DefaultRemoteNetworking.getInstance();
     LogManager log = LogManager.getInstance();
 
     /**

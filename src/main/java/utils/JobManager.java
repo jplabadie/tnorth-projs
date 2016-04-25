@@ -11,20 +11,12 @@ import java.io.File;
 public class JobManager {
 
     private static LogManager log = LogManager.getInstance();
-    private static JobManager instance = new JobManager();
-    private NetworkManager net_mgr = new NetworkManager();
+    private static JobSaveLoadManager jslm = JobSaveLoadManager.getInstance();
 
     private JobManager(){
 
     }
 
-    /**
-     *
-     * @return JobDispatchManager Singleton
-     */
-    public static JobManager getInstance(){
-        return instance;
-    }
 
     /**
      *
@@ -38,14 +30,14 @@ public class JobManager {
     public void startNewRemoteJob(File nasp_xml, String usrname, String password, String url, int port, String remote_path){
 
         log.info("Remote Job Requested:");
-        DispatchConfiguration dc = new DispatchConfiguration(usrname,url, LogManager.getTimestamp(),port,remote_path);
+        JobRecord dc = new JobRecord(usrname,url, port,remote_path,remote_path );
         log.logJob(dc);
 
-        net_mgr.initSession(usrname,password,url,port);
-        net_mgr.openSession();
-
-        net_mgr.upload(nasp_xml,remote_path);
-
-        net_mgr.runNaspJob(remote_path);
+//        net_mgr.initSession(usrname,password,url,port);
+//        net_mgr.openSession();
+//
+//        net_mgr.upload(nasp_xml,remote_path);
+//
+//        net_mgr.runNaspJob(remote_path);
     }
 }

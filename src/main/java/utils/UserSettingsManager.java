@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Managers user details and default settings
+ * Manages user details and default settings
  *
  * @author Jean-Paul Labadie
  */
@@ -20,7 +20,6 @@ public class UserSettingsManager {
     private static LogManager log;
 
     private static JSONObject general_settings;
-    private static JSONObject usr_settings;
     private static JSONObject remote_settings;
 
     private static String general_config_dir ;
@@ -38,11 +37,16 @@ public class UserSettingsManager {
         remote_config_dir = new File(getClass().getResource("/configs/remote_settings.json").getPath()).toString();
         System.out.println(general_config_dir);
 
-
         general_settings = readSettings(general_config_dir);
-        remote_settings = readSettings(remote_config_dir);
+
         if (general_settings != null) {
-            usr_config_dir = (String)general_settings.get("usersettingsdir");
+            usr_config_dir = (String)general_settings.get("usrsettingsdir");
+            local_save_dir = (String)general_settings.get("localsavedir");
+        }
+
+        remote_settings = readSettings(remote_config_dir);
+        if( remote_settings != null){
+
         }
     }
 
@@ -67,7 +71,8 @@ public class UserSettingsManager {
             return null;
         }
         log.info("Current Remote Settings successfully returned.");
-        return (JSONObject) remote_settings.get("Current Remote");
+        String current_remote_id = (String) remote_settings.get("Current Remote");
+        return (JSONObject) remote_settings.get(current_remote_id);
     }
 
     /**
@@ -201,13 +206,30 @@ public class UserSettingsManager {
      */
     public static String getUsername() {
 
-        return username;
+        JSONObject current = getCurrentRemoteSettings();
+
+        if (current != null) {
+            return (String) current.get("User Name");
+        }
+        return "";
     }
 
+    /**
+     *
+     * @param new_username
+     */
     public static void setUsername(String new_username) {
-        username = new_username;
+        JSONObject current = getCurrentRemoteSettings();
+
+        if (current != null) {
+            current.put("User Name", new_username);
+        }
     }
 
+    /**
+     *
+     * @return
+     */
     public static String getCurrentServerUrl() {
 
         JSONObject current = getCurrentRemoteSettings();
@@ -218,18 +240,51 @@ public class UserSettingsManager {
         return "";
     }
 
+    /**
+     *
+     * @return
+     */
     public static String getDefaultLocalSaveDir() {
         return local_save_dir;
     }
 
+    /**
+     *
+     * @param new_dir
+     */
     public static void setDefaultLocalSaveDir(String new_dir) {
         local_save_dir = new_dir;
     }
 
-    public static int getCurrentServerPort() {
-        return 0;
+    /**
+     *
+     * @return
+     */
+    public static Integer getCurrentServerPort() {
+        JSONObject current = getCurrentRemoteSettings();
+
+        if (current != null) {
+            return ((Long)current.get("Port")).intValue();
+        }
+        return null;
 
     }
+
+    /**
+     *
+     * @param port
+     */
     public static void setCurrentServerPort(int port) {
+    }
+
+    public static String getDefaultRemoteRoot() {
+
+        JSONObject current = getCurrentRemoteSettings();
+
+        if (current != null) {
+            JSONArray rem_dirs = (JSONArray) current.get("Remote Directories");
+            return (String)rem_dirs.get(0);
+        }
+        return null;
     }
 }

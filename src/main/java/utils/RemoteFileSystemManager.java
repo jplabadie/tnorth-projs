@@ -111,10 +111,8 @@ public class RemoteFileSystemManager {
         for(Path path :sshfs.getRootDirectories()) // refers to an absolute remote path
         {
             root_path = path;
-            System.out.println(root_path.toString());
-            System.out.println(root_path.getFileSystem().getSeparator());
-            System.out.println(root_path.toUri().toString());
         }
+
         return root_path;
     }
 
@@ -126,10 +124,14 @@ public class RemoteFileSystemManager {
      */
     public Path getDirAsPath(String dir) throws IOException{
         if(sshfs == null || !sshfs.isOpen()){
-            throw new ClosedDirectoryStreamException();
-        }
+            throw new ClosedDirectoryStreamException();        }
 
         Path specific_path = sshfs.getPath(dir);
+
+        if(specific_path != null)
+            log.info("RFSM: Remote path found: " + specific_path.toString());
+        else
+            log.error("RFSM: Remote path root unset");
 
         return specific_path;
     }

@@ -8,7 +8,7 @@ package utils;
 public class JobRecord {
     private String username;
     private String server;
-    private int port;
+    private Integer port;
     private String remote_xml_path;
 
     private String local_xml_path;
@@ -17,7 +17,7 @@ public class JobRecord {
     private String end_timestamp;
     private boolean completed;
 
-    public JobRecord(String username, String server, int port, String remote_xml_path, String local_xml_path) {
+    public JobRecord(String username, String server, Integer port, String remote_xml_path, String local_xml_path) {
         this.username = username;
         this.server = server;
         this.port = port;
@@ -42,11 +42,11 @@ public class JobRecord {
         this.server = server;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

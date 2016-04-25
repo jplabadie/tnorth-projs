@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 /**
  * @author Jean-Paul Labadie
  */
-public class JobTabDispatchController implements Initializable {
+public class JobTabStatusController implements Initializable {
 
     @FXML
     private Button nextButton;

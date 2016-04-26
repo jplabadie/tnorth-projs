@@ -50,14 +50,6 @@ public class JobRecord {
         this.port = port;
     }
 
-    public String getXmlPath() {
-        return remote_xml_path;
-    }
-
-    public void setXmlPath(String xml_path) {
-        this.remote_xml_path = xml_path;
-    }
-
     public String getStartTimestamp() {
         return start_timestamp;
     }

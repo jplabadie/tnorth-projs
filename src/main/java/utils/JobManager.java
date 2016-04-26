@@ -54,7 +54,7 @@ public class JobManager {
         obj.put("Timestamp", dc.getStartTimestamp());
         obj.put("Host",dc.getServer());
         obj.put("Port",dc.getPort());
-        obj.put("XML Path",dc.getXmlPath());
+        obj.put("XML Path",dc.getRemoteXmlPath());
 
         // try-with-resources statement based on post comment below :)
         String path = "out\\joblog\\"+ LogManager.getTimestamp()+".json";

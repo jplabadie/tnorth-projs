@@ -28,7 +28,7 @@ public class UserSettingsManager {
     private static String remote_config_dir;
     private static String local_save_dir;
 
-    private static String username;
+    private static String current_password;
 
     private UserSettingsManager(){
 
@@ -217,6 +217,7 @@ public class UserSettingsManager {
      *
      * @param new_username change the default username
      */
+    @SuppressWarnings("unchecked")
     public static void setUsername(String new_username) {
         JSONObject current = getCurrentRemoteSettings();
 
@@ -289,5 +290,13 @@ public class UserSettingsManager {
             return (String)rem_dirs.get(0);
         }
         return null;
+    }
+
+    public static String getCurrentPassword() {
+        return current_password;
+    }
+
+    public static void setCurrentPassword(String current_password) {
+        UserSettingsManager.current_password = current_password;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NaspInputData>
     <Options>
-        <OutputFolder>/home/jlabadie/nasp_test</OutputFolder>
+        <OutputFolder>/home/jlabadie</OutputFolder>
         <RunName>NASPTestRun</RunName>
         <Reference name="EXAMPLEREF" path="/home/jlabadie/reference.fasta">
             <FindDups>true</FindDups>
@@ -24,7 +24,7 @@
         </VCFFolder>
     </Files>
     <ExternalApplications>
-        <Index path="/packages/tnorth/bin/nasp_python/">
+        <Index path="scratch/packages/tnorth/bin/nasp_python/">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="nasp_index">
                 <MemRequested>2</MemRequested>
@@ -34,7 +34,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </Index>
-        <BamIndex path="/packages/tnorth/bin/nasp_python/">
+        <BamIndex path="scratch/packages/tnorth/bin/nasp_python/">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="nasp_bamindex">
                 <MemRequested>2</MemRequested>
@@ -44,7 +44,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </BamIndex>
-        <MatrixGenerator path="/packages/tnorth/bin/nasp_python/vcf_to_matrix.py">
+        <MatrixGenerator path="scratch/packages/tnorth/bin/nasp_python/vcf_to_matrix.py">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="nasp_matrix">
                 <MemRequested>45</MemRequested>
@@ -54,13 +54,13 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </MatrixGenerator>
-        <Picard path="/packages/tnorth/bin/">
+        <Picard path="scratch/packages/tnorth/bin/">
             <AdditionalArgs></AdditionalArgs>
         </Picard>
-        <Samtools path="/packages/tnorth/bin/samtools">
+        <Samtools path="scratch/packages/tnorth/bin/samtools">
             <AdditionalArgs></AdditionalArgs>
         </Samtools>
-        <DupFinder path="/packages/tnorth/bin/nucmer">
+        <DupFinder path="scratch/packages/tnorth/bin/nucmer">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>2</MemRequested>
@@ -70,7 +70,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </DupFinder>
-        <AssemblyImporter path="/packages/tnorth/bin/delta-filter">
+        <AssemblyImporter path="scratch/packages/tnorth/bin/delta-filter">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>2</MemRequested>
@@ -80,7 +80,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </AssemblyImporter>
-        <Aligner name="SNAP" path="/packages/tnorth/bin/snap">
+        <Aligner name="SNAP" path="scratch/packages/tnorth/bin/snap">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -90,7 +90,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </Aligner>
-        <Aligner name="Novoalign" path="/packages/tnorth/bin/novoalign">
+        <Aligner name="Novoalign" path="scratch/packages/tnorth/bin/novoalign">
             <AdditionalArgs>-r all</AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -98,7 +98,7 @@
                 <Walltime>36</Walltime>
             </JobParameters>
         </Aligner>
-        <Aligner name="BWA sampe" path="/packages/tnorth/bin/bwa">
+        <Aligner name="BWA sampe" path="scratch/packages/tnorth/bin/bwa">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -108,7 +108,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </Aligner>
-        <Aligner name="BWA mem" path="/packages/tnorth/bin/bwa">
+        <Aligner name="BWA mem" path="scratch/packages/tnorth/bin/bwa">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -118,7 +118,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </Aligner>
-        <SNPCaller name="GATK" path="/packages/tnorth/bin/GenomeAnalysisTK.jar">
+        <SNPCaller name="GATK" path="scratch/packages/tnorth/bin/GenomeAnalysisTK.jar">
             <AdditionalArgs>-stand_call_conf 100 -stand_emit_conf 100</AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -128,7 +128,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </SNPCaller>
-        <SNPCaller name="SolSNP" path="/packages/tnorth/bin/SolSNP.jar">
+        <SNPCaller name="SolSNP" path="scratch/packages/tnorth/bin/SolSNP.jar">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>10</MemRequested>
@@ -138,7 +138,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </SNPCaller>
-        <SNPCaller name="VarScan" path="/packages/tnorth/bin/VarScan.jar">
+        <SNPCaller name="VarScan" path="scratch/packages/tnorth/bin/VarScan.jar">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>2</MemRequested>
@@ -148,7 +148,7 @@
                 <JobSubmitterArgs></JobSubmitterArgs>
             </JobParameters>
         </SNPCaller>
-        <SNPCaller name="Samtools" path="/packages/tnorth/bin/bcftools">
+        <SNPCaller name="Samtools" path="scratch/packages/tnorth/bin/bcftools">
             <AdditionalArgs></AdditionalArgs>
             <JobParameters name="">
                 <MemRequested>2</MemRequested>

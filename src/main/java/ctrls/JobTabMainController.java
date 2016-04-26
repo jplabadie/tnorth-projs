@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
@@ -19,8 +20,10 @@ import utils.*;
 import xmlbinds.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -51,6 +54,7 @@ public class JobTabMainController implements Initializable {
     @FXML   private TitledPane filter_options_pane;
 
     // JobManagerOptions Fields and Buttons
+    @FXML   private TextField runName;
     @FXML   private TextField jobOutputDir;
     @FXML   private ChoiceBox<String> jobManagerSystem;
     @FXML   private TextField jobManagerQueue;
@@ -199,6 +203,9 @@ public class JobTabMainController implements Initializable {
         AbstractRemoteNetUtilFactory arnuf = RemoteNetUtilFactoryMaker.getFactory();
         rem_network = arnuf.createRemoteNetUtil();
 
+        rem_network.initSession(UserSettingsManager.getUsername(),UserSettingsManager.getCurrentPassword(),
+                UserSettingsManager.getCurrentServerUrl(),UserSettingsManager.getCurrentServerPort());
+        rem_network.openSession();
 
         //Initialize Buttons
         initStartJobButton();
@@ -379,60 +386,158 @@ public class JobTabMainController implements Initializable {
                     public void handle(final ActionEvent e) {
                         if(!gracefulJobStart()) {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Incorrect Input Format");
+                            alert.setTitle("The job could not be started.");
                             alert.setHeaderText(null);
-                            alert.setContentText("The dragged input is not a file path.");
+                            alert.setContentText("An error with the job occurred. Please check your logs.");
                             alert.showAndWait();
                         }
-
-
                         //else open the job tab pane here
+                        jobConfigTabAnchorPane.getChildren().remove(0,jobConfigTabAnchorPane.getChildren().size());
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().
+                                    getResource("/job/NASPJobMonitorPane.fxml"));
+                            AnchorPane job_detail_pane = loader.load();
+                            JobTabStatusController ctrlr = loader.<JobTabStatusController>getController();
+                            ctrlr.initialize(loader.getLocation(),loader.getResources());
+                            ctrlr.setRemoteNetUtil(rem_network);
+
+
+                            jobConfigTabAnchorPane.getChildren().add(job_detail_pane);
+
+                        }
+                        catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 });
     }
 
     private boolean gracefulJobStart() {
-        saveFormState();
-        jobrec = new JobRecord(
-                UserSettingsManager.getUsername(),
-                UserSettingsManager.getCurrentServerUrl(),
-                UserSettingsManager.getCurrentServerPort(),
-                naspData.getOptions().getOutputFolder(),
-                UserSettingsManager.getDefaultLocalSaveDir()
-        );
+        LogManager.getInstance().info("JTMC: User Requesting Job Start.");
+        File file = saveFormState();
+        if (file != null) {
+            LogManager.getInstance().info("JTMC: Job Saved. Building Job Record.");
+            URI remote;
+            try {
+                remote = new URI(naspData.getOptions().getOutputFolder());
+                //remote = remote.resolve(file.getName());
 
-        File temp = new File(String.valueOf(getClass().getClassLoader().getResource(jobrec.getLocalXmlPath())));
-        rem_network.upload(temp, jobrec.getRemoteXmlPath());
-        rem_network.runNaspJob(jobrec.getRemoteXmlPath());
-        return true; //should also return false if any checks fail
+            } catch (URISyntaxException e) {
+                LogManager.getInstance().error("JTMC: Job Start failed. Could not create remote path -"+
+                e.getMessage());
+                return false;
+            }
+            jobrec = new JobRecord(
+                    UserSettingsManager.getUsername(),
+                    UserSettingsManager.getCurrentServerUrl(),
+                    UserSettingsManager.getCurrentServerPort(),
+                    remote.getPath(),
+                    file.getAbsolutePath()
+            );
+            LogManager.getInstance().info("JTMC: Remote upload path set to: "+jobrec.getRemoteXmlPath());
+            LogManager.getInstance().info("JTMC: Local XML path set to: "+jobrec.getLocalXmlPath());
+            LogManager.getInstance().info("JTMC: Job Record Created. Starting job XML upload.");
+            File temp = new File(jobrec.getLocalXmlPath());
+            if(!temp.exists()){
+                LogManager.getInstance().error("JTMC: Job Start failed. Could not load local XML.");
+                return false;
+            }
+            LogManager.getInstance().info("JTMC: Starting Job XML upload.");
+            rem_network.upload(temp, jobrec.getRemoteXmlPath());
+            LogManager.getInstance().info("JTMC: Job XML upload completed. Attempting to run NASP.");
+            remote = remote.resolve(file.getName());
+            rem_network.runNaspJob(remote.getPath());
+            return true; //should also return false if any checks fail
+        }
+        LogManager.getInstance().warn("JTMC: Job Start failed - Job not saved locally.");
+        return false; // could not save
     }
 
     /**
      *
      */
-    private void saveFormState(){
+    private File saveFormState(){
 
-        ExternalApplications exapps = new ExternalApplications();
+        ExternalApplications exapps = naspData.getExternalApplications();
+        if(exapps == null) exapps = new ExternalApplications();
         naspData.setExternalApplications(exapps);
 
-        Options opts = new Options();
+        Options opts = naspData.getOptions();
+        if(opts == null) opts = new Options();
         naspData.setOptions(opts);
 
-        Files files = new Files();
+        Files files = naspData.getFiles();
+        if(files == null) files = new Files();
         naspData.setFiles(files);
+
+        /**
+         * Save Reference Settings
+         */
+        Reference refs = opts.getReference();
+        if(refs == null) refs = new Reference();
+
+        if(outputFindDuplicates.isSelected())
+            refs.setFindDups("true");
+        else refs.setFindDups("false");
 
         String ref_path = inputRefFastaPath.getText();
         String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[0];
-        Reference ref = new Reference();
-        System.out.println();
-        ref.setName(ref_name);
-        ref.setPath(ref_path);
-        opts.setReference(ref);
-        opts.setOutputFolder(jobOutputDir.getText());
-        opts.setJobSubmitter(jobManagerSystem.getValue().toString());
-        opts.setRunName( "test"+"_"+Calendar.DATE);
 
-        // aligner_options_pane
+        refs.setName(ref_name);
+        refs.setPath(ref_path);
+
+        /**
+         * Save Options Settings
+         */
+        opts.setReference(refs);
+        opts.setOutputFolder(jobOutputDir.getText());
+        opts.setJobSubmitter(jobManagerSystem.getValue());
+        opts.setRunName(runName.getText());
+
+        /**
+         * Save Options Filters Settings
+         */
+        Filters filt = opts.getFilters();
+        if(filt == null) filt = new Filters();
+        filt.setCoverageFilter("10");
+        filt.setProportionFilter("0.9");
+        opts.setFilters(filt);
+
+        /**
+         * Save Files Settings from Inputs pane
+         */
+        AlignmentFolder alignment = files.getAlignmentFolder();
+        if(alignment == null) alignment = new AlignmentFolder();
+        files.setAlignmentFolder(alignment);
+        String algnstr = inputSamBamFiles.getItems().get(0).toString();
+        if(algnstr != null)alignment.setPath(algnstr);
+
+        VCFFolder vcf = files.getVCFFolder();
+        if(vcf == null) vcf = new VCFFolder();
+        files.setVCFFolder(vcf);
+        String vcfstr = inputVcfFiles.getItems().get(0);
+        if(vcfstr!=null)vcf.setPath(vcfstr);
+
+        AssemblyFolder assembly_folder = files.getAssemblyFolder();
+        if(assembly_folder==null) assembly_folder = new AssemblyFolder();
+        files.setAssemblyFolder(assembly_folder);
+
+        Assembly assembly = assembly_folder.getAssembly();
+        if(assembly==null) assembly = new Assembly();
+        assembly_folder.setAssembly(assembly);
+        assembly.setSample(inputFastaExternalGen.getText()
+                .substring(0,inputFastaExternalGen.getText().indexOf('.')));
+        assembly.setValue(inputFastaExternalGen.getText());
+
+        ReadFolder read = files.getReadFolder();
+        if(read == null) read = new ReadFolder();
+        files.setReadFolder(read);
+        String readstr = inputReadFiles.getItems().get(0);
+        if(readstr != null)read.setPath(readstr);
+
+        /**
+         * Save Aligners Settings
+         */
         List<Aligner> aligners = exapps.getAligner();
         List<SNPCaller> snpcallers = exapps.getSNPCaller();
 
@@ -537,25 +642,17 @@ public class JobTabMainController implements Initializable {
 
         //filter_options_pane
 
-        //  inputs_pane
-        AlignmentFolder alignment = new AlignmentFolder();
-            files.setAlignmentFolder(alignment);
-        AssemblyFolder assembly = new AssemblyFolder();
-            files.setAssemblyFolder(assembly);
-        ReadFolder read = new ReadFolder();
-            files.setReadFolder(read);
 
-        alignment.setPath(inputFastaExternalGen.getText());
-        //read.setPath(inputRead.getItems().get(0).toString());
 
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Template");
-        fileChooser.setInitialDirectory(new File(UserSettingsManager.getDefaultLocalSaveDir()));
+        fileChooser.setInitialDirectory(new File(getClass()
+                .getResource("/test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
-
-        File file = fileChooser.showOpenDialog(dialogStage);
+        File file = fileChooser.showSaveDialog(dialogStage);
 
         try {
             JobSaveLoadManager.jaxbObjectToXML(naspData, file.getPath());
@@ -564,6 +661,8 @@ public class JobTabMainController implements Initializable {
             alert.setHeaderText("");
             alert.setContentText("Your job was saved successfully.");
             alert.showAndWait();
+            System.out.println(file.getAbsolutePath());
+            return file;
         }
         catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -571,6 +670,7 @@ public class JobTabMainController implements Initializable {
             alert.setHeaderText("");
             alert.setContentText("Your job could not be saved!");
             alert.showAndWait();
+            return null;
         }
     }
 
@@ -581,8 +681,10 @@ public class JobTabMainController implements Initializable {
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Saved Job");
-        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+        fileChooser.setInitialDirectory(new File(getClass()
+                .getResource("/test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+        FileChooser.ExtensionFilter extFilter = new FileChooser
+                .ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(dialogStage);
 
@@ -592,6 +694,11 @@ public class JobTabMainController implements Initializable {
         Options opts = naspData.getOptions();
         Files files = naspData.getFiles();
         Filters filters = opts.getFilters();
+        Reference refs = opts.getReference();
+
+        if(refs.getFindDups().equalsIgnoreCase("true"))
+            outputFindDuplicates.setSelected(true);
+        else outputFindDuplicates.setSelected(false);
 
         //Options
         inputRefFastaPath.setText(opts.getReference().getPath());
@@ -613,7 +720,7 @@ public class JobTabMainController implements Initializable {
         jobOutputDir.setText(opts.getOutputFolder());
         jobManagerSystem.getSelectionModel().select(opts.getJobSubmitter());
         outputFindDuplicates.setSelected(opts.getReference().getFindDups().equals("true"));
-        opts.setRunName("test"+"_"+ Calendar.DATE);
+        runName.setText(opts.getRunName());
 
         // aligner_options_pane
         List<Aligner> aligners = exapps.getAligner();

@@ -98,7 +98,6 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
                     log.error("Login Failed: RFSM and/or NM failed to initialize.");
                     return null;
                 }
-
                 return new Pair<>(username.getText(), password.getText());
             }
             return null;

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 
 /**
  * Manages user details and default settings
@@ -62,7 +63,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @return
+     * @return a JSONObject containing only current remote settings information
      */
     public static JSONObject getCurrentRemoteSettings(){
         if (!remote_settings.containsKey("Current Remote"))
@@ -122,9 +123,7 @@ public class UserSettingsManager {
 
         JSONArray dirs = new JSONArray();
 
-        for(String dir : remote_dirs){
-            dirs.add(dir);
-        }
+        Collections.addAll(dirs, remote_dirs);
         json.put("Remote Directories", dirs);
 
         remote_settings.put(settings_name,json);
@@ -216,7 +215,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @param new_username
+     * @param new_username change the default username
      */
     public static void setUsername(String new_username) {
         JSONObject current = getCurrentRemoteSettings();
@@ -228,7 +227,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @return
+     * @return the url of the current host
      */
     public static String getCurrentServerUrl() {
 
@@ -242,7 +241,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @return
+     * @return the local path where files should be saved
      */
     public static String getDefaultLocalSaveDir() {
         return local_save_dir;
@@ -250,7 +249,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @param new_dir
+     * @param new_dir set a new local path for where files should be saved
      */
     public static void setDefaultLocalSaveDir(String new_dir) {
         local_save_dir = new_dir;
@@ -258,7 +257,7 @@ public class UserSettingsManager {
 
     /**
      *
-     * @return
+     * @return the port number specified by current remote server defaults
      */
     public static Integer getCurrentServerPort() {
         JSONObject current = getCurrentRemoteSettings();
@@ -272,12 +271,16 @@ public class UserSettingsManager {
 
     /**
      *
-     * @param port
+     * @param port change the default remote server port number
      */
     public static void setCurrentServerPort(int port) {
     }
 
-    public static String getDefaultRemoteRoot() {
+    /**
+     *
+     * @return SHOULD return a list of all remote paths to watch, but currently returns only a single path
+     */
+    public static String getDefaultRemoteDirs() {
 
         JSONObject current = getCurrentRemoteSettings();
 

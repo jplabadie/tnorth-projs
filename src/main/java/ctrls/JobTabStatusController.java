@@ -5,11 +5,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import utils.RemoteNetUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
 
 /**
  * @author Jean-Paul Labadie
@@ -20,6 +23,11 @@ public class JobTabStatusController implements Initializable {
     private Button nextButton;
     @FXML
     private AnchorPane jobTabMonitorPane;
+    @FXML
+    private TextArea jobDetailTextArea;
+
+    private Timer timer = new Timer();
+    private RemoteNetUtil rem_net_util;
 
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources)
@@ -39,5 +47,12 @@ public class JobTabStatusController implements Initializable {
                         jobTabMonitorPane.getChildren().add(job_visualization_pane);
                     }
                 });
+    }
+
+    public void setRemoteNetUtil(RemoteNetUtil rem_network) {
+        rem_net_util = rem_network;
+        String output = "";
+        output += rem_net_util.getUserJobs();
+        jobDetailTextArea.setText(output);
     }
 }

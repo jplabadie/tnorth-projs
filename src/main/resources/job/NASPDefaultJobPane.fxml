@@ -22,6 +22,7 @@
                                                   <children>
                                                       <VBox prefHeight="359.0" prefWidth="186.0" spacing="5.0">
                                                           <children>
+                                                <Label text="Run Name:" />
                                                               <Label prefHeight="24.0" prefWidth="182.0" text="Output Target dir:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                               <Label prefHeight="32.0" prefWidth="419.0" text="Job Management System:" wrapText="true" />
                                                               <Label prefHeight="32.0" prefWidth="420.0" text="Job Management Queue:" textAlignment="CENTER" wrapText="true" />
@@ -33,6 +34,7 @@
                                                       </VBox>
                                                       <VBox prefHeight="359.0" prefWidth="330.0" spacing="5.0">
                                                           <children>
+                                                <TextField fx:id="runName" />
                                                               <TextField fx:id="jobOutputDir" prefHeight="25.0" prefWidth="360.0" />
                                                               <ChoiceBox fx:id="jobManagerSystem" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="153.0" />
       
@@ -73,7 +75,7 @@
                                                  <children>
                                                      <HBox prefWidth="600.0" spacing="100.0">
                                                          <children>
-                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:"/>
+                                                             <Label prefHeight="17.0" prefWidth="157.0" text="Reference FASTA Path:" />
                                                              
                                                              <TextField fx:id="inputRefFastaPath" maxHeight="50.0" prefHeight="100.0" prefWidth="300.0" />
          

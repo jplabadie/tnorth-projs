@@ -77,19 +77,27 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
      *
      */
     public void openSession(){
+        log.info("RNU: Attempting to Open Remote Session and related connections.");
 
         try {
             session.connect();
+            log.info("RNU: Open Session - Session connected successfully.");
         } catch (JSchException e) {
             log.error("NM - Unable to Open the Session: \n" + e.getMessage());
             return;
         }
 
         try {
-            sftp_channel = (ChannelSftp)session.openChannel("sftp");
-            exec_channel = (ChannelExec)session.openChannel("exec");
-            sftp_channel.connect();
-            exec_channel.connect();
+
+            Channel sftpchannel=session.openChannel("sftp");
+            sftpchannel.connect();
+            sftp_channel=(ChannelSftp)sftpchannel;
+
+            Channel execchannel=session.openChannel("exec");
+            execchannel.connect();
+            exec_channel=(ChannelExec)execchannel;
+
+            log.info("RNU: Open Session - SFTP/EXEC Channels connected successfully.");
         } catch (JSchException e) {
             log.error("NM - Unable to Open and Connect to SFTP/EXEC Channels: \n" + e.getMessage());
             session.disconnect();
@@ -98,16 +106,17 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         }
 
         try {
-            sftp_in = new BufferedReader(new InputStreamReader(sftp_channel.getInputStream()));
-            sftp_out = sftp_channel.getOutputStream();
             exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
             exec_out = exec_channel.getOutputStream();
+            log.info("RNU: Open Session - I/O Streams connected successfully.");
+            log.info("RNU: Open Session - SFTP channel at directory: "+sftp_channel.pwd());
         } catch (IOException e) {
             log.error("NM - Unable to Get SFTP/EXEC I/O Streams: \n" + e.getMessage());
             session.disconnect();
             log.warn("NM - Session failed : Closing Session.");
+        } catch (SftpException e) {
+            log.error("RNU: Unable to Get SFTP PWD \n" + e.getMessage());
         }
-
     }
 
     /**
@@ -164,12 +173,13 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
      * @param abs_remote_path the absolute path to the file on the remote machine
      */
     public void upload(File file, String abs_remote_path){
+        log.info("RNU: Attempting upload: "+ file.getName()+ " at "+ abs_remote_path);
 
         if (sftp_channel == null){
             log.error("NM - Upload Step Fail: SFTP Channel is null. Cannot upload.");
             return;
         }
-        else if(file == null){
+        else if(!file.exists()){
             log.error("NM - Upload Step Fail: File for SFTP Upload is null. Cannot upload.");
             return;
         }
@@ -180,17 +190,15 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
             return;
         }
 
-        try{
-            if(abs_remote_path != "") {
-                sftp_channel.cd("/"); //main from root
+        try {
+            log.info("RNU: Upload - Attempting: cd " + abs_remote_path);
                 sftp_channel.cd(abs_remote_path); //cd to the absolute directory
-                log.info("cd " + abs_remote_path);
-                log.info("NM - Upload Step Successful: cd " + abs_remote_path);
-            }
+
+
         }
         catch (SftpException e){
             //the directory cannot be visited
-            log.error("NM - Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
+            log.error("RNU - Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
                     + e.getMessage());
 
         }
@@ -284,6 +292,25 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         return "The ID of the started Job";
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getUserJobs() {
+        exec_channel.setCommand("qstat -au" + getUsername() );
+        String output = "";
+        try {
+            while(exec_in.ready()) {
+                output += exec_in.readLine() + "\n";
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+
 
     /**
      *  Tests to see if a specified file exists and is a file on the remote server
@@ -316,18 +343,20 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
      */
     public boolean isRemoteDir(String remote_dir_abs_path) {
         int exec_status;
-
-        assert exec_channel != null;
-        exec_status = exec_channel.getExitStatus();
+        log.info("RNU: Checking for remote directory - " + remote_dir_abs_path);
+        if (exec_channel == null)
+            log.error("RNU: Cannot check remote dir - Exec channel is null.");
+        log.info("RNU: Checking for remote directory - Running test -d (remote path)...");
         exec_channel.setCommand("test -d " + remote_dir_abs_path);
-
-        return exec_status != -1; //returns false only if the remote system returned -1
+        exec_status = exec_channel.getExitStatus();
+        log.info("RNU: Checking for remote directory - Exec returned: "+exec_status);
+        return exec_status != -1;
     }
 
     public String getUsername(){
         if(isInitialized())
             return session.getUserName();
-        log.warn("RN: Cannot get username, session is not active.");
+        log.warn("RNU: Cannot get username, session is not active.");
         return null;
     }
 
@@ -359,7 +388,6 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
             return false;
         }
     }
-
 }
 
 

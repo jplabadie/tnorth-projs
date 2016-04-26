@@ -45,6 +45,8 @@ public class MainController implements Initializable{
     private static LogManager log;
     private static DefaultRemoteNetUtil nm;
 
+    private Optional<Pair<String, String>> userpass;
+
     /**
      *
      * @param fxmlFileLocation the location of the required fxml layout
@@ -75,8 +77,12 @@ public class MainController implements Initializable{
 
     private void gracefulLogin(){
         LoginDialog ld = new LoginDialog();
-        Optional<Pair<String, String>> output = ld.showAndWait();
-        if (output.isPresent() && rfsm.isConnected()) {
+        userpass = ld.showAndWait();
+
+
+        if (userpass.isPresent() && rfsm.isConnected()) {
+            UserSettingsManager.setUsername(userpass.get().getKey());
+            UserSettingsManager.setCurrentPassword(userpass.get().getValue());
             initRemotePathBrowserTree(rfsm);
         }
         else {
@@ -149,6 +155,7 @@ public class MainController implements Initializable{
                     public void handle(final ActionEvent e) {
                         try {
                             AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
+                            new_job_pane.setUserData(userpass);
                             Tab new_tab = new Tab("New Tab");
                             new_tab.setContent(new_job_pane);
                             jobTabPane.getTabs().add(new_tab);
@@ -222,7 +229,7 @@ public class MainController implements Initializable{
         {
             try {
 
-                String default_rem_dir = UserSettingsManager.getDefaultRemoteRoot();
+                String default_rem_dir = UserSettingsManager.getDefaultRemoteDirs();
                 log.info("RPBT: Init at root: " + default_rem_dir);
                 rti = new RemoteTreeItem(rfsm.getDirAsPath(default_rem_dir));
                 for(Path x : rfsm.getDirectory(default_rem_dir)){

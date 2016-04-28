@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="NaspInputData" type="NaspInputDataType"/>
+  <xs:complexType name="AlignerType">
+    <xs:sequence>
+      <xs:element name="AdditionalArguments">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value=""/>
+            <xs:enumeration value="-r all"/>
+            <xs:enumeration value="-M"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="path" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="PicardType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="ReadFolderType">
+    <xs:sequence>
+      <xs:element type="ReadPairType" name="ReadPair"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="MatrixGeneratorType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="AssemblyFolderType">
+    <xs:sequence>
+      <xs:element type="AssemblyType" name="Assembly"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="ReadPairType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Read1Filename"/>
+      <xs:element type="xs:string" name="Read2Filename"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="sample"/>
+  </xs:complexType>
+  <xs:complexType name="AssemblyImporterType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="ReferenceType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="FindDups"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="NaspInputDataType">
+    <xs:sequence>
+      <xs:element type="OptionsType" name="Options"/>
+      <xs:element type="FilesType" name="Files"/>
+      <xs:element type="ExternalApplicationsType" name="ExternalApplications"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OptionsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="RunName"/>
+      <xs:element type="xs:string" name="OutputFolder"/>
+      <xs:element type="ReferenceType" name="Reference"/>
+      <xs:element type="FiltersType" name="Filters"/>
+      <xs:element type="xs:string" name="JobSubmitter"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SamtoolsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="AssemblyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="sample"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DupFinderType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+  <xs:complexType name="JobParametersType">
+    <xs:sequence>
+      <xs:element name="MemRequested">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="8"/>
+            <xs:enumeration value="4"/>
+            <xs:enumeration value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="NumCPUs">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="8"/>
+            <xs:enumeration value="4"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Walltime">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="4"/>
+            <xs:enumeration value="48"/>
+            <xs:enumeration value="36"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="Queue"/>
+      <xs:element type="xs:string" name="JobSubmitterArgs"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ExternalApplicationsType">
+    <xs:sequence>
+      <xs:element type="IndexType" name="Index"/>
+      <xs:element type="MatrixGeneratorType" name="MatrixGenerator"/>
+      <xs:element type="PicardType" name="Picard"/>
+      <xs:element type="SamtoolsType" name="Samtools"/>
+      <xs:element type="DupFinderType" name="DupFinder"/>
+      <xs:element type="AssemblyImporterType" name="AssemblyImporter"/>
+      <xs:element type="AlignerType" name="Aligner" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="SNPCallerType" name="SNPCaller" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FilesType">
+    <xs:sequence>
+      <xs:element type="ReadFolderType" name="ReadFolder"/>
+      <xs:element type="AssemblyFolderType" name="AssemblyFolder"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SNPCallerType">
+    <xs:sequence>
+      <xs:element name="AdditionalArguments">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="-stand_call_conf 100 -stand_emit_conf 100 -ploidy 1"/>
+            <xs:enumeration value=""/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="path" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="FiltersType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="ProportionFilter"/>
+      <xs:element type="xs:string" name="CoverageFilter"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IndexType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="AdditionalArguments"/>
+      <xs:element type="JobParametersType" name="JobParameters"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="path"/>
+  </xs:complexType>
+</xs:schema>

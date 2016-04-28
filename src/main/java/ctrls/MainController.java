@@ -63,6 +63,7 @@ public class MainController implements Initializable{
         initLocalFileBrowserTree();
 
         initMenuItemQuit();
+        initMenuItemLoad();
         initCreateNewJobHandler();
         //initUserSettingsPaneHandler();
 
@@ -121,13 +122,15 @@ public class MainController implements Initializable{
                         final Stage dialogStage = new Stage();
                         FileChooser fileChooser = new FileChooser();
                         fileChooser.setTitle("Load Template");
-                        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+                        fileChooser.setInitialDirectory(new File(getClass()
+                                .getResource("/test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
                         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
                         fileChooser.getExtensionFilters().add(extFilter);
                         File file = fileChooser.showOpenDialog(dialogStage);
 
                         try {
-                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
+                            AnchorPane new_job_pane = FXMLLoader.load(getClass()
+                                    .getResource("/job/NASPDefaultJobPane.fxml"));
                             Tab new_tab = new Tab("New Tab");
                             new_tab.setContent(new_job_pane);
                             jobTabPane.getTabs().add(new_tab);
@@ -176,7 +179,8 @@ public class MainController implements Initializable{
                     public void handle(final ActionEvent e) {
                         try {
                             jobTabPane.setVisible(false);
-                            AnchorPane user_settings = FXMLLoader.load(getClass().getClassLoader().getResource("main/UserSettingsPane.fxml"));
+                            AnchorPane user_settings = FXMLLoader.load(getClass()
+                                    .getResource("/main/UserSettingsPane.fxml"));
                             centerPane = user_settings;
 
                         } catch (IOException e1) {

@@ -198,7 +198,7 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         }
         catch (SftpException e){
             //the directory cannot be visited
-            log.error("RNU - Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
+            log.error("RNU: Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
                     + e.getMessage());
 
         }
@@ -206,10 +206,10 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         try {
             try {
                 sftp_channel.put(new FileInputStream(file), file.getName());
-                log.info("NM - Upload Step Successful: file uploaded to " + abs_remote_path );
+                log.info("RNU: Upload Step Successful: file uploaded to " + abs_remote_path );
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
-                log.error("NM - Upload Step Fail: File Not Found. " +
+                log.error("RNU: Upload Step Fail: File Not Found. " +
                         "Insufficient Permissions? \n" + e.getMessage());
             }
 
@@ -279,16 +279,18 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         try {
             assert exec_channel != null;
             exec_channel.setCommand("module load nasp"); //main nasp tool
-            log.info("module load nasp");
+            log.info("RNU: Run command - module load nasp");
             exec_channel.setCommand("module load tnorth"); //main the tnorth tool [what does this do??]
-            log.info("module load tnorth");
+            log.info("RNU: Run command - module load tnorth");
             exec_channel.setCommand("nasp --config " + job_XML_abs_path); //run nasp with the xml
-            log.info("nasp --config " + job_XML_abs_path);
+            log.info("RNU: Run command - nasp --config " + job_XML_abs_path);
 
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("RNU: Run NASP failed: " + e.getMessage());
         }
 
+        //dreams
         return "The ID of the started Job";
     }
 

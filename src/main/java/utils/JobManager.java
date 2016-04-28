@@ -22,6 +22,7 @@ public class JobManager {
         rnm = net_mgr;
     }
 
+    public JobManager (){};
     /**
      *  @param nasp_xml the prepared NASP XML
      * @param usrname the username for the remote server
@@ -48,7 +49,7 @@ public class JobManager {
      * @param dc
      */
     @SuppressWarnings("unchecked")
-    private void saveJobRecord(JobRecord dc) {
+    public void saveJobRecord(JobRecord dc) {
         JSONObject obj = new JSONObject();
         obj.put("User Name", dc.getUsername());
         obj.put("Timestamp", dc.getStartTimestamp());

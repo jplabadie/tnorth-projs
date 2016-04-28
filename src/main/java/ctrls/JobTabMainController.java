@@ -188,7 +188,6 @@ public class JobTabMainController implements Initializable {
      */
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
-
         this.resources = resources;
 
         // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
@@ -401,9 +400,7 @@ public class JobTabMainController implements Initializable {
                             ctrlr.initialize(loader.getLocation(),loader.getResources());
                             ctrlr.setRemoteNetUtil(rem_network);
 
-
                             jobConfigTabAnchorPane.getChildren().add(job_detail_pane);
-
                         }
                         catch (IOException e1) {
                             e1.printStackTrace();
@@ -420,7 +417,6 @@ public class JobTabMainController implements Initializable {
             URI remote;
             try {
                 remote = new URI(naspData.getOptions().getOutputFolder());
-                //remote = remote.resolve(file.getName());
 
             } catch (URISyntaxException e) {
                 LogManager.getInstance().error("JTMC: Job Start failed. Could not create remote path -"+
@@ -434,7 +430,14 @@ public class JobTabMainController implements Initializable {
                     remote.getPath(),
                     file.getAbsolutePath()
             );
-            LogManager.getInstance().info("JTMC: Remote upload path set to: "+jobrec.getRemoteXmlPath());
+            JobManager jm = new JobManager();
+            try {
+                jm.saveJobRecord(jobrec);
+            }
+            catch (Exception e){
+                LogManager.getInstance().error("JTMC: Saving job record failed.");
+            }
+                LogManager.getInstance().info("JTMC: Remote upload path set to: "+jobrec.getRemoteXmlPath());
             LogManager.getInstance().info("JTMC: Local XML path set to: "+jobrec.getLocalXmlPath());
             LogManager.getInstance().info("JTMC: Job Record Created. Starting job XML upload.");
             File temp = new File(jobrec.getLocalXmlPath());
@@ -445,8 +448,8 @@ public class JobTabMainController implements Initializable {
             LogManager.getInstance().info("JTMC: Starting Job XML upload.");
             rem_network.upload(temp, jobrec.getRemoteXmlPath());
             LogManager.getInstance().info("JTMC: Job XML upload completed. Attempting to run NASP.");
-            remote = remote.resolve(file.getName());
-            rem_network.runNaspJob(remote.getPath());
+            String go = remote.getPath() +"/"+file.getName();
+            rem_network.runNaspJob(go);
             return true; //should also return false if any checks fail
         }
         LogManager.getInstance().warn("JTMC: Job Start failed - Job not saved locally.");
@@ -481,7 +484,10 @@ public class JobTabMainController implements Initializable {
         else refs.setFindDups("false");
 
         String ref_path = inputRefFastaPath.getText();
-        String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[0];
+        String ref_name = ref_path.substring(
+                ref_path.lastIndexOf('/'),
+                ref_path.indexOf('.')
+        );
 
         refs.setName(ref_name);
         refs.setPath(ref_path);
@@ -509,14 +515,18 @@ public class JobTabMainController implements Initializable {
         AlignmentFolder alignment = files.getAlignmentFolder();
         if(alignment == null) alignment = new AlignmentFolder();
         files.setAlignmentFolder(alignment);
-        String algnstr = inputSamBamFiles.getItems().get(0).toString();
-        if(algnstr != null)alignment.setPath(algnstr);
+        if(!inputSamBamFiles.getItems().isEmpty()){
+            String algnstr = inputSamBamFiles.getItems().get(0).toString();
+            alignment.setPath(algnstr);
+        }
 
         VCFFolder vcf = files.getVCFFolder();
         if(vcf == null) vcf = new VCFFolder();
         files.setVCFFolder(vcf);
-        String vcfstr = inputVcfFiles.getItems().get(0);
-        if(vcfstr!=null)vcf.setPath(vcfstr);
+        if(!inputVcfFiles.getItems().isEmpty()) {
+            String vcfstr = inputVcfFiles.getItems().get(0);
+            vcf.setPath(vcfstr);
+        }
 
         AssemblyFolder assembly_folder = files.getAssemblyFolder();
         if(assembly_folder==null) assembly_folder = new AssemblyFolder();
@@ -525,15 +535,91 @@ public class JobTabMainController implements Initializable {
         Assembly assembly = assembly_folder.getAssembly();
         if(assembly==null) assembly = new Assembly();
         assembly_folder.setAssembly(assembly);
-        assembly.setSample(inputFastaExternalGen.getText()
-                .substring(0,inputFastaExternalGen.getText().indexOf('.')));
-        assembly.setValue(inputFastaExternalGen.getText());
-
+        if(inputFastaExternalGen.getText().length()>0) {
+            assembly.setSample(inputFastaExternalGen.getText()
+                    .substring(0, inputFastaExternalGen.getText().indexOf('.')));
+            assembly.setValue(inputFastaExternalGen.getText());
+        }
         ReadFolder read = files.getReadFolder();
         if(read == null) read = new ReadFolder();
         files.setReadFolder(read);
-        String readstr = inputReadFiles.getItems().get(0);
-        if(readstr != null)read.setPath(readstr);
+        if(!inputReadFiles.getItems().isEmpty()) {
+            String readstr = inputReadFiles.getItems().get(0);
+            read.setPath(readstr);
+        }
+
+        /**
+         * Save External Application Settings
+         */
+        Index index = new Index();
+        BamIndex bindex = new BamIndex();
+        MatrixGenerator mgen = new MatrixGenerator();
+        Picard picard = new Picard();
+        Samtools samtools = new Samtools();
+        DupFinder  dupfind = new DupFinder();
+        AssemblyImporter assimport = new AssemblyImporter();
+
+        index.setPath("scratch/packages/tnorth/bin/nasp_python/");
+        JobParameters ijp = new JobParameters();
+        ijp.setName("nasp_index");
+        ijp.setMemRequested("2");
+        ijp.setNumCPUs("1");
+        ijp.setWalltime("4");
+        //ijp.setQueue();
+        //ijp.setJobSubmitterArgs();
+        index.setJobParameters(ijp);
+
+        bindex.setPath("scratch/packages/tnorth/bin/nasp_python/");
+        JobParameters ibjp = new JobParameters();
+        ibjp.setName("nasp_bamindex");
+        ibjp.setMemRequested("2");
+        ibjp.setNumCPUs("1");
+        ibjp.setWalltime("4");
+        //ibjp.setQueue();
+        //ibjp.setJobSubmitterArgs();
+        bindex.setJobParameters(ibjp);
+
+        mgen.setPath("scratch/packages/tnorth/bin/nasp_python/vcf_to_matrix.py");
+        JobParameters mgenjp = new JobParameters();
+        mgenjp.setName("nasp_matrix");
+        mgenjp.setMemRequested("45");
+        mgenjp.setNumCPUs("12");
+        mgenjp.setWalltime("48");
+        mgenjp.setQueue("hmem");
+        //mgenjp.setJobSubmitterArgs();
+        mgen.setJobParameters(mgenjp);
+
+        picard.setPath("scratch/packages/tnorth/bin/");
+
+        samtools.setPath("scratch/packages/tnorth/bin/samtools");
+
+        dupfind.setPath("scratch/packages/tnorth/bin/nucmer");
+        JobParameters dupfindjp = new JobParameters();
+        dupfindjp.setName("dup_finder");
+        dupfindjp.setMemRequested("2");
+        dupfindjp.setNumCPUs("1");
+        dupfindjp.setWalltime("1");
+        //dupfindjp.setQueue("hmem");
+        //dupfindjp.setJobSubmitterArgs();
+        dupfind.setJobParameters(dupfindjp);
+
+        assimport.setPath("scratch/packages/tnorth/bin/delta-filter");
+        JobParameters assimportjp = new JobParameters();
+        assimportjp.setName("assembly_importer");
+        assimportjp.setMemRequested("2");
+        assimportjp.setNumCPUs("1");
+        assimportjp.setWalltime("1");
+        //assimportjp.setQueue("hmem");
+        //assimportjp.setJobSubmitterArgs();
+        assimport.setJobParameters(assimportjp);
+
+        exapps.setIndex(index);
+        exapps.setBamIndex(bindex);
+        exapps.setMatrixGenerator(mgen);
+        exapps.setPicard(picard);
+        exapps.setSamtools(samtools);
+        exapps.setDupFinder(dupfind);
+        exapps.setAssemblyImporter(assimport);
 
         /**
          * Save Aligners Settings
@@ -542,6 +628,7 @@ public class JobTabMainController implements Initializable {
         List<SNPCaller> snpcallers = exapps.getSNPCaller();
 
         Aligner bwa_samp = new Aligner();
+        bwa_samp.setName("BWA sampe");
         aligners.add(bwa_samp);
         JobParameters bwa_samp_param = new JobParameters();
         bwa_samp.setJobParameters(bwa_samp_param);
@@ -553,6 +640,7 @@ public class JobTabMainController implements Initializable {
         bwa_samp.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner bwa_mem = new Aligner();
+        bwa_mem.setName("BWA mem");
         aligners.add(bwa_mem);
         JobParameters bwa_mem_param = new JobParameters();
         bwa_mem.setJobParameters(bwa_mem_param);
@@ -564,6 +652,7 @@ public class JobTabMainController implements Initializable {
         bwa_mem.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner novo = new Aligner();
+        novo.setName("Novoalign");
         aligners.add(novo);
         JobParameters novo_param = new JobParameters();
         novo.setJobParameters(novo_param);
@@ -575,6 +664,7 @@ public class JobTabMainController implements Initializable {
         novo.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner snap = new Aligner();
+        snap.setName("SNAP");
         aligners.add(snap);
         JobParameters snap_param = new JobParameters();
         snap.setJobParameters(snap_param);
@@ -586,6 +676,7 @@ public class JobTabMainController implements Initializable {
         snap.setAdditionalArgs(bwaSampArgs.getText());
 
         Aligner bow = new Aligner();
+        bow.setName("Bowtie2");
         aligners.add(bow);
         JobParameters bow_param = new JobParameters();
         bow.setJobParameters(bow_param);

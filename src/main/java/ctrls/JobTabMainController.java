@@ -12,6 +12,8 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -226,6 +228,13 @@ public class JobTabMainController implements Initializable {
 
         //Create a new NaspInputData Object which represents a blank job request
         naspData = new ObjectFactory().createNaspInputDataType();
+    }
+
+    private void initInputPane(){
+
+        HBox hbox = new HBox();
+        Pane readfolderpane =new ReadFolderPane().getReadPane();
+        hbox.getChildren().add(readfolderpane);
     }
 
     /**

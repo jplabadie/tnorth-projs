@@ -4,23 +4,24 @@ package xmlbinds;
 import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for FiltersType complex type.
+ * <p>Java class for AssemblyFolderType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="FiltersType">
+ * &lt;complexType name="AssemblyFolderType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="ProportionFilter" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="CoverageFilter" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="Assembly" type="{}AssemblyType"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -29,22 +30,47 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "FiltersType", propOrder = {
-    "proportionFilter",
-    "coverageFilter"
+@XmlType(name = "AssemblyFolder", propOrder = {
+    "assembly"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class FiltersType {
+public class AssemblyFolder {
 
-    @XmlElement(name = "ProportionFilter", required = true)
+    @XmlElement(name = "Assembly", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String proportionFilter;
-    @XmlElement(name = "CoverageFilter", required = true)
+    protected Assembly assembly;
+    @XmlAttribute(name = "path")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String coverageFilter;
+    protected String path;
 
     /**
-     * Gets the value of the proportionFilter property.
+     * Gets the value of the assembly property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Assembly }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public Assembly getAssembly() {
+        return assembly;
+    }
+
+    /**
+     * Sets the value of the assembly property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Assembly }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public void setAssembly(Assembly value) {
+        this.assembly = value;
+    }
+
+    /**
+     * Gets the value of the path property.
      * 
      * @return
      *     possible object is
@@ -52,12 +78,12 @@ public class FiltersType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getProportionFilter() {
-        return proportionFilter;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Sets the value of the proportionFilter property.
+     * Sets the value of the path property.
      * 
      * @param value
      *     allowed object is
@@ -65,34 +91,8 @@ public class FiltersType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setProportionFilter(String value) {
-        this.proportionFilter = value;
-    }
-
-    /**
-     * Gets the value of the coverageFilter property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getCoverageFilter() {
-        return coverageFilter;
-    }
-
-    /**
-     * Sets the value of the coverageFilter property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setCoverageFilter(String value) {
-        this.coverageFilter = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
 }

@@ -4,24 +4,25 @@ package xmlbinds;
 import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for NaspInputDataType complex type.
+ * <p>Java class for PicardType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="NaspInputDataType">
+ * &lt;complexType name="PicardType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Options" type="{}OptionsType"/>
- *         &lt;element name="Files" type="{}FilesType"/>
- *         &lt;element name="ExternalApplications" type="{}ExternalApplicationsType"/>
+ *         &lt;element name="AdditionalArguments" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -30,100 +31,98 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NaspInputDataType", propOrder = {
-    "options",
-    "files",
-    "externalApplications"
+@XmlType(name = "Picard", propOrder = {
+    "additionalArguments"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class NaspInputDataType {
+public class Picard {
 
-    @XmlElement(name = "Options", required = true)
+    @XmlElement(name = "AdditionalArguments", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected OptionsType options;
-    @XmlElement(name = "Files", required = true)
+    protected String additionalArguments;
+    @XmlAttribute(name = "name")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected FilesType files;
-    @XmlElement(name = "ExternalApplications", required = true)
+    protected String name;
+    @XmlAttribute(name = "path")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected ExternalApplicationsType externalApplications;
+    protected String path;
 
     /**
-     * Gets the value of the options property.
+     * Gets the value of the additionalArguments property.
      * 
      * @return
      *     possible object is
-     *     {@link OptionsType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public OptionsType getOptions() {
-        return options;
+    public String getAdditionalArguments() {
+        return additionalArguments;
     }
 
     /**
-     * Sets the value of the options property.
+     * Sets the value of the additionalArguments property.
      * 
      * @param value
      *     allowed object is
-     *     {@link OptionsType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setOptions(OptionsType value) {
-        this.options = value;
+    public void setAdditionalArguments(String value) {
+        this.additionalArguments = value;
     }
 
     /**
-     * Gets the value of the files property.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
-     *     {@link FilesType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public FilesType getFiles() {
-        return files;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the value of the files property.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
-     *     {@link FilesType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setFiles(FilesType value) {
-        this.files = value;
+    public void setName(String value) {
+        this.name = value;
     }
 
     /**
-     * Gets the value of the externalApplications property.
+     * Gets the value of the path property.
      * 
      * @return
      *     possible object is
-     *     {@link ExternalApplicationsType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public ExternalApplicationsType getExternalApplications() {
-        return externalApplications;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Sets the value of the externalApplications property.
+     * Sets the value of the path property.
      * 
      * @param value
      *     allowed object is
-     *     {@link ExternalApplicationsType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setExternalApplications(ExternalApplicationsType value) {
-        this.externalApplications = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
 }

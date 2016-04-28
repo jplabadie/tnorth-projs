@@ -10,17 +10,18 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ReadFolderType complex type.
+ * <p>Java class for ReferenceType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ReadFolderType">
+ * &lt;complexType name="ReferenceType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="ReadPair" type="{}ReadPairType"/>
+ *         &lt;element name="FindDups" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,43 +31,72 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ReadFolderType", propOrder = {
-    "readPair"
+@XmlType(name = "Reference", propOrder = {
+    "findDups"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class ReadFolderType {
+public class Reference {
 
-    @XmlElement(name = "ReadPair", required = true)
+    @XmlElement(name = "FindDups", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected ReadPairType readPair;
+    protected String findDups;
+    @XmlAttribute(name = "name")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    protected String name;
     @XmlAttribute(name = "path")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String path;
 
     /**
-     * Gets the value of the readPair property.
+     * Gets the value of the findDups property.
      * 
      * @return
      *     possible object is
-     *     {@link ReadPairType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public ReadPairType getReadPair() {
-        return readPair;
+    public String getFindDups() {
+        return findDups;
     }
 
     /**
-     * Sets the value of the readPair property.
+     * Sets the value of the findDups property.
      * 
      * @param value
      *     allowed object is
-     *     {@link ReadPairType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setReadPair(ReadPairType value) {
-        this.readPair = value;
+    public void setFindDups(String value) {
+        this.findDups = value;
+    }
+
+    /**
+     * Gets the value of the name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the value of the name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public void setName(String value) {
+        this.name = value;
     }
 
     /**

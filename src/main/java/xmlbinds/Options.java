@@ -4,26 +4,26 @@ package xmlbinds;
 import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for AssemblyImporterType complex type.
+ * <p>Java class for OptionsType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AssemblyImporterType">
+ * &lt;complexType name="OptionsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AdditionalArguments" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="JobParameters" type="{}JobParametersType"/>
+ *         &lt;element name="RunName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="OutputFolder" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="Reference" type="{}ReferenceType"/>
+ *         &lt;element name="Filters" type="{}FiltersType"/>
+ *         &lt;element name="JobSubmitter" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -32,28 +32,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AssemblyImporterType", propOrder = {
-    "additionalArguments",
-    "jobParameters"
+@XmlType(name = "Options", propOrder = {
+    "runName",
+    "outputFolder",
+    "reference",
+    "filters",
+    "jobSubmitter"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class AssemblyImporterType {
+public class Options {
 
-    @XmlElement(name = "AdditionalArguments", required = true)
+    @XmlElement(name = "RunName", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String additionalArguments;
-    @XmlElement(name = "JobParameters", required = true)
+    protected String runName;
+    @XmlElement(name = "OutputFolder", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected JobParametersType jobParameters;
-    @XmlAttribute(name = "name")
+    protected String outputFolder;
+    @XmlElement(name = "Reference", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String name;
-    @XmlAttribute(name = "path")
+    protected Reference reference;
+    @XmlElement(name = "Filters", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String path;
+    protected Filters filters;
+    @XmlElement(name = "JobSubmitter", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    protected String jobSubmitter;
 
     /**
-     * Gets the value of the additionalArguments property.
+     * Gets the value of the runName property.
      * 
      * @return
      *     possible object is
@@ -61,12 +67,12 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getAdditionalArguments() {
-        return additionalArguments;
+    public String getRunName() {
+        return runName;
     }
 
     /**
-     * Sets the value of the additionalArguments property.
+     * Sets the value of the runName property.
      * 
      * @param value
      *     allowed object is
@@ -74,38 +80,12 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setAdditionalArguments(String value) {
-        this.additionalArguments = value;
+    public void setRunName(String value) {
+        this.runName = value;
     }
 
     /**
-     * Gets the value of the jobParameters property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JobParametersType }
-     *     
-     */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public JobParametersType getJobParameters() {
-        return jobParameters;
-    }
-
-    /**
-     * Sets the value of the jobParameters property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JobParametersType }
-     *     
-     */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setJobParameters(JobParametersType value) {
-        this.jobParameters = value;
-    }
-
-    /**
-     * Gets the value of the name property.
+     * Gets the value of the outputFolder property.
      * 
      * @return
      *     possible object is
@@ -113,12 +93,12 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getName() {
-        return name;
+    public String getOutputFolder() {
+        return outputFolder;
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the outputFolder property.
      * 
      * @param value
      *     allowed object is
@@ -126,12 +106,64 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setName(String value) {
-        this.name = value;
+    public void setOutputFolder(String value) {
+        this.outputFolder = value;
     }
 
     /**
-     * Gets the value of the path property.
+     * Gets the value of the reference property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Reference }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public Reference getReference() {
+        return reference;
+    }
+
+    /**
+     * Sets the value of the reference property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Reference }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public void setReference(Reference value) {
+        this.reference = value;
+    }
+
+    /**
+     * Gets the value of the filters property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Filters }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public Filters getFilters() {
+        return filters;
+    }
+
+    /**
+     * Sets the value of the filters property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Filters }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public void setFilters(Filters value) {
+        this.filters = value;
+    }
+
+    /**
+     * Gets the value of the jobSubmitter property.
      * 
      * @return
      *     possible object is
@@ -139,12 +171,12 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getPath() {
-        return path;
+    public String getJobSubmitter() {
+        return jobSubmitter;
     }
 
     /**
-     * Sets the value of the path property.
+     * Sets the value of the jobSubmitter property.
      * 
      * @param value
      *     allowed object is
@@ -152,8 +184,8 @@ public class AssemblyImporterType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setPath(String value) {
-        this.path = value;
+    public void setJobSubmitter(String value) {
+        this.jobSubmitter = value;
     }
 
 }

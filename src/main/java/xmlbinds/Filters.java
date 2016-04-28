@@ -9,17 +9,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for FilesType complex type.
+ * <p>Java class for FiltersType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="FilesType">
+ * &lt;complexType name="FiltersType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="ReadFolder" type="{}ReadFolderType"/>
- *         &lt;element name="AssemblyFolder" type="{}AssemblyFolderType"/>
+ *         &lt;element name="ProportionFilter" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="CoverageFilter" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,70 +29,70 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "FilesType", propOrder = {
-    "readFolder",
-    "assemblyFolder"
+@XmlType(name = "Filters", propOrder = {
+    "proportionFilter",
+    "coverageFilter"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class FilesType {
+public class Filters {
 
-    @XmlElement(name = "ReadFolder", required = true)
+    @XmlElement(name = "ProportionFilter", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected ReadFolderType readFolder;
-    @XmlElement(name = "AssemblyFolder", required = true)
+    protected String proportionFilter;
+    @XmlElement(name = "CoverageFilter", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected AssemblyFolderType assemblyFolder;
+    protected String coverageFilter;
 
     /**
-     * Gets the value of the readFolder property.
+     * Gets the value of the proportionFilter property.
      * 
      * @return
      *     possible object is
-     *     {@link ReadFolderType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public ReadFolderType getReadFolder() {
-        return readFolder;
+    public String getProportionFilter() {
+        return proportionFilter;
     }
 
     /**
-     * Sets the value of the readFolder property.
+     * Sets the value of the proportionFilter property.
      * 
      * @param value
      *     allowed object is
-     *     {@link ReadFolderType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setReadFolder(ReadFolderType value) {
-        this.readFolder = value;
+    public void setProportionFilter(String value) {
+        this.proportionFilter = value;
     }
 
     /**
-     * Gets the value of the assemblyFolder property.
+     * Gets the value of the coverageFilter property.
      * 
      * @return
      *     possible object is
-     *     {@link AssemblyFolderType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public AssemblyFolderType getAssemblyFolder() {
-        return assemblyFolder;
+    public String getCoverageFilter() {
+        return coverageFilter;
     }
 
     /**
-     * Sets the value of the assemblyFolder property.
+     * Sets the value of the coverageFilter property.
      * 
      * @param value
      *     allowed object is
-     *     {@link AssemblyFolderType }
+     *     {@link String }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setAssemblyFolder(AssemblyFolderType value) {
-        this.assemblyFolder = value;
+    public void setCoverageFilter(String value) {
+        this.coverageFilter = value;
     }
 
 }

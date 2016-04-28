@@ -10,19 +10,19 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ReadPairType complex type.
+ * <p>Java class for SamtoolsType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ReadPairType">
+ * &lt;complexType name="SamtoolsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Read1Filename" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Read2Filename" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="AdditionalArguments" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="sample" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -31,25 +31,24 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ReadPairType", propOrder = {
-    "read1Filename",
-    "read2Filename"
+@XmlType(name = "Samtools", propOrder = {
+    "additionalArguments"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class ReadPairType {
+public class Samtools {
 
-    @XmlElement(name = "Read1Filename", required = true)
+    @XmlElement(name = "AdditionalArguments", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String read1Filename;
-    @XmlElement(name = "Read2Filename", required = true)
+    protected String additionalArguments;
+    @XmlAttribute(name = "name")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String read2Filename;
-    @XmlAttribute(name = "sample")
+    protected String name;
+    @XmlAttribute(name = "path")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected String sample;
+    protected String path;
 
     /**
-     * Gets the value of the read1Filename property.
+     * Gets the value of the additionalArguments property.
      * 
      * @return
      *     possible object is
@@ -57,12 +56,12 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getRead1Filename() {
-        return read1Filename;
+    public String getAdditionalArguments() {
+        return additionalArguments;
     }
 
     /**
-     * Sets the value of the read1Filename property.
+     * Sets the value of the additionalArguments property.
      * 
      * @param value
      *     allowed object is
@@ -70,12 +69,12 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setRead1Filename(String value) {
-        this.read1Filename = value;
+    public void setAdditionalArguments(String value) {
+        this.additionalArguments = value;
     }
 
     /**
-     * Gets the value of the read2Filename property.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
@@ -83,12 +82,12 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getRead2Filename() {
-        return read2Filename;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the value of the read2Filename property.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
@@ -96,12 +95,12 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setRead2Filename(String value) {
-        this.read2Filename = value;
+    public void setName(String value) {
+        this.name = value;
     }
 
     /**
-     * Gets the value of the sample property.
+     * Gets the value of the path property.
      * 
      * @return
      *     possible object is
@@ -109,12 +108,12 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public String getSample() {
-        return sample;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Sets the value of the sample property.
+     * Sets the value of the path property.
      * 
      * @param value
      *     allowed object is
@@ -122,8 +121,8 @@ public class ReadPairType {
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setSample(String value) {
-        this.sample = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
 }

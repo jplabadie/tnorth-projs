@@ -34,164 +34,164 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link NaspInputDataType }
+     * Create an instance of {@link NaspInputData }
      * 
      */
-    public NaspInputDataType createNaspInputDataType() {
-        return new NaspInputDataType();
+    public NaspInputData createNaspInputDataType() {
+        return new NaspInputData();
     }
 
     /**
-     * Create an instance of {@link AlignerType }
+     * Create an instance of {@link Aligner }
      * 
      */
-    public AlignerType createAlignerType() {
-        return new AlignerType();
+    public Aligner createAlignerType() {
+        return new Aligner();
     }
 
     /**
-     * Create an instance of {@link PicardType }
+     * Create an instance of {@link Picard }
      * 
      */
-    public PicardType createPicardType() {
-        return new PicardType();
+    public Picard createPicardType() {
+        return new Picard();
     }
 
     /**
-     * Create an instance of {@link ReadFolderType }
+     * Create an instance of {@link ReadFolder }
      * 
      */
-    public ReadFolderType createReadFolderType() {
-        return new ReadFolderType();
+    public ReadFolder createReadFolderType() {
+        return new ReadFolder();
     }
 
     /**
-     * Create an instance of {@link MatrixGeneratorType }
+     * Create an instance of {@link MatrixGenerator }
      * 
      */
-    public MatrixGeneratorType createMatrixGeneratorType() {
-        return new MatrixGeneratorType();
+    public MatrixGenerator createMatrixGeneratorType() {
+        return new MatrixGenerator();
     }
 
     /**
-     * Create an instance of {@link AssemblyFolderType }
+     * Create an instance of {@link AssemblyFolder }
      * 
      */
-    public AssemblyFolderType createAssemblyFolderType() {
-        return new AssemblyFolderType();
+    public AssemblyFolder createAssemblyFolderType() {
+        return new AssemblyFolder();
     }
 
     /**
-     * Create an instance of {@link ReadPairType }
+     * Create an instance of {@link ReadPair }
      * 
      */
-    public ReadPairType createReadPairType() {
-        return new ReadPairType();
+    public ReadPair createReadPairType() {
+        return new ReadPair();
     }
 
     /**
-     * Create an instance of {@link AssemblyImporterType }
+     * Create an instance of {@link AssemblyImporter }
      * 
      */
-    public AssemblyImporterType createAssemblyImporterType() {
-        return new AssemblyImporterType();
+    public AssemblyImporter createAssemblyImporterType() {
+        return new AssemblyImporter();
     }
 
     /**
-     * Create an instance of {@link ReferenceType }
+     * Create an instance of {@link Reference }
      * 
      */
-    public ReferenceType createReferenceType() {
-        return new ReferenceType();
+    public Reference createReferenceType() {
+        return new Reference();
     }
 
     /**
-     * Create an instance of {@link OptionsType }
+     * Create an instance of {@link Options }
      * 
      */
-    public OptionsType createOptionsType() {
-        return new OptionsType();
+    public Options createOptionsType() {
+        return new Options();
     }
 
     /**
-     * Create an instance of {@link SamtoolsType }
+     * Create an instance of {@link Samtools }
      * 
      */
-    public SamtoolsType createSamtoolsType() {
-        return new SamtoolsType();
+    public Samtools createSamtoolsType() {
+        return new Samtools();
     }
 
     /**
-     * Create an instance of {@link AssemblyType }
+     * Create an instance of {@link Assembly }
      * 
      */
-    public AssemblyType createAssemblyType() {
-        return new AssemblyType();
+    public Assembly createAssemblyType() {
+        return new Assembly();
     }
 
     /**
-     * Create an instance of {@link DupFinderType }
+     * Create an instance of {@link DupFinder }
      * 
      */
-    public DupFinderType createDupFinderType() {
-        return new DupFinderType();
+    public DupFinder createDupFinderType() {
+        return new DupFinder();
     }
 
     /**
-     * Create an instance of {@link JobParametersType }
+     * Create an instance of {@link JobParameters }
      * 
      */
-    public JobParametersType createJobParametersType() {
-        return new JobParametersType();
+    public JobParameters createJobParametersType() {
+        return new JobParameters();
     }
 
     /**
-     * Create an instance of {@link ExternalApplicationsType }
+     * Create an instance of {@link ExternalApplications }
      * 
      */
-    public ExternalApplicationsType createExternalApplicationsType() {
-        return new ExternalApplicationsType();
+    public ExternalApplications createExternalApplicationsType() {
+        return new ExternalApplications();
     }
 
     /**
-     * Create an instance of {@link FilesType }
+     * Create an instance of {@link Files }
      * 
      */
-    public FilesType createFilesType() {
-        return new FilesType();
+    public Files createFilesType() {
+        return new Files();
     }
 
     /**
-     * Create an instance of {@link SNPCallerType }
+     * Create an instance of {@link SNPCaller }
      * 
      */
-    public SNPCallerType createSNPCallerType() {
-        return new SNPCallerType();
+    public SNPCaller createSNPCallerType() {
+        return new SNPCaller();
     }
 
     /**
-     * Create an instance of {@link FiltersType }
+     * Create an instance of {@link Filters }
      * 
      */
-    public FiltersType createFiltersType() {
-        return new FiltersType();
+    public Filters createFiltersType() {
+        return new Filters();
     }
 
     /**
-     * Create an instance of {@link IndexType }
+     * Create an instance of {@link Index }
      * 
      */
-    public IndexType createIndexType() {
-        return new IndexType();
+    public Index createIndexType() {
+        return new Index();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link NaspInputDataType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link NaspInputData }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "NaspInputData")
-    public JAXBElement<NaspInputDataType> createNaspInputData(NaspInputDataType value) {
-        return new JAXBElement<NaspInputDataType>(_NaspInputData_QNAME, NaspInputDataType.class, null, value);
+    public JAXBElement<NaspInputData> createNaspInputData(NaspInputData value) {
+        return new JAXBElement<NaspInputData>(_NaspInputData_QNAME, NaspInputData.class, null, value);
     }
 
 }

@@ -10,20 +10,21 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for SNPCallerType complex type.
+ * <p>Java class for AlignerType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SNPCallerType">
+ * &lt;complexType name="AlignerType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="AdditionalArguments">
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;enumeration value="-stand_call_conf 100 -stand_emit_conf 100 -ploidy 1"/>
  *               &lt;enumeration value=""/>
+ *               &lt;enumeration value="-r all"/>
+ *               &lt;enumeration value="-M"/>
  *             &lt;/restriction>
  *           &lt;/simpleType>
  *         &lt;/element>
@@ -39,19 +40,19 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SNPCallerType", propOrder = {
+@XmlType(name = "Aligner", propOrder = {
     "additionalArguments",
     "jobParameters"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class SNPCallerType {
+public class Aligner {
 
     @XmlElement(name = "AdditionalArguments", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String additionalArguments;
     @XmlElement(name = "JobParameters", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    protected JobParametersType jobParameters;
+    protected JobParameters jobParameters;
     @XmlAttribute(name = "name")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String name;
@@ -90,11 +91,11 @@ public class SNPCallerType {
      * 
      * @return
      *     possible object is
-     *     {@link JobParametersType }
+     *     {@link JobParameters }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public JobParametersType getJobParameters() {
+    public JobParameters getJobParameters() {
         return jobParameters;
     }
 
@@ -103,11 +104,11 @@ public class SNPCallerType {
      * 
      * @param value
      *     allowed object is
-     *     {@link JobParametersType }
+     *     {@link JobParameters }
      *     
      */
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-    public void setJobParameters(JobParametersType value) {
+    public void setJobParameters(JobParameters value) {
         this.jobParameters = value;
     }
 

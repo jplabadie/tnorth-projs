@@ -10,16 +10,24 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for PicardType complex type.
+ * <p>Java class for SNPCallerType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="PicardType">
+ * &lt;complexType name="SNPCallerType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="AdditionalArguments" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="AdditionalArguments">
+ *           &lt;simpleType>
+ *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *               &lt;enumeration value="-stand_call_conf 100 -stand_emit_conf 100 -ploidy 1"/>
+ *               &lt;enumeration value=""/>
+ *             &lt;/restriction>
+ *           &lt;/simpleType>
+ *         &lt;/element>
+ *         &lt;element name="JobParameters" type="{}JobParametersType"/>
  *       &lt;/sequence>
  *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="path" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -31,15 +39,19 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PicardType", propOrder = {
-    "additionalArguments"
+@XmlType(name = "SNPCaller", propOrder = {
+    "additionalArguments",
+    "jobParameters"
 })
 @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
-public class PicardType {
+public class SNPCaller {
 
     @XmlElement(name = "AdditionalArguments", required = true)
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String additionalArguments;
+    @XmlElement(name = "JobParameters", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    protected JobParameters jobParameters;
     @XmlAttribute(name = "name")
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String name;
@@ -71,6 +83,32 @@ public class PicardType {
     @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setAdditionalArguments(String value) {
         this.additionalArguments = value;
+    }
+
+    /**
+     * Gets the value of the jobParameters property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JobParameters }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public JobParameters getJobParameters() {
+        return jobParameters;
+    }
+
+    /**
+     * Sets the value of the jobParameters property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JobParameters }
+     *     
+     */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
+    public void setJobParameters(JobParameters value) {
+        this.jobParameters = value;
     }
 
     /**

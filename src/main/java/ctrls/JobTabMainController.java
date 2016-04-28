@@ -512,17 +512,17 @@ public class JobTabMainController implements Initializable {
         /**
          * Save Files Settings from Inputs pane
          */
-        AlignmentFolder alignment = files.getAlignmentFolder();
-        if(alignment == null) alignment = new AlignmentFolder();
-        files.setAlignmentFolder(alignment);
+        ReadFolder readfolder = files.getReadFolder();
+        if(readfolder == null) readfolder = new ReadFolder();
+        files.setReadFolder(readfolder);
         if(!inputSamBamFiles.getItems().isEmpty()){
             String algnstr = inputSamBamFiles.getItems().get(0).toString();
-            alignment.setPath(algnstr);
+            readfolder.setPath(algnstr);
         }
 
-        VCFFolder vcf = files.getVCFFolder();
-        if(vcf == null) vcf = new VCFFolder();
-        files.setVCFFolder(vcf);
+        AssemblyFolder vcf = files.getAssemblyFolder();
+        if(vcf == null) vcf = new AssemblyFolder();
+        files.setAssemblyFolder(vcf);
         if(!inputVcfFiles.getItems().isEmpty()) {
             String vcfstr = inputVcfFiles.getItems().get(0);
             vcf.setPath(vcfstr);
@@ -552,7 +552,7 @@ public class JobTabMainController implements Initializable {
          * Save External Application Settings
          */
         Index index = new Index();
-        BamIndex bindex = new BamIndex();
+        Index bindex = new Index();
         MatrixGenerator mgen = new MatrixGenerator();
         Picard picard = new Picard();
         Samtools samtools = new Samtools();
@@ -614,7 +614,7 @@ public class JobTabMainController implements Initializable {
         assimport.setJobParameters(assimportjp);
 
         exapps.setIndex(index);
-        exapps.setBamIndex(bindex);
+        exapps.setIndex(bindex);
         exapps.setMatrixGenerator(mgen);
         exapps.setPicard(picard);
         exapps.setSamtools(samtools);
@@ -637,7 +637,7 @@ public class JobTabMainController implements Initializable {
         bwa_samp_param.setMemRequested(limitBwaSampMem.getText());
         bwa_samp_param.setNumCPUs(limitBwaSampCpu.getText());
         bwa_samp_param.setWalltime(limitBwaSampRuntime.getText());
-        bwa_samp.setAdditionalArgs(bwaSampArgs.getText());
+        bwa_samp.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner bwa_mem = new Aligner();
         bwa_mem.setName("BWA mem");
@@ -649,7 +649,7 @@ public class JobTabMainController implements Initializable {
         bwa_mem_param.setMemRequested(limitBwaMemMem.getText());
         bwa_mem_param.setNumCPUs(limitBwaMemCpu.getText());
         bwa_mem_param.setWalltime(limitBwaMemRuntime.getText());
-        bwa_mem.setAdditionalArgs(bwaSampArgs.getText());
+        bwa_mem.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner novo = new Aligner();
         novo.setName("Novoalign");
@@ -661,7 +661,7 @@ public class JobTabMainController implements Initializable {
         novo_param.setMemRequested(limitNovoalignMem.getText());
         novo_param.setNumCPUs(limitNovoalignCpu.getText());
         novo_param.setWalltime(limitNovoalignRuntime.getText());
-        novo.setAdditionalArgs(bwaSampArgs.getText());
+        novo.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner snap = new Aligner();
         snap.setName("SNAP");
@@ -673,7 +673,7 @@ public class JobTabMainController implements Initializable {
         snap_param.setMemRequested(limitSnapMem.getText());
         snap_param.setNumCPUs(limitSnapCpu.getText());
         snap_param.setWalltime(limitSnapRuntime.getText());
-        snap.setAdditionalArgs(bwaSampArgs.getText());
+        snap.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner bow = new Aligner();
         bow.setName("Bowtie2");
@@ -685,14 +685,14 @@ public class JobTabMainController implements Initializable {
         bow_param.setMemRequested(limitBowtieMem.getText());
         bow_param.setNumCPUs(limitBowtieCpu.getText());
         bow_param.setWalltime(limitBowtieRuntime.getText());
-        bow.setAdditionalArgs(bwaSampArgs.getText());
+        bow.setAdditionalArguments(bwaSampArgs.getText());
 
         SNPCaller gatk = new SNPCaller();
         snpcallers.add(gatk);
         JobParameters gatk_param = new JobParameters();
         gatk.setJobParameters(gatk_param);
         gatk.setPath(GATKPath.getText());
-        gatk.setAdditionalArgs(GATKArguments.getText());
+        gatk.setAdditionalArguments(GATKArguments.getText());
         gatk_param.setQueue(GATKQueue.getText());
         gatk_param.setMemRequested(GATKMemory.getText());
         gatk_param.setNumCPUs(GATKCPU.getText());
@@ -703,7 +703,7 @@ public class JobTabMainController implements Initializable {
         JobParameters sol_param = new JobParameters();
         sol.setJobParameters(sol_param);
         sol.setPath(solPath.getText());
-        sol.setAdditionalArgs(solArguments.getText());
+        sol.setAdditionalArguments(solArguments.getText());
         sol_param.setQueue(solQueue.getText());
         sol_param.setMemRequested(solMemory.getText());
         sol_param.setNumCPUs(solCPU.getText());
@@ -714,7 +714,7 @@ public class JobTabMainController implements Initializable {
         JobParameters var_param = new JobParameters();
         var.setJobParameters(var_param);
         var.setPath(varPath.getText());
-        var.setAdditionalArgs(varArguments.getText());
+        var.setAdditionalArguments(varArguments.getText());
         var_param.setQueue(varQueue.getText());
         var_param.setMemRequested(varMemory.getText());
         var_param.setNumCPUs(varCPU.getText());
@@ -725,7 +725,7 @@ public class JobTabMainController implements Initializable {
         JobParameters sam_param = new JobParameters();
         sam.setJobParameters(sam_param);
         sam.setPath(SAMPath.getText());
-        sam.setAdditionalArgs(SAMArguments.getText());
+        sam.setAdditionalArguments(SAMArguments.getText());
         sam_param.setQueue(SAMQueue.getText());
         sam_param.setMemRequested(SAMMemory.getText());
         sam_param.setNumCPUs(SAMCPU.getText());
@@ -796,7 +796,7 @@ public class JobTabMainController implements Initializable {
 
         // Inputs
         try {
-            ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
+            ObservableList<String> vcf = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
             inputVcfFiles.setItems(vcf);
             ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
             inputReadFiles.setItems(read);
@@ -820,7 +820,7 @@ public class JobTabMainController implements Initializable {
         for(Aligner aligner : aligners){
             JobParameters job_params = aligner.getJobParameters();
             String name = aligner.getName().toLowerCase();
-            String args = aligner.getAdditionalArgs();
+            String args = aligner.getAdditionalArguments();
             String path = aligner.getPath();
 
             if(name.contains("sampe")){
@@ -873,7 +873,7 @@ public class JobTabMainController implements Initializable {
         for(SNPCaller caller: snpcallers){
             JobParameters job_params = caller.getJobParameters();
             String name = caller.getName().toLowerCase();
-            String args = caller.getAdditionalArgs();
+            String args = caller.getAdditionalArguments();
             String path = caller.getPath();
             if(name.contains("gatk")){
                 cbSnpCallerGATK.setSelected(true);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="NaspInputData" type="NaspInputDataType"/>
-  <xs:complexType name="AlignerType">
+  <xs:complexType name="Aligner">
     <xs:sequence>
       <xs:element name="AdditionalArguments">
         <xs:simpleType>
@@ -17,20 +17,20 @@
     <xs:attribute type="xs:string" name="name" use="optional"/>
     <xs:attribute type="xs:string" name="path" use="optional"/>
   </xs:complexType>
-  <xs:complexType name="PicardType">
+  <xs:complexType name="Picard">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="ReadFolderType">
+  <xs:complexType name="ReadFolder">
     <xs:sequence>
       <xs:element type="ReadPairType" name="ReadPair"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="MatrixGeneratorType">
+  <xs:complexType name="MatrixGenerator">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
       <xs:element type="JobParametersType" name="JobParameters"/>
@@ -38,20 +38,20 @@
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="AssemblyFolderType">
+  <xs:complexType name="AssemblyFolder">
     <xs:sequence>
       <xs:element type="AssemblyType" name="Assembly"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="ReadPairType">
+  <xs:complexType name="ReadPair">
     <xs:sequence>
       <xs:element type="xs:string" name="Read1Filename"/>
       <xs:element type="xs:string" name="Read2Filename"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="sample"/>
   </xs:complexType>
-  <xs:complexType name="AssemblyImporterType">
+  <xs:complexType name="AssemblyImporter">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
       <xs:element type="JobParametersType" name="JobParameters"/>
@@ -59,21 +59,21 @@
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="ReferenceType">
+  <xs:complexType name="Reference">
     <xs:sequence>
       <xs:element type="xs:string" name="FindDups"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="NaspInputDataType">
+  <xs:complexType name="NaspInputData">
     <xs:sequence>
       <xs:element type="OptionsType" name="Options"/>
       <xs:element type="FilesType" name="Files"/>
       <xs:element type="ExternalApplicationsType" name="ExternalApplications"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="OptionsType">
+  <xs:complexType name="Options">
     <xs:sequence>
       <xs:element type="xs:string" name="RunName"/>
       <xs:element type="xs:string" name="OutputFolder"/>
@@ -82,21 +82,21 @@
       <xs:element type="xs:string" name="JobSubmitter"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="SamtoolsType">
+  <xs:complexType name="Samtools">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="AssemblyType">
+  <xs:complexType name="Assembly">
     <xs:simpleContent>
       <xs:extension base="xs:string">
         <xs:attribute type="xs:string" name="sample"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
-  <xs:complexType name="DupFinderType">
+  <xs:complexType name="DupFinder">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
       <xs:element type="JobParametersType" name="JobParameters"/>
@@ -104,7 +104,7 @@
     <xs:attribute type="xs:string" name="name"/>
     <xs:attribute type="xs:string" name="path"/>
   </xs:complexType>
-  <xs:complexType name="JobParametersType">
+  <xs:complexType name="JobParameters">
     <xs:sequence>
       <xs:element name="MemRequested">
         <xs:simpleType>
@@ -139,7 +139,7 @@
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="optional"/>
   </xs:complexType>
-  <xs:complexType name="ExternalApplicationsType">
+  <xs:complexType name="ExternalApplications">
     <xs:sequence>
       <xs:element type="IndexType" name="Index"/>
       <xs:element type="MatrixGeneratorType" name="MatrixGenerator"/>
@@ -151,13 +151,13 @@
       <xs:element type="SNPCallerType" name="SNPCaller" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="FilesType">
+  <xs:complexType name="Files">
     <xs:sequence>
       <xs:element type="ReadFolderType" name="ReadFolder"/>
       <xs:element type="AssemblyFolderType" name="AssemblyFolder"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="SNPCallerType">
+  <xs:complexType name="SNPCaller">
     <xs:sequence>
       <xs:element name="AdditionalArguments">
         <xs:simpleType>
@@ -172,13 +172,13 @@
     <xs:attribute type="xs:string" name="name" use="optional"/>
     <xs:attribute type="xs:string" name="path" use="optional"/>
   </xs:complexType>
-  <xs:complexType name="FiltersType">
+  <xs:complexType name="Filters">
     <xs:sequence>
       <xs:element type="xs:string" name="ProportionFilter"/>
       <xs:element type="xs:string" name="CoverageFilter"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="IndexType">
+  <xs:complexType name="Index">
     <xs:sequence>
       <xs:element type="xs:string" name="AdditionalArguments"/>
       <xs:element type="JobParametersType" name="JobParameters"/>

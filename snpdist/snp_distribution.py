@@ -8,8 +8,7 @@ across an interval"""
 
 import optparse
 import sys
-import collections
-import os
+from collections import Counter
 
 def test_file(option, opt_str, value, parser):
     try:
@@ -54,10 +53,11 @@ def parse_matrix(matrix, step, largest):
             for line in f:
                 fields = line.split("\t")
                 if int(fields[coords]) in my_range:
-                    counter=collections.Counter(fields[1:last])
-                    values=counter.values()
-                    new_values=list(sorted(values, key=int))
-                    if len(new_values)==1:
+                    temp = fields[1:last]
+                    counter = Counter(temp)
+                    values = counter.values()
+                    new_values = list(sorted(values, key=int))
+                    if len(new_values) == 1:
                         sys.exc_clear()
                     else:
                         for z in range(2,5):

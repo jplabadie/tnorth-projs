@@ -40,7 +40,13 @@ def parse_matrix(matrix, step, largest):
     coords=first_fields.index("Position")
     last=first_fields.index("#SNPcall")
     in_matrix.close()
-    for i in xrange(int(start), int(largest), int(step)):
+
+    """
+        Xrange was originally used in this for loop, which in Python2 gives a significant performance improvement.
+        However, xrange is not a function in Python3 (where range always uses the behavior of xrange).
+        IF WORKING IN A PYTHON v2 ENVIRONMENT: revert this function to 'xrange' instead of 'range'
+    """
+    for i in range(int(start), int(largest), int(step)):
         positives=[ ]
         my_range=range(i,i+step)
         with open(matrix) as f:

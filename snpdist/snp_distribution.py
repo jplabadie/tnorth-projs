@@ -62,7 +62,7 @@ def parse_matrix(matrix, step, largest):
                     else:
                         for z in range(2,5):
                             if len(new_values)==int(z) and new_values[z-2]>1: positives.append("1")
-        print >> outfile, i, i+step, len(positives)
+        print(i, i+step, len(positives), file=outfile )
     outfile.close()
 
 def main(matrix, step):

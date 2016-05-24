@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 from __future__ import division
 """calculates the SNP density
 across an interval"""
@@ -14,21 +15,21 @@ def test_file(option, opt_str, value, parser):
     try:
         with open(value): setattr(parser.values, option.dest, value)
     except IOError:
-        print '%s file cannot be opened' % option
+        print('%s file cannot be opened' % option)
         sys.exit()
 
 def get_index(matrix):
-    in_matrix = open(matrix, "U")
-    positions=[]
-    firstLine = in_matrix.readline()
-    first_fields = firstLine.split("\t")
-    coords=first_fields.index("Position")
-    for line in in_matrix:
-        fields = line.split("\t")
-        positions.append(fields[coords])
-    largest=positions[-1]
+    with open(matrix, "U") as in_matrix:
+        positions=[]
+        firstLine = in_matrix.readline()
+        first_fields = firstLine.split("\t")
+        coords=first_fields.index("Position")
+        for line in in_matrix:
+            fields = line.split("\t")
+            positions.append(fields[coords])
+        largest=positions[-1]
     return largest
-    in_matrix.close()
+
 
 def parse_matrix(matrix, step, largest):
     start=1
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     mandatories = ["matrix"]
     for m in mandatories:
         if not getattr(options, m, None):
-            print "\nMust provide %s.\n" %m
+            print ("\nMust provide %s.\n" % m)
             parser.print_help()
             exit(-1)
 

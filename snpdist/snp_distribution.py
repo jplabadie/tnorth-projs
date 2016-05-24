@@ -6,7 +6,7 @@ from __future__ import division
 across an interval"""
 
 
-import optparse
+from optparse import OptionParser
 import sys
 from collections import Counter
 
@@ -71,7 +71,7 @@ def main(matrix, step):
 
 if __name__ == "__main__":
     usage="usage: %prog [options]"
-    parser = optparse.OptionParser(usage=usage)
+    parser = OptionParser(usage=usage)
     parser.add_option("-m", "--matrix", dest="matrix",
                       help="/path/to/NASP formatted SNP matrix [REQUIRED]",
                       type="string", action="callback", callback=test_file)

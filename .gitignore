@@ -17,6 +17,7 @@ hs_err_pid*
 
 #blanket
 *.idea/*
+*.iml
 
 # User-specific stuff:
 .idea/workspace.xml

@@ -1,10 +1,12 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project tnorth-projs.
  * Created by jlabadie on 5/25/16.
  *
- * @Author jlabadie
+ * @author jlabadie
  */
 public class DefaultSNPDistribution {
 
@@ -88,40 +90,43 @@ public class DefaultSNPDistribution {
         }
         System.out.println(output);
         return output;
-
     }
 
 
-    public String getSNPDistribution(int window_size, int step_size) throws IOException {
-        String outputs = "";
-
-
+    public ArrayList<String> getSNPDistribution(int window_size, int step_size) throws IOException {
+        ArrayList<String> output = new ArrayList<String>();
         int last_snp_index = getLastSNPIndex();
 
         br.readLine(); //ignore the first line, which is essentially a header
         String[] line_fields;
+
+        int range_min = 1;
+        int range_max = window_size;
+        int snp_position;
+        int snp_count = 0;
         int temp_total = 0;
-        int temp_pos;
-        int temp_calls = 0;
+        String line = "";
 
-        for (int i = 0; i < last_snp_index - window_size; i += window_size) {
-            for (String line; (line = br.readLine()) != null; ) {
-                line_fields = line.split("\t");
-                temp_calls = new Integer(line_fields[snp_call_field]);
-                temp_pos = new Integer(line_fields[snp_position_field]);
-                System.out.print("!"+temp_calls);
+        while ( (line = br.readLine()) != null ) {
+            line_fields = line.split("\t");
+            snp_count = new Integer(line_fields[snp_call_field]);
+            snp_position = new Integer(line_fields[snp_position_field]);
 
-
-                    if (temp_calls > 1)
-                        temp_total+=temp_calls;
-
-
+            if (snp_count > 1) {
+                if(snp_position > range_max){
+                    output.add( range_min + "," + range_max +","+temp_total);
+                    System.out.println(output.get(output.size()-1));
+                    range_min += step_size;
+                    range_max = range_min+window_size;
+                    temp_total = 1;
+                }
+                else {
+                    temp_total++;
+                }
             }
-            outputs += i + " : " + (i+window_size) +" #"+temp_total+"\n";
-            temp_total=0;
-
         }
+
         resetBufferedReader();
-        return outputs;
+        return output;
     }
 }

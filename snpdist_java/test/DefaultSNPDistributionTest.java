@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Project tnorth-projs.
@@ -27,7 +28,32 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void getSNPDistribution() throws Exception {
-        System.out.println(snpd.getSNPDistribution(1000,1000));
+        ArrayList<String> temp = snpd.getAggregateSNPDistribution(1000,1000);
+
+        for(String x : temp){
+            //System.out.println(x);
+        }
     }
+
+    @Test
+    public void getIndividualSamplesSNPDistribution() throws Exception {
+        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1);
+
+
+        for (String aTemp : temp) {
+            //System.out.println(aTemp);
+        }
+    }
+
+    @Test
+    public void getCompleteSNPDistribution() throws Exception{
+        ArrayList<String> temp = snpd.getCompleteSNPDistribution(1000,1000);
+
+        for (String aTemp : temp) {
+            System.out.println(aTemp);
+        }
+
+    }
+
 
 }

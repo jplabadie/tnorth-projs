@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Project tnorth-projs.
@@ -48,7 +49,6 @@ public class DefaultSNPDistribution {
                     snp_position_field=count;
                 count++;
             }
-        System.out.println(snp_position_field + ":"+snp_call_field);
         resetBufferedReader();
     }
 
@@ -73,7 +73,6 @@ public class DefaultSNPDistribution {
 
         for(String line; (line = br.readLine()) != null; ) {
             if(!br.ready()){
-                System.out.println(line);
                 line_fields = line.split("\t");
                 largest = line_fields[snp_position_field];
             }
@@ -93,9 +92,8 @@ public class DefaultSNPDistribution {
     }
 
 
-    public ArrayList<String> getSNPDistribution(int window_size, int step_size) throws IOException {
-        ArrayList<String> output = new ArrayList<String>();
-        int last_snp_index = getLastSNPIndex();
+    public ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size) throws IOException {
+        ArrayList<String> output = new ArrayList<>();
 
         br.readLine(); //ignore the first line, which is essentially a header
         String[] line_fields;
@@ -112,21 +110,95 @@ public class DefaultSNPDistribution {
             snp_count = new Integer(line_fields[snp_call_field]);
             snp_position = new Integer(line_fields[snp_position_field]);
 
-            if (snp_count > 1) {
-                if(snp_position > range_max){
-                    output.add( range_min + "," + range_max +","+temp_total);
-                    System.out.println(output.get(output.size()-1));
+            if(snp_position > range_max){
+                output.add( range_min + "," + range_max + "," + temp_total);
+                range_min += step_size;
+                range_max = range_min + window_size;
+                temp_total = 0;
+                while(snp_position>range_max){
+                    output.add( range_min + "," + range_max + "," + temp_total);
                     range_min += step_size;
-                    range_max = range_min+window_size;
-                    temp_total = 1;
+                    range_max = range_min + window_size;
                 }
-                else {
-                    temp_total++;
-                }
+            }
+            if (snp_count > 1) {
+                temp_total++;
             }
         }
 
         resetBufferedReader();
         return output;
     }
+
+    public ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
+        ArrayList<String> output = new ArrayList<>();
+        String output_line = "";
+
+        br.readLine(); //ignore the first line, which is essentially a header
+        String[] line_fields;
+
+        int range_min = 1;
+        int range_max = window_size;
+        int snp_position;
+        char sample;
+        char reference;
+        int temp_total = 0;
+        String line = "";
+
+        while ( (line = br.readLine()) != null ) {
+            line_fields = line.split("\t");
+
+            snp_position = new Integer(line_fields[snp_position_field]);
+            reference = line_fields[1].charAt(0);
+            sample = line_fields[sample_field+2].charAt(0);
+
+            if (snp_position > range_max) {
+                output_line =range_min+","+range_max+","+ temp_total;
+                output.add(output_line);
+                range_min += step_size;
+                range_max = range_min + window_size;
+                temp_total = 0;
+                while(snp_position > range_max){
+                    output.add( range_min + "," + range_max + "," + temp_total);
+                    range_min += step_size;
+                    range_max = range_min + window_size;
+                }
+            }
+            if (sample != reference) {
+                temp_total++;
+            }
+        }
+
+        resetBufferedReader();
+        return output;
+    }
+
+    public ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
+
+        ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size);
+        ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
+        ArrayList<String> snp_dist;
+        for( int i= 0; i < snp_call_field -3; i++){
+            snp_dist = getIndividualSamplesSNPDistribution(window_size,step_size,i);
+            snp_dists.add(snp_dist);
+        }
+
+        int index = 0;
+        for(ArrayList<String> snp_list : snp_dists){
+            for (String out_dist : agg_dist) {
+
+                String temp = snp_list.get(index);
+                temp = temp.substring(temp.lastIndexOf(','),temp.length());
+                out_dist+=temp;
+                agg_dist.set(index,out_dist);
+
+                index++;
+            }
+            index=0;
+        }
+
+        return agg_dist;
+
+    }
+
 }

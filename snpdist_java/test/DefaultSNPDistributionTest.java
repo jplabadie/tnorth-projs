@@ -8,7 +8,7 @@ import java.io.File;
  * Project tnorth-projs.
  * Created by jlabadie on 5/25/16.
  *
- * @Author jlabadie
+ * @author jlabadie
  */
 public class DefaultSNPDistributionTest {
     private DefaultSNPDistribution snpd;

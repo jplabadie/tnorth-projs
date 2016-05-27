@@ -25,33 +25,44 @@ public class DefaultSNPDistributionTest {
         Assert.assertEquals(snpd.getLastSNPIndex(),1750724);
     }
 
+    @Test
+    public void writeResultsToCSV() throws Exception {
+        //ArrayList<String> temp =snpd.getCompleteSNPDistribution(1000,1000);
+        //snpd.exportResultsToCSV(temp, "results",true);
+    }
 
     @Test
-    public void getSNPDistribution() throws Exception {
-        ArrayList<String> temp = snpd.getAggregateSNPDistribution(1000,1000);
+    public void getSamples() throws Exception {
+        System.out.println(snpd.getSampleNames());
+    }
 
+
+    @Test
+    public void getAggregateSNPDistribution() throws Exception {
+        ArrayList<String> temp = snpd.getAggregateSNPDistribution(1000,1000);
+        System.out.println("---Aggregate Distribution Data----");
         for(String x : temp){
-            //System.out.println(x);
+            System.out.println(x);
         }
     }
 
     @Test
     public void getIndividualSamplesSNPDistribution() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1);
+       // ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,26);
+       // System.out.println("---Individual Distribution Data----");
 
-
-        for (String aTemp : temp) {
-            //System.out.println(aTemp);
-        }
+       // for (String aTemp : temp) {
+       //     System.out.println(aTemp);
+      //  }
     }
 
     @Test
     public void getCompleteSNPDistribution() throws Exception{
-        ArrayList<String> temp = snpd.getCompleteSNPDistribution(1000,1000);
-
-        for (String aTemp : temp) {
-            System.out.println(aTemp);
-        }
+       // ArrayList<String> temp = snpd.getCompleteSNPDistribution(1000,1000);
+       // System.out.println("---Complete Distribution Data----");
+       // for (String aTemp : temp) {
+       //     System.out.println(aTemp);
+       // }
 
     }
 

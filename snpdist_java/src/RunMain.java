@@ -91,7 +91,7 @@ public class RunMain {
                 output = dsd.getCompleteSNPDistribution(window_size,step_size);
             }
             else if (mode=='i'){
-                output = dsd.getIndividualSamplesSNPDistribution(window_size,step_size)
+                output = dsd.getIndividualSamplesSNPDistribution(window_size,step_size,indv_samples);
             }
         } catch (IOException e) {
             e.printStackTrace();

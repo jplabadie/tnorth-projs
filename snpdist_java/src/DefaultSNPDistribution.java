@@ -25,6 +25,7 @@ class DefaultSNPDistribution {
     private int sample_count = 0;
 
     private ArrayList<String> column_names = new ArrayList<>();
+    private ArrayList<String> sample_names = new ArrayList<>();
     private ArrayList<String[]> snapshot = new ArrayList<>();
     private int[] snapshot_index;
     private BufferedReader br;
@@ -83,10 +84,14 @@ class DefaultSNPDistribution {
             snapshot_index[i++] = new Integer(x[POS]);
         }
 
+        Collections.addAll(sample_names, getSampleNames().split(","));
 
         resetBufferedReader();
     }
 
+    /**
+     * Largely deprecated by current implementation and the init() function
+     */
     private void resetBufferedReader(){
         try {
             br = new BufferedReader(new FileReader(snp_matrix));
@@ -179,6 +184,29 @@ class DefaultSNPDistribution {
             start_pos += step_size;
         }
         return output;
+    }
+
+    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size,int step_size, ArrayList<String> samples){
+
+        int[] samps = new int[samples.size()];
+
+        try{
+            for(int i=0; i< samples.size(); i++){
+                samps[i] = new Integer(samples.get(i));
+            }
+
+
+        }
+        catch (Exception e){
+
+            for(String x: samples){
+                for(int i=0; i <sample_names.size(); i++){
+
+                }
+            }
+        }
+        return new ArrayList<>(); //TODO:This method is incomplete, should return multiple sample distributions
+
     }
 
     ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {

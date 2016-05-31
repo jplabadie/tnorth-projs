@@ -152,7 +152,6 @@ public class DefaultSNPDistribution {
         int step_total=0;
 
         for ( String[] line : snapshot) {
-            System.out.println(line[TOT]);
             snp_count = new Integer(line[TOT]);
             snp_position = new Integer(line[POS]);
 

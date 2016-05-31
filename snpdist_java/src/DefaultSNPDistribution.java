@@ -4,9 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project tnorth-projs.
@@ -14,7 +12,7 @@ import java.util.List;
  *
  * @author jlabadie
  */
-public class DefaultSNPDistribution {
+class DefaultSNPDistribution {
 
     private int POS = 0;
     private int REF = 1;
@@ -28,9 +26,10 @@ public class DefaultSNPDistribution {
 
     private ArrayList<String> column_names = new ArrayList<>();
     private ArrayList<String[]> snapshot = new ArrayList<>();
+    private int[] snapshot_index;
     private BufferedReader br;
 
-    public DefaultSNPDistribution(File snp_matrix_tsv) {
+    DefaultSNPDistribution(File snp_matrix_tsv) {
         try {
             init(snp_matrix_tsv);
         } catch (IOException e) {
@@ -38,7 +37,7 @@ public class DefaultSNPDistribution {
         }
     }
 
-    public DefaultSNPDistribution(String path_local_snp_matrix_tsv){
+    DefaultSNPDistribution(String path_local_snp_matrix_tsv){
         File temp = new File(path_local_snp_matrix_tsv);
         try {
             init(temp);
@@ -46,8 +45,6 @@ public class DefaultSNPDistribution {
             e.printStackTrace();
         }
     }
-
-    private DefaultSNPDistribution(){}
 
     private void init(File snp_matrix_tsv) throws IOException {
         snp_matrix = snp_matrix_tsv;
@@ -57,12 +54,17 @@ public class DefaultSNPDistribution {
             String[] line_fields = br.readLine().split("\t");
             int count = 0;
             for (String x : line_fields) {
-                if (x.equals("#SNPcall"))
-                    snp_call_field_index =count;
-                else if(x.equals("Reference"))
-                    reference_field_index = count;
-                else if (x.equals("Position"))
-                    snp_position_field_index =count;
+                switch (x) {
+                    case "#SNPcall":
+                        snp_call_field_index = count;
+                        break;
+                    case "Reference":
+                        reference_field_index = count;
+                        break;
+                    case "Position":
+                        snp_position_field_index = count;
+                        break;
+                }
                 column_names.add(x);
                 count++;
             }
@@ -77,11 +79,19 @@ public class DefaultSNPDistribution {
             temp[REF] = line_fields[reference_field_index];
             temp[TOT] = line_fields[snp_call_field_index];
 
-            for(int i=reference_field_index+2; i<snp_call_field_index;i++){
-                temp[i] = line_fields[i];
-            }
+            System.arraycopy(line_fields, reference_field_index + 1, temp,
+                    TOT+1, snp_call_field_index - (reference_field_index + 1));
             snapshot.add(temp);
         }
+
+        snapshot_index = new int[snapshot.size()];
+
+        int i = 0;
+        for(String[] x : snapshot){
+
+            snapshot_index[i++] = new Integer(x[POS]);
+        }
+
 
         resetBufferedReader();
     }
@@ -96,28 +106,29 @@ public class DefaultSNPDistribution {
 
     /**
      *
-     * @return
+     * @return int representing the position (in the contig) of the last SNP
      * @throws IOException
      */
-    public int getLastSNPIndex() throws IOException {
+    int getLastSNPIndex() throws IOException {
 
         String largest = snapshot.get(snapshot.size()-1)[POS];
         return new Integer(largest);
     }
 
-    public String getSampleNames() throws IOException {
+    String getSampleNames() throws IOException {
 
         String output="";
 
         for(int i = reference_field_index +1; i < snp_call_field_index; i++)
         {
-            output += column_names.get(i)+',';
+            if(i>reference_field_index+1)
+                output += ',';
+            output += column_names.get(i);
         }
-
         return output;
     }
 
-    public void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
+    protected void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
         List<String> lines = new ArrayList<>();
         String header = "fromPos,toPos,AggregateDist,";
         header += getSampleNames();
@@ -140,87 +151,85 @@ public class DefaultSNPDistribution {
     }
 
 
-    public ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size) throws IOException {
+    ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size) throws IOException {
         ArrayList<String> output = new ArrayList<>();
 
-        int range_min = 1;
-        int range_max = 1+window_size;
+        int true_max = getLastSNPIndex();
+        boolean no_slide = false;
+        if(window_size==step_size) no_slide = true;
 
-        int snp_count;
-        int snp_position;
-        int window_total=0;
-        int step_total=0;
+        int start_pos=0;
+        int ss_index;
+        int ss_step_index=0;
+        boolean step_index_set;
+        int end_pos;
 
-        for ( String[] line : snapshot) {
-            snp_count = new Integer(line[TOT]);
-            snp_position = new Integer(line[POS]);
+        int range_total = 0;
 
-            while(snp_position>range_max){
-                output.add( range_min + "," + range_max + "," + window_total);
-                range_min += step_size;
-                range_max = range_min + window_size;
+        while(start_pos+window_size < true_max){
+            end_pos = start_pos+window_size;
+            ss_index = ss_step_index;
+            step_index_set = false;
+            for(;snapshot_index[ss_index] <= end_pos; ss_index++){
+                int tot = new Integer(snapshot.get(ss_index)[TOT]);
+                if(tot > 1)
+                    range_total++ ;
+                if(no_slide)
+                    ss_step_index++;
+                else if(snapshot_index[ss_index]>=start_pos+step_size && !step_index_set) {
+                    ss_step_index = ss_index;
+                    step_index_set = true;
+                }
             }
+            String out = start_pos + ","+end_pos+","+range_total;
+            output.add(out);
+            range_total=0;
 
-            if(snp_position >= range_min && snp_position<range_max){
-                output.add( range_min + "," + range_max + "," + window_total+step_total);
-                range_min += step_size;
-                range_max = range_min + window_size;
-                window_total = step_total = 0;
-            }
-
-            if (snp_count > 1) {
-                window_total++;
-                if(snp_position >= range_min+step_size)
-                    step_total++;
-            }
+            start_pos += step_size;
         }
         return output;
     }
 
-    public ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
+    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
 
         if(sample_field<=0 || sample_field > sample_count)
             throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and "+sample_count);
 
         ArrayList<String> output = new ArrayList<>();
-        String output_line = "";
 
-        br.readLine(); //ignore the first line, which is essentially a header
-        String[] line_fields;
+        int true_max = getLastSNPIndex();
+        boolean no_slide = false;
+        if(window_size==step_size) no_slide = true;
 
-        int range_min = 1;
-        int range_max = window_size;
-        int snp_position;
-        char sample;
-        char reference;
-        int temp_total = 0;
-        String line = "";
+        int start_pos=0;
+        int ss_index;
+        int ss_step_index=0;
+        boolean step_index_set;
+        int end_pos;
 
-        while ( (line = br.readLine()) != null ) {
-            line_fields = line.split("\t");
-
-            snp_position = new Integer(line_fields[snp_position_field_index]);
-            reference = line_fields[1].charAt(0);
-            sample = line_fields[sample_field+1].charAt(0);
-
-            if (snp_position > range_max) {
-                output_line =range_min+","+range_max+","+ temp_total;
-                output.add(output_line);
-                range_min += step_size;
-                range_max = range_min + window_size;
-                temp_total = 0;
-                while(snp_position > range_max){
-                    output.add( range_min + "," + range_max + "," + temp_total);
-                    range_min += step_size;
-                    range_max = range_min + window_size;
+        int range_total = 0;
+        while(start_pos+window_size < true_max){
+            end_pos = start_pos+window_size;
+            ss_index = ss_step_index;
+            step_index_set = false;
+            for(;snapshot_index[ss_index] <= end_pos; ss_index++){
+                String sample = snapshot.get(ss_index)[sample_field+TOT];
+                String reference = snapshot.get(ss_index)[REF];
+                if(!sample.equals(reference))
+                    range_total++ ;
+                if(no_slide)
+                    ss_step_index++;
+                else if(snapshot_index[ss_index]>=start_pos+step_size && !step_index_set) {
+                    ss_step_index = ss_index;
+                    step_index_set = true;
                 }
             }
-            if (sample != reference) {
-                temp_total++;
-            }
-        }
+            String out = start_pos + ","+end_pos+","+range_total;
+            output.add(out);
+            range_total=0;
 
-        resetBufferedReader();
+            start_pos += step_size;
+        }
         return output;
     }
 

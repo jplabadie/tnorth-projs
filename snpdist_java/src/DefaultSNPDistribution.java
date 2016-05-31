@@ -37,15 +37,6 @@ class DefaultSNPDistribution {
         }
     }
 
-    DefaultSNPDistribution(String path_local_snp_matrix_tsv){
-        File temp = new File(path_local_snp_matrix_tsv);
-        try {
-            init(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void init(File snp_matrix_tsv) throws IOException {
         snp_matrix = snp_matrix_tsv;
 
@@ -128,7 +119,7 @@ class DefaultSNPDistribution {
         return output;
     }
 
-    protected void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
+    void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
         List<String> lines = new ArrayList<>();
         String header = "fromPos,toPos,AggregateDist,";
         header += getSampleNames();
@@ -233,7 +224,7 @@ class DefaultSNPDistribution {
         return output;
     }
 
-    public ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
+    ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
 
         ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size);
         ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
@@ -242,8 +233,6 @@ class DefaultSNPDistribution {
             snp_dist = getIndividualSamplesSNPDistribution(window_size,step_size,i);
             snp_dists.add(snp_dist);
         }
-
-        System.out.println("$#$"+sample_count);
 
         int index = 0;
         for(ArrayList<String> snp_list : snp_dists){
@@ -261,4 +250,6 @@ class DefaultSNPDistribution {
 
         return agg_dist;
     }
+
 }
+

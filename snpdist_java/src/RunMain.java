@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Project tnorth-projs.
@@ -8,33 +10,93 @@ import java.util.ArrayList;
  * @author jlabadie
  */
 public class RunMain {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
-        char mode;
-        String ref_path;
-        String out_path;
-        int window_size;
-        int step_size;
+        /**
+         * modes:
+         * c = complete, aggregate dist + all indv samples dist
+         * i = individual, each listed sample dist
+         * a = aggregate, only the aggregate dist
+         * d = default, aggregate only, window and step = 1000
+         */
+        char mode = '\0';
+        String ref_path = "";
+        String out_path = "";
+        int window_size = 0;
+        int step_size = 0;
+        ArrayList<String> indv_samples = new ArrayList<>();
+
+        String previous = "";
+        for (String x : args) {
+
+            if (mode == '\0' && x.equalsIgnoreCase("-C")) {
+                mode = 'c';
+                continue;
+            } else if (mode == '\0' && x.equalsIgnoreCase("-A")) {
+                mode = 'a';
+                continue;
+            } else if (mode == '\0' && x.equalsIgnoreCase("-I")) {
+                mode = 'i';
+                continue;
+            }
+
+            if (ref_path.equals("") && x.contains(".") || previous.equalsIgnoreCase("-R")) {
+                ref_path = x;
+                continue;
+            } else if (out_path.equals("") && x.contains(".") || previous.equalsIgnoreCase("-O")) {
+                out_path = x;
+                continue;
+            }
+
+            if (window_size == 0 || previous.equalsIgnoreCase("-W")) {
+                try {
+                    window_size = new Integer(x);
+                    continue;
+                } catch (Exception e) {
+                    System.out.println("Bad window size input");
+                }
+            } else if (step_size == 0 || previous.equalsIgnoreCase("-S")) {
+                try {
+                    step_size = new Integer(x);
+                    continue;
+                } catch (Exception e) {
+                    System.out.println("Bad step size input");
+                }
+            }
+
+            if(mode == 'i' ){
+                indv_samples.add(x);
+            }
+
+            previous = x;
+        }
+
+        if(mode == '\0')// if mode unset, default to 'd'
+            mode = 'd';
+        if(ref_path.equals("") || out_path.equals("")){
+            System.out.println("A reference and output path must be provided.");
+            System.exit(1);
+        }
 
         try {
-            mode = args[0].charAt(0);
-            ref_path = args[1];
-            out_path = args[2];
-            window_size = new Integer(args[3]);
-            step_size = new Integer(args[4]);
-
             File input = new File(ref_path);
             DefaultSNPDistribution dsd = new DefaultSNPDistribution(input);
+            ArrayList<String> output;
 
-            if(mode == 'c'){
-                dsd.exportResultsToCSV(dsd.getCompleteSNPDistribution(window_size,step_size),
-                out_path,
-                false);
+            if(mode =='d' && window_size>0 && step_size>0) {
+                output = dsd.getAggregateSNPDistribution(window_size, step_size);
+                dsd.exportResultsToCSV(output,out_path,false);
             }
-            else if(mode ==)
-
-        }catch (Exception e){
-
+            else if(mode == 'c'){
+                output = dsd.getCompleteSNPDistribution(window_size,step_size);
+            }
+            else if (mode=='i'){
+                output = dsd.getIndividualSamplesSNPDistribution(window_size,step_size)
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
     }
 }

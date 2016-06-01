@@ -7,22 +7,24 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
- * Project tnorth-projs.
- * Created by jlabadie on 5/25/16.
+ * Project: SNP Density Script
+ * Git-Hub repository: tnorth-projs.
+ * Created by: jlabadie on 5/25/16.
  *
  * @author jlabadie
  */
 class DefaultSNPDistribution {
 
-    private int POS = 0;
-    private int REF = 1;
-    private int TOT = 2;
+    private int POS = 0; // index of snp position in snapshot (arbitrary)
+    private int REF = 1; // index of reference nucleotide in snapshot (arbitrary)
+    private int TOT = 2; // index of snp total in snapshot (arbitrary)
 
-    private File snp_matrix;
-    private int snp_position_field_index = 0;
-    private int reference_field_index = 0;
-    private int snp_call_field_index = 0;
-    private int sample_count = 0;
+    private File snp_matrix; // tab-delimited NASP input File, usage is largely deprecated
+
+    private int snp_position_field_index = 0; // index of snp position in tab-delimited input File
+    private int reference_field_index = 0; // index of reference nucleotide in input File
+    private int snp_call_field_index = 0; // index of snp total in input File
+    private int sample_count = 0; // a count of the unique samples found in the input (begins at 1)
 
     private ArrayList<String> column_names = new ArrayList<>();
     private ArrayList<String> sample_names = new ArrayList<>();
@@ -38,6 +40,11 @@ class DefaultSNPDistribution {
         }
     }
 
+    /**
+     *
+     * @param snp_matrix_tsv
+     * @throws IOException
+     */
     private void init(File snp_matrix_tsv) throws IOException {
         snp_matrix = snp_matrix_tsv;
 
@@ -111,6 +118,11 @@ class DefaultSNPDistribution {
         return new Integer(largest);
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     String getSampleNames() throws IOException {
 
         String output="";
@@ -124,6 +136,13 @@ class DefaultSNPDistribution {
         return output;
     }
 
+    /**
+     *
+     * @param results
+     * @param path
+     * @param overwrite
+     * @throws IOException
+     */
     void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
         List<String> lines = new ArrayList<>();
         String header = "fromPos,toPos,AggregateDist,";
@@ -147,6 +166,13 @@ class DefaultSNPDistribution {
     }
 
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @return
+     * @throws IOException
+     */
     ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size) throws IOException {
         ArrayList<String> output = new ArrayList<>();
 
@@ -186,6 +212,13 @@ class DefaultSNPDistribution {
         return output;
     }
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @param samples
+     * @return
+     */
     ArrayList<String> getIndividualSamplesSNPDistribution(int window_size,int step_size, ArrayList<String> samples){
 
         int[] samps = new int[samples.size()];
@@ -209,6 +242,14 @@ class DefaultSNPDistribution {
 
     }
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @param sample_field
+     * @return
+     * @throws IOException
+     */
     ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
 
         if(sample_field<=0 || sample_field > sample_count)
@@ -252,6 +293,13 @@ class DefaultSNPDistribution {
         return output;
     }
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @return
+     * @throws IOException
+     */
     ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
 
         ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size);
@@ -278,6 +326,5 @@ class DefaultSNPDistribution {
 
         return agg_dist;
     }
-
 }
 

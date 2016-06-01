@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * @author jlabadie
  */
 public class DefaultSNPDistributionTest {
+
     private DefaultSNPDistribution snpd;
     private String sample_names_reference = "";
     private ArrayList<String> agg_sliding_test_reference = new ArrayList<>();
@@ -164,8 +165,98 @@ public class DefaultSNPDistributionTest {
     @Test
     public void testCompleteSNPDistribution() throws Exception{
         ArrayList<String> temp = snpd.getCompleteSNPDistribution(1000,1000);
-        for (String aTemp : temp) {
-            System.out.println(aTemp);
-       }
+
+    }
+
+    @Test
+    public void getLastSNPIndex() throws Exception {
+
+    }
+
+    @Test
+    public void getSampleNames() throws Exception {
+
+        String out = snpd.getSampleNames();
+        int i=1;
+        for(String x : out.split(",")){
+            System.out.println(i+":"+x);
+            i++;
+        }
+    }
+
+    @Test
+    public void exportResultsToCSV() throws Exception {
+
+    }
+
+    @Test
+    public void getAggregateSNPDistribution() throws Exception {
+
+    }
+
+    @Test
+    public void getMultiSampleSNPDistributionNoSlide() throws Exception {
+
+        ArrayList<String> samples = new ArrayList<>();
+        samples.add("06-299002_S31_L001"); // #9
+        samples.add("03-2525_S26_L001"); // #2
+        samples.add("06-2950_S32_L001"); // #8
+
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,false);;
+        snpd.exportResultsToCSV(output,"mult_samp_9_2_8_noslide",true);
+    }
+
+    @Test
+    public void getMultiSampleSNPDistributionSlide() throws Exception {
+
+        ArrayList<String> samples = new ArrayList<>();
+        samples.add("03-2454_S25_L001"); // #1
+        samples.add("03-2525_S26_L001"); // #2
+        samples.add("06-2950_S32_L001"); // #8
+
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,false);
+        snpd.exportResultsToCSV(output,"mult_samp_1_2_8_slide",true);
+    }
+
+    @Test
+    public void getMultiSampleSNPDistributionNoSlideNumerical() throws Exception {
+
+        ArrayList<String> samples = new ArrayList<>();
+        samples.add("1");
+        samples.add("5");
+        samples.add("35");
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,true);
+        snpd.exportResultsToCSV(output,"mult_samp_1_5_35_noslide_numerical",true);
+    }
+
+    @Test
+    public void getMultiSampleSNPDistributionSlideNumerical() throws Exception {
+
+        ArrayList<String> samples = new ArrayList<>();
+        samples.add("1");
+        samples.add("33");
+        samples.add("35");
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
+        snpd.exportResultsToCSV(output,"mult_samp_1_33_35_slide_numerical",true);
+    }
+
+    @Test
+    public void getMultiSampleSNPDistributionSlideNumericalRange() throws Exception {
+
+        ArrayList<String> samples = new ArrayList<>();
+        samples.add("1:5");
+        samples.add("32:35");
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
+        snpd.exportResultsToCSV(output,"mult_samp_1-5_32-35_slide_numerical_range",true);
+    }
+
+    @Test
+    public void getIndividualSamplesSNPDistribution() throws Exception {
+
+    }
+
+    @Test
+    public void getCompleteSNPDistribution() throws Exception {
+
     }
 }

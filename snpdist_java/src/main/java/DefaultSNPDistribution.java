@@ -223,53 +223,52 @@ class DefaultSNPDistribution {
      */
     ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples, boolean numerical){
 
-        int[] samps = new int[samples.size()];
-        int samps_index = 0;
+        ArrayList<Integer> samps = new ArrayList<>();
         ArrayList<String> output;
 
         if(numerical){
             for(String samp : samples){
                 if (samp.contains(":")) {
                     int temp1 = new Integer(samp.substring(0,samp.indexOf(":")));
-                    int temp2 = new Integer(samp.substring(samp.indexOf(":"),samp.length()));
+                    int temp2 = new Integer(samp.substring(samp.indexOf(":")+1,samp.length()));
 
                     for(int i = temp1; i <= temp2; i++){
-                        samps[samps_index++] = i;
+                        samps.add(i);
                     }
                 }
                 else{
-                    samps[samps_index++] = new Integer(samp);
+                    samps.add(new Integer(samp));
                 }
             }
         }
         else{
             for(String samp : samples){
-                samps[samps_index++]= sample_names.indexOf(samp);
+                samps.add(sample_names.indexOf(samp));
             }
         }
 
         try{
-            output = getIndividualSamplesSNPDistribution(window_size,step_size,samps[0],false);
+            output = getIndividualSamplesSNPDistribution(window_size,step_size,samps.get(0),false);
             for(int indv : samps){
-                if(indv == samps[0])
+                if(indv == samps.get(0))
                     continue; //we already have the first sample loaded, skip it
                 else{
                     ArrayList<String> indv_output =
                             getIndividualSamplesSNPDistribution(window_size,step_size,indv, true);
 
-                    int indv_index = 0;
-                    for(String line : output){
-                        line += ","+indv_output.get(indv_index++); //append each indvidual
+                    for(int index = 0; index < output.size(); index++){
+                        String line = output.get(index); // get the output that already exists
+                        line += ","+indv_output.get(index++); // append each sample's snp total
+                        output.set(index,line);
                     }
-
                 }
             }
+            return output;
         }
         catch (Exception e){
-
+            System.out.println("There was an error in finding the distribution for multiple samples.");
+            return null;
         }
-        return new ArrayList<>(); //TODO:This method is incomplete, should return multiple sample distributions
-
     }
 
     /**

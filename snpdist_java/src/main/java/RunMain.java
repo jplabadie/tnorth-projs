@@ -92,7 +92,8 @@ public class RunMain {
                 output = dsd.getCompleteSNPDistribution(window_size,step_size);
             }
             else if (mode=='i'){
-                output = dsd.getMultiSampleSNPDistribution(window_size,step_size,indv_samples);
+                //TODO: this main method will likely be dumped, hiding output errors here
+                //output = dsd.getMultiSampleSNPDistribution(window_size,step_size,indv_samples);
             }
         } catch (IOException e) {
             e.printStackTrace();

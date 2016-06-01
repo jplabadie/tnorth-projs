@@ -92,7 +92,6 @@ class DefaultSNPDistribution {
         }
 
         Collections.addAll(sample_names, getSampleNames().split(","));
-
     }
 
     /**

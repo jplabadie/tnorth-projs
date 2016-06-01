@@ -19,8 +19,6 @@ class DefaultSNPDistribution {
     private int REF = 1; // index of reference nucleotide in snapshot (arbitrary)
     private int TOT = 2; // index of snp total in snapshot (arbitrary)
 
-    private File snp_matrix; // tab-delimited NASP input File, usage is largely deprecated
-
     private int snp_position_field_index = 0; // index of snp position in tab-delimited input File
     private int reference_field_index = 0; // index of reference nucleotide in input File
     private int snp_call_field_index = 0; // index of snp total in input File
@@ -30,7 +28,6 @@ class DefaultSNPDistribution {
     private ArrayList<String> sample_names = new ArrayList<>();
     private ArrayList<String[]> snapshot = new ArrayList<>();
     private int[] snapshot_index;
-    private BufferedReader br;
 
     DefaultSNPDistribution(File snp_matrix_tsv) {
         try {
@@ -41,14 +38,15 @@ class DefaultSNPDistribution {
     }
 
     /**
+     * <h>Initializer Method</h>
      * Private initializer method. Accepts a NASP Best-SNPs formatted, tab-delimited input file.
+     * <br/>
      * @param snp_matrix_tsv the input best-snps matrix, a tab delimited text file from NASP output
      * @throws IOException when there is an error opening the input file
      */
     private void init(File snp_matrix_tsv) throws IOException {
-        snp_matrix = snp_matrix_tsv;
 
-        br = new BufferedReader(new FileReader(snp_matrix));
+        BufferedReader br = new BufferedReader(new FileReader(snp_matrix_tsv));
 
             String[] line_fields = br.readLine().split("\t");
             int count = 0;
@@ -87,7 +85,6 @@ class DefaultSNPDistribution {
 
         int i = 0;
         for(String[] x : snapshot){
-
             snapshot_index[i++] = new Integer(x[POS]);
         }
 
@@ -97,20 +94,19 @@ class DefaultSNPDistribution {
     /**
      *
      * @return int representing the position (in the contig) of the last SNP
-     * @throws IOException
      */
-    int getLastSNPIndex() throws IOException {
+    int getLastSNPIndex()  {
 
         String largest = snapshot.get(snapshot.size()-1)[POS];
         return new Integer(largest);
     }
 
     /**
+     * Returns a comma-delimited string of sample names
      *
-     * @return
-     * @throws IOException
+     * @return a list of sample names, separated in original order by commas
      */
-    String getSampleNames() throws IOException {
+    String getSampleNames() {
 
         String output="";
 
@@ -124,11 +120,12 @@ class DefaultSNPDistribution {
     }
 
     /**
+     * Writes the given ArrayList of Strings (formatted by commas) to a CSV.
      *
-     * @param results
-     * @param path
-     * @param overwrite
-     * @throws IOException
+     * @param results the results ArrayList containing comma-delimited strings representing lines of output
+     * @param path the desired path for this output CSV
+     * @param overwrite if true, identical files will potentially be overwritten, if false, collisions will throw an exception
+     * @throws IOException if a file writing error occurs due to path errors, permissions, or collisions
      */
     void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
         List<String> lines = new ArrayList<>();
@@ -153,13 +150,20 @@ class DefaultSNPDistribution {
     }
 
     /**
-     *
-     * @param window_size
-     * @param step_size
-     * @return
-     * @throws IOException
+     * <h>Gives SNP Distribution data for the aggregate sum of samples</h>
+     * Creates an ArrayList of Strings. Each Element represents a line of output.
+     * <br/>
+     * The first line is a header which represents each column of data below it.
+     * Each subsequent line presents, in order: start_position, end_position, and total SNPS from all samples which had more than 1 SNP
+     * in the window.
+     * <br/>
+     * This output is typically passed to the exportToCSV method for output parsing.
+     * <br/>
+     * @param window_size the window size for sampling
+     * @param step_size the step size for moving the window, if >= window_size, the window is non-sliding
+     * @return an ArrayList representing lines of comma-delimited output
      */
-    ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size) throws IOException {
+    ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size){
         ArrayList<String> output = new ArrayList<>();
 
         int true_max = getLastSNPIndex();
@@ -198,16 +202,32 @@ class DefaultSNPDistribution {
         return output;
     }
 
+
     /**
+     * <h>Gives SNP Distribution data for a given list of samples</h>
+     * Creates an ArrayList of Strings. Each Element represents a line of output.
+     * <br/>
+     * The first line is a header which represents each column of data below it.
+     * Each subsequent line presents, in order: start_position, end_position,
+     * and an absolute count of SNPS for each sample found in the sample_list given.
+     * <br/>
+     * This output is typically passed to the exportToCSV method for output parsing.
+     * <br/>
+     * @param window_size the window size to use
+     * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
+     * @param samples an ArrayList of Strings representing the samples we are interested in
+     * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      *
-     * @param window_size
-     * @param step_size
-     * @param samples
-     * @return
      */
-    ArrayList<String> getMultiSampleSNPDistribution(int window_size,int step_size, ArrayList<String> samples){
+    ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples, boolean numerical){
 
         int[] samps = new int[samples.size()];
+
+        if(numerical){
+            for(String samp : samples){
+                //TODO: get list of samples to evaluate
+            }
+        }
 
         try{
             for(int i=0; i< samples.size(); i++){
@@ -229,11 +249,19 @@ class DefaultSNPDistribution {
     }
 
     /**
-     *
-     * @param window_size
-     * @param step_size
-     * @param sample_field
-     * @return
+     * <h>Gives SNP Distribution data for a single sample</h>
+     * Creates an ArrayList of Strings. Each Element represents a line of output.
+     * <br/>
+     * The first line is a header which represents each column of data below it.
+     * Each subsequent line presents, in order: start_position, end_position,
+     * and an absolute count of SNPS found inside the given window for the given sample.
+     * <br/>
+     * This output is typically passed to the exportToCSV method for output parsing.
+     * <br/>
+     * @param window_size the window size to use
+     * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
+     * @param sample_field refers to a sample by its position in the list of samples (1:sample_count)
+     * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
     ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
@@ -280,10 +308,18 @@ class DefaultSNPDistribution {
     }
 
     /**
-     *
-     * @param window_size
-     * @param step_size
-     * @return
+     * <h>Gives a complete output of all SNP Distribution data</h>
+     * Creates an ArrayList of Strings. Each Element represents a line of output.
+     * <br/>
+     * The first line is a header which represents each column of data below it.
+     * Each subsequent line presents, in order: start_position, end_position, total SNPS from all samples which had more than 1 SNP
+     * in the window, and an absolute count of SNPS for each sample (in order).
+     * <br/>
+     * This output is typically passed to the exportToCSV method for output parsing.
+     * <br/>
+     * @param window_size the window size to use
+     * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
+     * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
     ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{

@@ -65,7 +65,7 @@ def parse_matrix(matrix, step, largest):
         print(i, i+step, len(positives), file=outfile )
     outfile.close()
 
-def main(matrix, step):
+def RunMain(matrix, step):
     largest=get_index(matrix)
     parse_matrix(matrix, step, largest)
 
@@ -87,4 +87,4 @@ if __name__ == "__main__":
             parser.print_help()
             exit(-1)
 
-    main(options.matrix,options.step)
+    RunMain(options.matrix,options.step)

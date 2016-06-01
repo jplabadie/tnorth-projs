@@ -159,6 +159,7 @@ class DefaultSNPDistribution {
      * <br/>
      * This output is typically passed to the exportToCSV method for output parsing.
      * <br/>
+     *
      * @param window_size the window size for sampling
      * @param step_size the step size for moving the window, if >= window_size, the window is non-sliding
      * @return an ArrayList representing lines of comma-delimited output
@@ -213,6 +214,7 @@ class DefaultSNPDistribution {
      * <br/>
      * This output is typically passed to the exportToCSV method for output parsing.
      * <br/>
+     *
      * @param window_size the window size to use
      * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
      * @param samples an ArrayList of Strings representing the samples we are interested in
@@ -222,27 +224,49 @@ class DefaultSNPDistribution {
     ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples, boolean numerical){
 
         int[] samps = new int[samples.size()];
+        int samps_index = 0;
+        ArrayList<String> output;
 
         if(numerical){
             for(String samp : samples){
-                //TODO: get list of samples to evaluate
+                if (samp.contains(":")) {
+                    int temp1 = new Integer(samp.substring(0,samp.indexOf(":")));
+                    int temp2 = new Integer(samp.substring(samp.indexOf(":"),samp.length()));
+
+                    for(int i = temp1; i <= temp2; i++){
+                        samps[samps_index++] = i;
+                    }
+                }
+                else{
+                    samps[samps_index++] = new Integer(samp);
+                }
+            }
+        }
+        else{
+            for(String samp : samples){
+                samps[samps_index++]= sample_names.indexOf(samp);
             }
         }
 
         try{
-            for(int i=0; i< samples.size(); i++){
-                samps[i] = new Integer(samples.get(i));
-            }
+            output = getIndividualSamplesSNPDistribution(window_size,step_size,samps[0],false);
+            for(int indv : samps){
+                if(indv == samps[0])
+                    continue; //we already have the first sample loaded, skip it
+                else{
+                    ArrayList<String> indv_output =
+                            getIndividualSamplesSNPDistribution(window_size,step_size,indv, true);
 
-
-        }
-        catch (Exception e){
-
-            for(String x: samples){
-                for(int i=0; i <sample_names.size(); i++){
+                    int indv_index = 0;
+                    for(String line : output){
+                        line += ","+indv_output.get(indv_index++); //append each indvidual
+                    }
 
                 }
             }
+        }
+        catch (Exception e){
+
         }
         return new ArrayList<>(); //TODO:This method is incomplete, should return multiple sample distributions
 
@@ -258,13 +282,15 @@ class DefaultSNPDistribution {
      * <br/>
      * This output is typically passed to the exportToCSV method for output parsing.
      * <br/>
+     *
      * @param window_size the window size to use
      * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
      * @param sample_field refers to a sample by its position in the list of samples (1:sample_count)
+     * @param no_meta_data if true, output will only consist of SNP count, without headers etc
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
+    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field, boolean no_meta_data) throws IOException {
 
         if(sample_field<=0 || sample_field > sample_count)
             throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and "+sample_count);
@@ -280,6 +306,8 @@ class DefaultSNPDistribution {
         int ss_step_index=0;
         boolean step_index_set;
         int end_pos;
+
+        String out; // used to create formatted output per each line
 
         int range_total = 0;
         while(start_pos+window_size < true_max){
@@ -298,7 +326,12 @@ class DefaultSNPDistribution {
                     step_index_set = true;
                 }
             }
-            String out = start_pos + ","+end_pos+","+range_total;
+
+            if(no_meta_data) // don't include window position information per line
+                out = "" + range_total;
+            else
+                out = start_pos + ","+end_pos+","+range_total;
+
             output.add(out);
             range_total=0;
 
@@ -317,6 +350,7 @@ class DefaultSNPDistribution {
      * <br/>
      * This output is typically passed to the exportToCSV method for output parsing.
      * <br/>
+     *
      * @param window_size the window size to use
      * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
@@ -328,7 +362,7 @@ class DefaultSNPDistribution {
         ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
         ArrayList<String> snp_dist;
         for(int i = 1; i <= sample_count; i++){
-            snp_dist = getIndividualSamplesSNPDistribution(window_size,step_size,i);
+            snp_dist = getIndividualSamplesSNPDistribution(window_size,step_size,i, false);
             snp_dists.add(snp_dist);
         }
 

@@ -41,9 +41,9 @@ class DefaultSNPDistribution {
     }
 
     /**
-     *
-     * @param snp_matrix_tsv
-     * @throws IOException
+     * Private initializer method. Accepts a NASP Best-SNPs formatted, tab-delimited input file.
+     * @param snp_matrix_tsv the input best-snps matrix, a tab delimited text file from NASP output
+     * @throws IOException when there is an error opening the input file
      */
     private void init(File snp_matrix_tsv) throws IOException {
         snp_matrix = snp_matrix_tsv;
@@ -93,18 +93,6 @@ class DefaultSNPDistribution {
 
         Collections.addAll(sample_names, getSampleNames().split(","));
 
-        resetBufferedReader();
-    }
-
-    /**
-     * Largely deprecated by current implementation and the init() function
-     */
-    private void resetBufferedReader(){
-        try {
-            br = new BufferedReader(new FileReader(snp_matrix));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -165,7 +153,6 @@ class DefaultSNPDistribution {
             Files.write(file, lines, Charset.forName("UTF-8"));
     }
 
-
     /**
      *
      * @param window_size
@@ -219,7 +206,7 @@ class DefaultSNPDistribution {
      * @param samples
      * @return
      */
-    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size,int step_size, ArrayList<String> samples){
+    ArrayList<String> getMultiSampleSNPDistribution(int window_size,int step_size, ArrayList<String> samples){
 
         int[] samps = new int[samples.size()];
 

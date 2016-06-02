@@ -40,7 +40,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results with sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("agg_win1000_step500_results.csv").getPath())));
+                getClass().getResource("agg_win1000_step500_results.csv").getPath()));
 
         //initialize reference aggregate results with sliding window data from saved csv
         while(br.ready()){
@@ -130,8 +130,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum1SNPDistributionNoSlide() throws Exception {
-       ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1, false);
-
+        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1, false);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl1_nonsliding_test_reference.get(i));
         }
@@ -140,6 +139,7 @@ public class DefaultSNPDistributionTest {
     @Test
     public void testIndividualSamplesNum1SNPDistributionSlide() throws Exception {
         ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,500,1, false);
+
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl1_sliding_test_reference.get(i));
         }
@@ -148,7 +148,6 @@ public class DefaultSNPDistributionTest {
     @Test
     public void testIndividualSamplesNum35SNPDistributionNoSlide() throws Exception {
         ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1, false);
-
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl35_nonsliding_test_reference.get(i));
         }
@@ -163,38 +162,6 @@ public class DefaultSNPDistributionTest {
     }
 
     @Test
-    public void testCompleteSNPDistribution() throws Exception{
-        ArrayList<String> temp = snpd.getCompleteSNPDistribution(1000,1000);
-
-    }
-
-    @Test
-    public void getLastSNPIndex() throws Exception {
-
-    }
-
-    @Test
-    public void getSampleNames() throws Exception {
-
-        String out = snpd.getSampleNames();
-        int i=1;
-        for(String x : out.split(",")){
-            System.out.println(i+":"+x);
-            i++;
-        }
-    }
-
-    @Test
-    public void exportResultsToCSV() throws Exception {
-
-    }
-
-    @Test
-    public void getAggregateSNPDistribution() throws Exception {
-
-    }
-
-    @Test
     public void getMultiSampleSNPDistributionNoSlide() throws Exception {
 
         ArrayList<String> samples = new ArrayList<>();
@@ -202,8 +169,7 @@ public class DefaultSNPDistributionTest {
         samples.add("03-2525_S26_L001"); // #2
         samples.add("06-2950_S32_L001"); // #8
 
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,false);;
-        snpd.exportResultsToCSV(output,"mult_samp_9_2_8_noslide",true);
+        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,false);
     }
 
     @Test
@@ -215,7 +181,6 @@ public class DefaultSNPDistributionTest {
         samples.add("06-2950_S32_L001"); // #8
 
         ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,false);
-        snpd.exportResultsToCSV(output,"mult_samp_1_2_8_slide",true);
     }
 
     @Test
@@ -226,7 +191,6 @@ public class DefaultSNPDistributionTest {
         samples.add("5");
         samples.add("35");
         ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,true);
-        snpd.exportResultsToCSV(output,"mult_samp_1_5_35_noslide_numerical",true);
     }
 
     @Test
@@ -237,7 +201,6 @@ public class DefaultSNPDistributionTest {
         samples.add("33");
         samples.add("35");
         ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
-        snpd.exportResultsToCSV(output,"mult_samp_1_33_35_slide_numerical",true);
     }
 
     @Test
@@ -247,16 +210,6 @@ public class DefaultSNPDistributionTest {
         samples.add("1:5");
         samples.add("32:35");
         ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
-        snpd.exportResultsToCSV(output,"mult_samp_1-5_32-35_slide_numerical_range",true);
     }
 
-    @Test
-    public void getIndividualSamplesSNPDistribution() throws Exception {
-
-    }
-
-    @Test
-    public void getCompleteSNPDistribution() throws Exception {
-
-    }
 }

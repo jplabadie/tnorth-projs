@@ -127,12 +127,7 @@ class DefaultSNPDistribution {
      * @param overwrite if true, identical files will potentially be overwritten, if false, collisions will throw an exception
      * @throws IOException if a file writing error occurs due to path errors, permissions, or collisions
      */
-    void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException {
-        List<String> lines = new ArrayList<>();
-        String header = "fromPos,toPos,AggregateDist,";
-        header += getSampleNames();
-        lines.add(header);
-        lines.addAll(results);
+    void exportResultsToCSV(ArrayList<String> results, String path, boolean overwrite) throws IOException{
 
         if(!path.contains(".csv"))
             path+=".csv";
@@ -140,13 +135,13 @@ class DefaultSNPDistribution {
 
         if(Files.exists(file)){
             if(overwrite) {
-                Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
+                Files.write(file, results, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
             }
             else
                 throw new IOException("File already exists, and overwrite tag set to false! (try a different name)");
         }
         else
-            Files.write(file, lines, Charset.forName("UTF-8"));
+            Files.write(file, results, Charset.forName("UTF-8"));
     }
 
     /**
@@ -200,6 +195,8 @@ class DefaultSNPDistribution {
 
             start_pos += step_size;
         }
+        String header = "fromPos,toPos,SumSNPDistribution";
+        output.add(0,header);
         return output;
     }
 
@@ -224,7 +221,8 @@ class DefaultSNPDistribution {
     ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples, boolean numerical){
 
         ArrayList<Integer> samps = new ArrayList<>();
-        ArrayList<String> output;
+        ArrayList<String> output = new ArrayList<>();
+        String header = "fromPos,toPos";
 
         if(numerical){
             for(String samp : samples){
@@ -234,6 +232,7 @@ class DefaultSNPDistribution {
 
                     for(int i = temp1; i <= temp2; i++){
                         samps.add(i);
+                        header += ","+sample_names.get(i-1);
                     }
                 }
                 else{
@@ -243,26 +242,30 @@ class DefaultSNPDistribution {
         }
         else{
             for(String samp : samples){
-                samps.add(sample_names.indexOf(samp));
+                int temp = sample_names.indexOf(samp)+1;
+                samps.add(temp);
+                header += ","+temp+":"+samp;
             }
         }
 
         try{
-            output = getIndividualSamplesSNPDistribution(window_size,step_size,samps.get(0),false);
             for(int indv : samps){
-                if(indv == samps.get(0))
-                    continue; //we already have the first sample loaded, skip it
+                if(indv == samps.get(0)){
+                    output = getIndividualSamplesSNPDistribution(window_size,step_size,samps.get(0),false);
+                }
                 else{
                     ArrayList<String> indv_output =
-                            getIndividualSamplesSNPDistribution(window_size,step_size,indv, true);
+                            getIndividualSamplesSNPDistribution(window_size,step_size,indv,true);
 
                     for(int index = 0; index < output.size(); index++){
                         String line = output.get(index); // get the output that already exists
-                        line += ","+indv_output.get(index++); // append each sample's snp total
+                        line += ","+indv_output.get(index); // append each sample's snp total
                         output.set(index,line);
                     }
                 }
             }
+
+            output.add(0,header);
             return output;
         }
         catch (Exception e){
@@ -291,6 +294,7 @@ class DefaultSNPDistribution {
      */
     ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field, boolean no_meta_data) throws IOException {
 
+        String header = "fromPos,toPos,"+sample_field+":"+sample_names.get(sample_field-1);
         if(sample_field<=0 || sample_field > sample_count)
             throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and "+sample_count);
 
@@ -336,6 +340,7 @@ class DefaultSNPDistribution {
 
             start_pos += step_size;
         }
+        output.add(0,header);
         return output;
     }
 
@@ -356,6 +361,9 @@ class DefaultSNPDistribution {
      * @throws IOException
      */
     ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
+
+        String header = "fromPos,toPos,AggregateDist,";
+        header += getSampleNames();
 
         ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size);
         ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
@@ -378,7 +386,7 @@ class DefaultSNPDistribution {
             }
             index=0;
         }
-
+        agg_dist.add(0,header);
         return agg_dist;
     }
 }

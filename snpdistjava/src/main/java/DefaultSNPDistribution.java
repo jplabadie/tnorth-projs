@@ -7,6 +7,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
+ * Gathers SNP Density information from NASP output 'best-snps.tsv'
+ *
+ * TODO: There are some bad-code smells. Chiefly, some magic-numbers usage.
+ *
  * Project: SNP Density Script
  * Git-Hub repository: tnorth-projs.
  * Created by: jlabadie on 5/25/16.
@@ -131,17 +135,54 @@ class DefaultSNPDistribution {
 
         if(!path.contains(".csv"))
             path+=".csv";
-        Path file = Paths.get(path);
+        Path csvfile = Paths.get(path);
 
-        if(Files.exists(file)){
+        writeTextToFile(results, csvfile,overwrite);
+    }
+
+    /**
+     * Writes the given ArrayList of Strings (formatted by commas) to a TSV.
+     *
+     * Note: This method is more expensive than the CSV call, as commas are laboriously replaced with tabs on each line
+     *
+     * @param results the results ArrayList containing comma-delimited strings representing lines of output
+     * @param path the desired path for this output CSV
+     * @param overwrite if true, identical files will potentially be overwritten, if false, collisions will throw an exception
+     * @throws IOException if a file writing error occurs due to path errors, permissions, or collisions
+     */
+    void exportResultsToTSV(ArrayList<String> results, String path, boolean overwrite) throws IOException{
+
+        if(!path.contains(".tsv"))
+            path+=".tsv";
+        Path tsvfile = Paths.get(path);
+
+        for(int line_index=0; line_index <results.size(); line_index++){
+            String line = results.get(line_index);
+            line = line.replaceAll(",","\t");
+            results.set(line_index,line);
+        }
+
+        writeTextToFile(results,tsvfile,overwrite);
+    }
+
+    /**
+     * Private Helper to write an ArrayList of Strings to disk
+     *
+     * @param text an ArrayList of type String representing lines of text
+     * @param path a Path object representing the desired path to write the file to
+     * @param overwrite if true, truncate and overwrite any previous file at the given path
+     * @throws IOException if there was an error writing to disk due to space, bad path, permissions, etc
+     */
+    private void writeTextToFile( ArrayList<String> text, Path path, boolean overwrite) throws IOException{
+        if(Files.exists(path)){
             if(overwrite) {
-                Files.write(file, results, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
+                Files.write(path, text, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
             }
             else
                 throw new IOException("File already exists, and overwrite tag set to false! (try a different name)");
         }
         else
-            Files.write(file, results, Charset.forName("UTF-8"));
+            Files.write(path, text, Charset.forName("UTF-8"));
     }
 
     /**

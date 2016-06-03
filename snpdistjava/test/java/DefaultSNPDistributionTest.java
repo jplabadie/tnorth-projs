@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -31,7 +32,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference sample names data from file
         BufferedReader br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("sample_names.csv").getPath())));
+                getClass().getResource("sample_names.csv").getPath()));
 
         //initialize reference sample names data from saved csv
         while(br.ready()){
@@ -49,7 +50,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results sans sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("agg_win1000_step1000_results.csv").getPath())));
+                getClass().getResource("agg_win1000_step1000_results.csv").getPath()));
 
         //initialize reference aggregate results sans sliding window data from saved csv
         while(br.ready()){
@@ -58,7 +59,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results sans sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("indv_samp1_win1000_step1000_results.csv").getPath())));
+                getClass().getResource("indv_samp1_win1000_step1000_results.csv").getPath()));
 
         //initialize reference aggregate results sans sliding window data from saved csv
         while(br.ready()){
@@ -67,7 +68,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results sans sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("indv_samp1_win1000_step500_results.csv").getPath())));
+                getClass().getResource("indv_samp1_win1000_step500_results.csv").getPath()));
 
         //initialize reference aggregate results sans sliding window data from saved csv
         while(br.ready()){
@@ -76,7 +77,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results sans sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("indv_samp35_win1000_step1000_results.csv").getPath())));
+                getClass().getResource("indv_samp35_win1000_step1000_results.csv").getPath()));
 
         //initialize reference aggregate results sans sliding window data from saved csv
         while(br.ready()){
@@ -85,7 +86,7 @@ public class DefaultSNPDistributionTest {
 
         //load reference aggregate results sans sliding window from file
         br = new BufferedReader(new FileReader(
-                new File(getClass().getResource("indv_samp35_win1000_step500_results.csv").getPath())));
+                getClass().getResource("indv_samp35_win1000_step500_results.csv").getPath()));
 
         //initialize reference aggregate results sans sliding window data from saved csv
         while(br.ready()){
@@ -100,8 +101,48 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testWriteResultsToCSV() throws Exception {
-        //ArrayList<String> temp =snpd.getCompleteSNPDistribution(1000,1000);
-        //snpd.exportResultsToCSV(temp, "results",true);
+        ArrayList<String> csvlines = new ArrayList<>();
+        csvlines.add("a,b,c,d,e,f,g,h,i,j,k");
+        csvlines.add("1,2,3,4,5,6,7,8,9,10");
+        snpd.exportResultsToCSV(csvlines,"test_csv",false);
+        File csvpath = new File(getClass().getResource("test_csv.csv").getPath());
+
+        Assert.assertEquals(true,csvpath.exists());
+
+        ArrayList<String> csvlines_load = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(
+                getClass().getResource("test_csv.csv").getPath()));
+        while(br.ready()){
+            String line = br.readLine();
+            csvlines_load.add(line);
+        }
+        for(int i = 0; i < csvlines.size(); i++) {
+            Assert.assertEquals(csvlines.get(i), csvlines_load.get(i));
+        }
+
+    }
+
+    @Test
+    public void testWriteResultsToTSV() throws Exception {
+        ArrayList<String> tsvlines = new ArrayList<>();
+        tsvlines.add("a\tb\tc\td\te\tf\tg\th\ti\tj\tk");
+        tsvlines.add("1\t2\t3\t4\t5\t6\t7\t8\t9\t10");
+        snpd.exportResultsToCSV(tsvlines,"test_tsv",false);
+        File tsvpath = new File(getClass().getResource("test_tsv.tsv").getPath());
+
+        Assert.assertEquals(true,tsvpath.exists());
+
+        ArrayList<String> tsvlines_load = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader(
+                getClass().getResource("test_tsv.tsv").getPath()));
+        while(br.ready()){
+            String line = br.readLine();
+            tsvlines_load.add(line);
+        }
+        for(int i = 0; i < tsvlines.size(); i++) {
+            Assert.assertEquals(tsvlines.get(i), tsvlines_load.get(i));
+        }
+
     }
 
     @Test

@@ -1,3 +1,5 @@
+package snpdist;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -18,7 +20,7 @@ import static joptsimple.util.DateConverter.*;
  *
  * @author jlabadie
  */
-public class SNPDistributionMain {
+public class SnpdCli {
 
     private static File input;
     private static File output;

@@ -139,7 +139,7 @@ class DefaultSNPDistribution {
             path+=".csv";
         Path csvfile = Paths.get(path);
 
-        writeTextToFile(results, csvfile,overwrite);
+        writeTextToFile(results, csvfile, overwrite);
     }
 
     /**
@@ -187,6 +187,10 @@ class DefaultSNPDistribution {
             Files.write(path, text, Charset.forName("UTF-8"));
     }
 
+    ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size){
+        return getAggregateSNPDistribution(window_size,step_size,true);
+    }
+
     /**
      * <h>Gives SNP Distribution data for the aggregate sum of samples</h>
      * Creates an ArrayList of Strings. Each Element represents a line of output.
@@ -202,7 +206,7 @@ class DefaultSNPDistribution {
      * @param step_size the step size for moving the window, if >= window_size, the window is non-sliding
      * @return an ArrayList representing lines of comma-delimited output
      */
-    ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size){
+    private ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size, boolean include_header){
         ArrayList<String> output = new ArrayList<>();
 
         int true_max = getLastSNPIndex();
@@ -238,8 +242,10 @@ class DefaultSNPDistribution {
 
             start_pos += step_size;
         }
-        String header = "fromPos,toPos,SumSNPDistribution";
-        output.add(0,header);
+        if(include_header) {
+            String header = "fromPos,toPos,SumSNPDistribution";
+            output.add(0, header);
+        }
         return output;
     }
 
@@ -261,7 +267,8 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      *
      */
-    ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples, boolean numerical){
+    ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples,
+                                                    boolean numerical){
 
         ArrayList<Integer> samps = new ArrayList<>();
         ArrayList<String> output = new ArrayList<>();
@@ -294,11 +301,11 @@ class DefaultSNPDistribution {
         try{
             for(int indv : samps){
                 if(indv == samps.get(0)){
-                    output = getIndividualSampleSNPDistribution(window_size,step_size,samps.get(0),false);
+                    output = getIndividualSampleSNPDistribution(window_size,step_size,samps.get(0),false,false);
                 }
                 else{
                     ArrayList<String> indv_output =
-                            getIndividualSampleSNPDistribution(window_size,step_size,indv,true);
+                            getIndividualSampleSNPDistribution(window_size,step_size,indv,true,false);
 
                     for(int index = 0; index < output.size(); index++){
                         String line = output.get(index); // get the output that already exists
@@ -334,7 +341,7 @@ class DefaultSNPDistribution {
     }
 
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
-        return getIndividualSampleSNPDistribution( window_size, step_size, sample, false);
+        return getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false);
     }
 
     /**
@@ -355,7 +362,8 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample_field, boolean no_meta_data) throws IOException {
+    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample_field,
+                                                         boolean no_meta_data, boolean include_header) throws IOException {
 
         String header = "fromPos,toPos,"+sample_field+":"+sample_names.get(sample_field-1);
         if(sample_field<=0 || sample_field > sample_count)
@@ -403,7 +411,9 @@ class DefaultSNPDistribution {
 
             start_pos += step_size;
         }
-        output.add(0,header);
+        if(include_header) {
+            output.add(0, header);
+        }
         return output;
     }
 
@@ -428,11 +438,12 @@ class DefaultSNPDistribution {
         String header = "fromPos,toPos,AggregateDist,";
         header += getSampleNames();
 
-        ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size);
+        ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size,false);
         ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
         ArrayList<String> snp_dist;
+
         for(int i = 1; i <= sample_count; i++){
-            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false);
+            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false, true);
             snp_dists.add(snp_dist);
         }
 

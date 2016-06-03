@@ -45,45 +45,55 @@ public class SnpdCli {
 
         OptionParser parser = new OptionParser() {
             {
-                accepts( "c" ).withRequiredArg().ofType( String.class )
-                        .describedAs( "complete - gives an aggregate distribution and distributions for each sample." +
-                                "Must be followed by a path representing where to write the output as a CSV." );
+                acceptsAll( asList( "c", "complete" ), "Will output aggregate distributions AND distributions for " +
+                        "each sample. MUST be followed by a path representing where to write the output as a CSV." +
+                        "This is the DEFAULT behavior." )
+                        .withRequiredArg().ofType( String.class )
+                        .describedAs( "output/path/name" );
 
-                accepts( "i" ).withRequiredArg().ofType( String.class )
-                        .describedAs( "individual - gives distributions for a single sample." +
-                                "Must be followed by a path representing where to write the output as a CSV." );
+                acceptsAll( asList( "i", "individual" ), " Will output distributions for a single sample. " +
+                        "MUST be followed by a path representing where to write the output as a CSV." )
+                        .withRequiredArg().ofType( String.class )
+                        .describedAs( "output/path/name" );
 
-                accepts( "im" ).withRequiredArg().ofType( String.class )
-                        .describedAs( "individual multiple - gives the distribution for multiple specific samples." +
-                                "Must be followed by a list of samples, separated by commas, or as a range using a colon" +
-                                "Must then be followed by a path representing where to write the output as a CSV." );
+                acceptsAll( asList( "im", "individualmultiple" ), "Will output the distributions for multiple specific " +
+                        "samples. MUST be followed by a list of samples, separated by commas, or as a range using a " +
+                        "colon. The final argument MUST be a path representing where to write the output as a CSV." )
+                        .withRequiredArg().ofType( String.class )
+                        .describedAs( "samplename1, samplename2, ... , output/path/name" );
 
-                accepts( "n" , "by number - alerts the program to expect samples to referenced by" +
-                        "their position in the list of samples, rather than their name." ).availableIf( "im" );
+                acceptsAll( asList( "n", "numerical" ), "Will alert the program to expect samples to referenced by" +
+                        "their position in the list of samples, rather than their name. ONLY works when using the" +
+                        "'im' or 'individualmultiple' option.")
+                        .availableIf( "im" );
 
-                accepts( "a" ).withRequiredArg().ofType( String.class )
-                        .describedAs( "aggregate - gives the distribution across all samples summed" +
-                                "Must be followed by a path representing where to write the output as a CSV." );
+                acceptsAll( asList( "a", "aggregate" ), "Will output the aggregate distribution across all samples." +
+                        "MUST be followed by a path representing where to write the output as a CSV.")
+                        .withRequiredArg().ofType( String.class )
+                        .describedAs( "output/path/name" );
 
-                accepts( "w" ).withRequiredArg().ofType( Integer.class )
-                    .describedAs( "window size - specify the window size for surveying SNP distribution." +
-                            "Must be followed by a sane non-zero value. Defaults to 1000." );
+                acceptsAll( asList("w", "window"), "Allows the window size to be specified for surveying SNP " +
+                        "distribution. REQUIRED if 's' or 'step' option is included in arguments." +
+                        "MUST be followed by a sane non-zero value. Defaults to 1000." )
+                        .withRequiredArg().ofType( Integer.class )
+                        .describedAs( "0...n" );
 
-                accepts( "s" ).withRequiredArg().ofType( Integer.class )
-                        .describedAs( "step size - specify the step size for the survey window." +
-                                "If step size = window size, the window does not have a sliding behavior." +
-                                "Must be followed by a sane non-zero value. Defaults to 1000." );
+                acceptsAll( asList("s", "step" ), "Allows the step size to be specified for the survey window." +
+                        "If step size = window size, the window will not have a sliding behavior." +
+                        "REQUIRED if 'w' or 'window' option is included in arguments." +
+                        "MUST be followed by a sane non-zero value. Defaults to 1000." )
+                        .requiredIf("w", "window")
+                        .withRequiredArg().ofType( Integer.class )
+                        .describedAs( "0...n" );
 
-                accepts( "ow" ).withRequiredArg().ofType(String.class)
-                        .describedAs("over-write - attempts to overwrite a file at the given output path." +
-                                "Must be followed by the string 'true' as a confirmation." );
+                acceptsAll( asList("ow", "overwrite" ), "Will attempt to overwrite a file at the given output path." +
+                        "MUST be followed by the string 'true' as a confirmation.")
+                        .withRequiredArg().ofType(Boolean.class)
+                        .describedAs("true/false");
 
-                acceptsAll( asList( "h", "?", "help", "info" ), "help" ).forHelp();
+                acceptsAll( asList( "h", "?", "help", "info" ), "Displays these help details." ).forHelp();
 
-                /*acceptsAll( asList( "cp", "classpath" ) ).withRequiredArg()
-                        .describedAs( "path1" + pathSeparatorChar + "path2:..." )
-                        .ofType( File.class )
-                        .withValuesSeparatedBy( pathSeparatorChar );*/
+                acceptsAll( asList( "h", "?", "help", "info" ), "Displays these help details." ).forHelp();
             }
         };
         parser.posixlyCorrect(true);

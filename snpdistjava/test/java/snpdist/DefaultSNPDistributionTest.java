@@ -172,7 +172,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum1SNPDistributionNoSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1, false);
+        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,1000,1, false);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl1_nonsliding_test_reference.get(i));
         }
@@ -180,7 +180,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum1SNPDistributionSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,500,1, false);
+        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false);
 
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl1_sliding_test_reference.get(i));
@@ -189,7 +189,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum35SNPDistributionNoSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,1000,1, false);
+        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,1000,1, false);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl35_nonsliding_test_reference.get(i));
         }
@@ -197,7 +197,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum35SNPDistributionSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSamplesSNPDistribution(1000,500,1, false);
+        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl35_sliding_test_reference.get(i));
         }

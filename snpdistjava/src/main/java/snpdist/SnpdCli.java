@@ -101,7 +101,10 @@ public class SnpdCli {
         parser.posixlyCorrect(true);
         parser.printHelpOn(System.out);
 
-        OptionSet opts = parser.parse(args);
+        String[] arguments = new String[args.length-1];
+        System.arraycopy(args, 1, arguments, 0, args.length - 1);
+
+        OptionSet opts = parser.parse(arguments);
 
         if(input != null)
             snpd = new DefaultSNPDistribution(input);
@@ -115,7 +118,8 @@ public class SnpdCli {
         }
 
         if(opts.has("ow") || opts.has("overwrite")){
-            overwrite = (boolean) opts.valueOf("ow");
+            if(opts.valueOf( "ow" ).equals("true"))
+                overwrite = true;
         }
 
         if(opts.has( "w" )){
@@ -138,10 +142,11 @@ public class SnpdCli {
 
         if(opts.has( "c" ) || opts.has( "complete" )){
             try{
-                output = (String)opts.valueOf( "c" );
+                output = (String) opts.valueOf( "c" );
 
                 results = snpd.getCompleteSNPDistribution(window_size,step_size);
-                snpd.exportResultsToCSV(results, output,overwrite);
+                snpd.exportResultsToCSV(results, output, overwrite);
+                System.exit(0);
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -161,6 +166,7 @@ public class SnpdCli {
                     results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(1));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
+                System.exit(0);
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -177,7 +183,7 @@ public class SnpdCli {
 
                 results = snpd.getMultiSampleSNPDistribution(window_size,step_size,chosen_samples,numerical);
                 snpd.exportResultsToCSV(results, output,overwrite);
-
+                System.exit(0);
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -185,6 +191,9 @@ public class SnpdCli {
         }else if(opts.has( "a" ) || opts.has( "aggregate" )){
             try{
                 output = (String)opts.valueOf( "a" );
+                results = snpd.getAggregateSNPDistribution(window_size,step_size);
+                snpd.exportResultsToCSV(results, output, overwrite);
+                System.exit(0);
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );

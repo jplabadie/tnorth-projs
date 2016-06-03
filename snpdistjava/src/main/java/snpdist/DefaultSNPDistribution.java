@@ -294,11 +294,11 @@ class DefaultSNPDistribution {
         try{
             for(int indv : samps){
                 if(indv == samps.get(0)){
-                    output = getIndividualSamplesSNPDistribution(window_size,step_size,samps.get(0),false);
+                    output = getIndividualSampleSNPDistribution(window_size,step_size,samps.get(0),false);
                 }
                 else{
                     ArrayList<String> indv_output =
-                            getIndividualSamplesSNPDistribution(window_size,step_size,indv,true);
+                            getIndividualSampleSNPDistribution(window_size,step_size,indv,true);
 
                     for(int index = 0; index < output.size(); index++){
                         String line = output.get(index); // get the output that already exists
@@ -315,6 +315,26 @@ class DefaultSNPDistribution {
             System.out.println("There was an error in finding the distribution for multiple samples.");
             return null;
         }
+    }
+
+    private int getSamplePosition( String sample_name){
+        return sample_names.indexOf(sample_name);
+    }
+
+    public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, String sample) throws IOException {
+
+        int sample_index = getSamplePosition(sample);
+
+        if(sample_index >= 0){
+            return getIndividualSampleSNPDistribution(window_size, step_size,sample_index);
+        }
+        else{
+            throw new NoSuchElementException(" Failed to run > There is no sample named: " + sample);
+        }
+    }
+
+    public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
+        return getIndividualSampleSNPDistribution( window_size, step_size, sample, false);
     }
 
     /**
@@ -335,7 +355,7 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSamplesSNPDistribution(int window_size, int step_size, int sample_field, boolean no_meta_data) throws IOException {
+    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample_field, boolean no_meta_data) throws IOException {
 
         String header = "fromPos,toPos,"+sample_field+":"+sample_names.get(sample_field-1);
         if(sample_field<=0 || sample_field > sample_count)
@@ -412,7 +432,7 @@ class DefaultSNPDistribution {
         ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
         ArrayList<String> snp_dist;
         for(int i = 1; i <= sample_count; i++){
-            snp_dist = getIndividualSamplesSNPDistribution(window_size,step_size,i, false);
+            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false);
             snp_dists.add(snp_dist);
         }
 

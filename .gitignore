@@ -19,6 +19,8 @@ hs_err_pid*
 *.idea/*
 /target
 target/*
+/target/
+/target/*
 
 # User-specific stuff:
 .idea/workspace.xml

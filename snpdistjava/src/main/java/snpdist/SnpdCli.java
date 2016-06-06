@@ -1,5 +1,6 @@
 package snpdist;
 
+import com.sun.tools.javac.code.Type;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -156,14 +157,21 @@ public class SnpdCli {
             try {
 
                 List<?> temp = opts.valuesOf("i");
-                output = (String) temp.get(0);
+
+
+                for(int i = 0; i <temp.size(); i++)
+                {
+                    System.out.println( temp.get(i));
+                }
+                output = (String) temp.get(1);
+
                 if(numerical){
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(Integer) temp.get(1));
+                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(Integer) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 else {
 
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(1));
+                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 System.out.println("Success!");
@@ -175,11 +183,13 @@ public class SnpdCli {
         else if(opts.has( "im" ) || opts.has( "individualmultiple" )){
             try{
                 List<?> temp = opts.valuesOf("im");
-                output = (String) temp.get(0);
-                for(int i = 1; i < temp.size(); i++){
+                int i;
+                for(i = 0; i < temp.size()-1; i++){
                     String sample = (String) temp.get(i);
                     chosen_samples.add(sample);
                 }
+
+                output = (String) temp.get(i);
 
                 results = snpd.getMultiSampleSNPDistribution(window_size,step_size,chosen_samples,numerical);
                 snpd.exportResultsToCSV(results, output,overwrite);

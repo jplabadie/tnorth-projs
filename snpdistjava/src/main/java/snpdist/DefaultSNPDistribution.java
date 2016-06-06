@@ -2,10 +2,7 @@ package snpdist;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -180,15 +177,14 @@ class DefaultSNPDistribution {
      * @throws IOException if there was an error writing to disk due to space, bad path, permissions, etc
      */
     private void writeTextToFile( ArrayList<String> text, Path path, boolean overwrite) throws IOException{
-        if(Files.exists(path)){
-            if(overwrite) {
-                Files.write(path, text, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
-            }
-            else
-                throw new IOException("File already exists, and overwrite tag set to false! (try a different name)");
+
+        if(overwrite) {
+
+            Files.write(path, text, Charset.forName("UTF-8"));
+
         }
         else
-            Files.write(path, text, Charset.forName("UTF-8"));
+            Files.write(path, text, Charset.forName("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     /**

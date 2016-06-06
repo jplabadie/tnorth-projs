@@ -146,7 +146,7 @@ public class SnpdCli {
 
                 results = snpd.getCompleteSNPDistribution(window_size,step_size);
                 snpd.exportResultsToCSV(results, output, overwrite);
-                System.exit(0);
+                System.out.println("Success!");
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -166,7 +166,7 @@ public class SnpdCli {
                     results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(1));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
-                System.exit(0);
+                System.out.println("Success!");
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -183,7 +183,7 @@ public class SnpdCli {
 
                 results = snpd.getMultiSampleSNPDistribution(window_size,step_size,chosen_samples,numerical);
                 snpd.exportResultsToCSV(results, output,overwrite);
-                System.exit(0);
+                System.out.println("Success!");
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );
@@ -193,7 +193,7 @@ public class SnpdCli {
                 output = (String)opts.valueOf( "a" );
                 results = snpd.getAggregateSNPDistribution(window_size,step_size);
                 snpd.exportResultsToCSV(results, output, overwrite);
-                System.exit(0);
+                System.out.println("Success!");
             }
             catch (Exception e){
                 System.out.println( "Non-valid output file name, location, or permissions." );

@@ -36,8 +36,8 @@ class DefaultSNPDistribution {
     private int[] snapshot_index;
 
     /**
-     * 
-     * @param snp_matrix_tsv
+     *
+     * @param snp_matrix_tsv expects a tab-delimited best-SNPs output from NASP
      */
     DefaultSNPDistribution(File snp_matrix_tsv) {
         try {
@@ -191,6 +191,12 @@ class DefaultSNPDistribution {
             Files.write(path, text, Charset.forName("UTF-8"));
     }
 
+    /**
+     *
+     * @param window_size the window size (the range of sample positions to check)
+     * @param step_size the amount of positions to move the window each iteration
+     * @return an ArrayList representing lines of comma-delimited output
+     */
     ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size){
         return getAggregateSNPDistribution(window_size,step_size,true);
     }
@@ -216,34 +222,43 @@ class DefaultSNPDistribution {
 
         int true_max = getLastSNPIndex();
         boolean no_slide = false;
-        if(window_size==step_size) no_slide = true;
+        if( window_size == step_size ) no_slide = true;
 
-        int start_pos=0;
-        int ss_index;
-        int ss_step_index=0;
+        int start_pos = 0;
+        int ss_index = 0;
+        int ss_step_index = 0;
         boolean step_index_set;
         int end_pos;
 
-        int range_total = 0;
+        int range_total;
 
-        while(start_pos+window_size < true_max){
-            end_pos = start_pos+window_size;
-            ss_index = ss_step_index;
+        while(start_pos + window_size < true_max){
+            end_pos = start_pos + window_size;
+
             step_index_set = false;
-            for(;snapshot_index[ss_index] <= end_pos; ss_index++){
-                int tot = new Integer(snapshot.get(ss_index)[TOT]);
-                if(tot > 1)
-                    range_total++ ;
-                if(no_slide)
-                    ss_step_index++;
-                else if(snapshot_index[ss_index]>=start_pos+step_size && !step_index_set) {
-                    ss_step_index = ss_index;
-                    step_index_set = true;
+            range_total = 0;
+
+            // if the next snp position in the snapshot is beyond (after) our current window:
+            // the total for this range is zero (the for-loop will be ignored)
+            if(snapshot_index[ss_index] > end_pos){
+                range_total = 0;
+            }
+            else{
+                for(ss_index = ss_step_index; snapshot_index[ss_index] <= end_pos; ss_index++ ){
+                    int tot = new Integer( snapshot.get(ss_index)[TOT] );
+                    if( tot > 1 )
+                        range_total++ ;
+                    if( no_slide )
+                        ss_step_index++;
+                    else if( snapshot_index[ss_index] >= start_pos + step_size
+                            && !step_index_set ) {
+                        ss_step_index = ss_index;
+                        step_index_set = true;
+                    }
                 }
             }
-            String out = start_pos + ","+end_pos+","+range_total;
-            output.add(out);
-            range_total=0;
+            String out = start_pos + "," + end_pos + "," + range_total;
+            output.add( out );
 
             start_pos += step_size;
         }
@@ -253,7 +268,6 @@ class DefaultSNPDistribution {
         }
         return output;
     }
-
 
     /**
      * <h>Gives SNP Distribution data for a given list of samples</h>
@@ -320,7 +334,7 @@ class DefaultSNPDistribution {
                 }
             }
 
-            output.add(0,header);
+            output.add( 0, header );
             return output;
         }
         catch (Exception e){
@@ -331,19 +345,19 @@ class DefaultSNPDistribution {
 
     /**
      *
-     * @param sample_name
-     * @return
+     * @param sample_name get the 'position' of a sample name in the array of names (taken in-order)
+     * @return an int representing the position of the sample name
      */
     private int getSamplePosition( String sample_name){
+
         return sample_names.indexOf(sample_name);
     }
 
     /**
      *
-     * @param window_size
-     * @param step_size
-     * @param sample
-     * @return
+     * @param window_size the window size (the range of sample positions to check)
+     * @param step_size the amount of positions to move the window each iteration
+     * @return an ArrayList representing lines of comma-delimited output
      * @throws IOException
      */
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, String sample) throws IOException {
@@ -352,18 +366,16 @@ class DefaultSNPDistribution {
 
         if(sample_index >= 0){
             return getIndividualSampleSNPDistribution(window_size, step_size,sample_index);
-        }
-        else{
+        } else{
             throw new NoSuchElementException(" Failed to run > There is no sample named: " + sample);
         }
     }
 
     /**
      *
-     * @param window_size
-     * @param step_size
-     * @param sample
-     * @return
+     * @param window_size the window size (the range of sample positions to check)
+     * @param step_size the amount of positions to move the window each iteration
+     * @return an ArrayList representing lines of comma-delimited output
      * @throws IOException
      */
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
@@ -402,28 +414,37 @@ class DefaultSNPDistribution {
         if(window_size==step_size) no_slide = true;
 
         int start_pos=0;
-        int ss_index;
+        int ss_index = 0;
         int ss_step_index=0;
         boolean step_index_set;
         int end_pos;
 
         String out; // used to create formatted output per each line
 
-        int range_total = 0;
+        int range_total;
         while(start_pos+window_size < true_max){
+
             end_pos = start_pos+window_size;
-            ss_index = ss_step_index;
             step_index_set = false;
-            for(;snapshot_index[ss_index] <= end_pos; ss_index++){
-                String sample = snapshot.get(ss_index)[sample_field+TOT];
-                String reference = snapshot.get(ss_index)[REF];
-                if(!sample.equals(reference))
-                    range_total++ ;
-                if(no_slide)
-                    ss_step_index++;
-                else if(snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
-                    ss_step_index = ss_index;
-                    step_index_set = true;
+            range_total=0;
+
+            // if the next snp position in the snapshot is beyond (after) our current window:
+            // the total for this range is zero (the for-loop will be ignored)
+            if(snapshot_index[ss_index] > end_pos){
+                range_total = 0;
+            }
+            else {
+                for (ss_index = ss_step_index; snapshot_index[ss_index] <= end_pos; ss_index++) {
+                    String sample = snapshot.get(ss_index)[sample_field + TOT];
+                    String reference = snapshot.get(ss_index)[REF];
+                    if (!sample.equals(reference))
+                        range_total++;
+                    if (no_slide)
+                        ss_step_index++;
+                    else if (snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
+                        ss_step_index = ss_index;
+                        step_index_set = true;
+                    }
                 }
             }
 
@@ -433,8 +454,6 @@ class DefaultSNPDistribution {
                 out = start_pos + "," + end_pos + "," + range_total;
 
             output.add(out);
-            range_total=0;
-
             start_pos += step_size;
         }
         if(include_header) {

@@ -35,6 +35,10 @@ class DefaultSNPDistribution {
     private ArrayList<String[]> snapshot = new ArrayList<>();
     private int[] snapshot_index;
 
+    /**
+     * 
+     * @param snp_matrix_tsv
+     */
     DefaultSNPDistribution(File snp_matrix_tsv) {
         try {
             init(snp_matrix_tsv);
@@ -325,10 +329,23 @@ class DefaultSNPDistribution {
         }
     }
 
+    /**
+     *
+     * @param sample_name
+     * @return
+     */
     private int getSamplePosition( String sample_name){
         return sample_names.indexOf(sample_name);
     }
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @param sample
+     * @return
+     * @throws IOException
+     */
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, String sample) throws IOException {
 
         int sample_index = getSamplePosition(sample);
@@ -341,6 +358,14 @@ class DefaultSNPDistribution {
         }
     }
 
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @param sample
+     * @return
+     * @throws IOException
+     */
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
         return getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false);
     }

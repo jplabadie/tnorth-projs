@@ -206,7 +206,8 @@ class DefaultSNPDistribution {
      * @param step_size the step size for moving the window, if >= window_size, the window is non-sliding
      * @return an ArrayList representing lines of comma-delimited output
      */
-    private ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size, boolean include_header){
+    private ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size,
+                                                          boolean include_header){
         ArrayList<String> output = new ArrayList<>();
 
         int true_max = getLastSNPIndex();
@@ -367,7 +368,7 @@ class DefaultSNPDistribution {
 
         String header = "fromPos,toPos,"+sample_field+":"+sample_names.get(sample_field-1);
         if(sample_field<=0 || sample_field > sample_count)
-            throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and "+sample_count);
+            throw new IndexOutOfBoundsException( "No such sample. Refer to a sample between 1 and " + sample_count );
 
         ArrayList<String> output = new ArrayList<>();
 
@@ -395,7 +396,7 @@ class DefaultSNPDistribution {
                     range_total++ ;
                 if(no_slide)
                     ss_step_index++;
-                else if(snapshot_index[ss_index]>=start_pos+step_size && !step_index_set) {
+                else if(snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
                     ss_step_index = ss_index;
                     step_index_set = true;
                 }
@@ -404,7 +405,7 @@ class DefaultSNPDistribution {
             if(no_meta_data) // don't include window position information per line
                 out = "" + range_total;
             else
-                out = start_pos + ","+end_pos+","+range_total;
+                out = start_pos + "," + end_pos + "," + range_total;
 
             output.add(out);
             range_total=0;
@@ -443,7 +444,7 @@ class DefaultSNPDistribution {
         ArrayList<String> snp_dist;
 
         for(int i = 1; i <= sample_count; i++){
-            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false, true);
+            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false, false);
             snp_dists.add(snp_dist);
         }
 

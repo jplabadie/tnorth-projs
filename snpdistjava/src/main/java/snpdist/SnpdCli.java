@@ -99,8 +99,8 @@ public class SnpdCli {
 
             }
         };
-        parser.posixlyCorrect(true);
-        parser.printHelpOn(System.out);
+        //parser.posixlyCorrect(true);
+        //parser.printHelpOn(System.out);
 
         String[] arguments = new String[args.length-1];
         System.arraycopy(args, 1, arguments, 0, args.length - 1);

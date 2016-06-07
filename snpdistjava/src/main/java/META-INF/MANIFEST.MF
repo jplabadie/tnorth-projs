@@ -1,3 +1,7 @@
 Manifest-Version: 1.0
+Created-By: Apache Maven ${maven.version}
+Built-By: ${user.name}
+Build-Jdk: ${java.version}
 Main-Class: snpdist.SnpdCli
+
 

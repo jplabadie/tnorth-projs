@@ -123,6 +123,11 @@ public class SnpdCli {
                 overwrite = true;
         }
 
+        if (opts.has("h") || opts.has("help") || opts.has("?")){
+            parser.printHelpOn(System.out);
+            System.exit(0);
+        }
+
         if(opts.has( "w" )){
             try{
                 window_size = (int) opts.valueOf( "w" );

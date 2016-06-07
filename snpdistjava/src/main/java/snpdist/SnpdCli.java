@@ -7,6 +7,7 @@ import joptsimple.OptionSpec;
 import joptsimple.util.DateConverter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -107,11 +108,19 @@ public class SnpdCli {
 
         OptionSet opts = parser.parse(arguments);
 
-        if(input != null)
-            snpd = new DefaultSNPDistribution(input);
-        else {
-            System.out.println("Failed to load input file.");
-            System.exit(1);
+        if (opts.has("h") || opts.has("help") || opts.has("?")){
+            parser.printHelpOn(System.out);
+            System.exit(0);
+        }
+
+        if(input != null) {
+            try {
+                snpd = new DefaultSNPDistribution(input);
+            } catch (Exception fnf) {
+                System.out.println("Failed to load input file.");
+                parser.printHelpOn(System.out);
+                System.exit(1);
+            }
         }
 
         if(opts.has("n") || opts.has("numerical")){
@@ -121,11 +130,6 @@ public class SnpdCli {
         if(opts.has("ow") || opts.has("overwrite")){
             if(opts.valueOf( "ow" ).equals("true"))
                 overwrite = true;
-        }
-
-        if (opts.has("h") || opts.has("help") || opts.has("?")){
-            parser.printHelpOn(System.out);
-            System.exit(0);
         }
 
         if(opts.has( "w" )){

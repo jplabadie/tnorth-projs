@@ -31,7 +31,7 @@ public class JobSaveLoadManager {
         try {
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            NaspInputData naspData = ((JAXBElement<NaspInputData>) unmarshaller.unmarshal(xml_path)).getValue();
+            NaspInputData naspData = ((NaspInputData) unmarshaller.unmarshal(xml_path));
             lm.info("JSLM: Job XML loaded and converted to objects from: "+xml_path.getPath());
             return naspData;
         } catch (JAXBException e) {
@@ -62,8 +62,13 @@ public class JobSaveLoadManager {
             m.marshal(input_for_conversion, new File(output_path));
             lm.info("JSLM: Job XML converted from objects and saved to XML at: "+output_path);
         } catch (JAXBException e) {
+            String temp ="";
+            for( StackTraceElement x : e.getStackTrace()){
+                temp+= "\t"+ x.toString()+"\n";
+            }
             lm.error("JSLM: Job objects failed to convert or save as XML to: " + output_path + "\nError occured:\n"
-                    + e.getMessage());
+                    + temp);
+            e.printStackTrace();
         }
     }
 

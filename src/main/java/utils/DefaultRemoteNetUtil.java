@@ -106,8 +106,9 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
         }
 
         try {
+            (exec_channel).setErrStream(System.err);
+
             exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
-            exec_out = exec_channel.getOutputStream();
             log.info("RNU: Open Session - I/O Streams connected successfully.");
             log.info("RNU: Open Session - SFTP channel at directory: "+sftp_channel.pwd());
         } catch (IOException e) {
@@ -135,23 +136,7 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
 
             sftp_channel.disconnect();
             exec_channel.disconnect();
-            sftp_channel = null;
-            exec_channel = null;
             log.info("NM - Session Channels Disconnected." );
-
-            try {
-                sftp_in.close();
-                exec_in.close();
-            } catch (IOException e) {
-                log.warn("NM - Could Not Close Input Streams: \n" + e.getMessage());
-            }
-
-            try {
-                sftp_out.close();
-                exec_out.close();
-            } catch (IOException e) {
-                log.warn("NM - Could Not Close Output Streams: \n" + e.getMessage());
-            }
 
             session.disconnect();
             log.info("NM - Session Disconnected." );
@@ -275,9 +260,10 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
      * @param job_XML_abs_path the absolute path to the XML job file on the remote server
      */
     public String runNaspJob(String job_XML_abs_path) {
-
+        String runpath = job_XML_abs_path.substring(0,job_XML_abs_path.lastIndexOf('/'));
         try {
             assert exec_channel != null;
+            exec_channel.setCommand("cd "+ runpath);
             exec_channel.setCommand("module load nasp"); //main nasp tool
             log.info("RNU: Run command - module load nasp");
             exec_channel.setCommand("module load tnorth"); //main the tnorth tool [what does this do??]
@@ -377,18 +363,12 @@ public class DefaultRemoteNetUtil implements RemoteNetUtil {
     }
 
     public boolean isInitialized() {
-        if(session == null)
-            return false;
-        try{
-            session.connect();
-            if(session.isConnected())
-                return true;
-            else
-                return false;
-        }
-        catch (JSchException e) {
-            return false;
-        }
+        return session != null ;
+
+    }
+
+    public boolean isConnected() {
+        return session.isConnected();
     }
 }
 

@@ -2,7 +2,7 @@
 <NaspInputData>
     <Options>
         <RunName>nasp_results3</RunName>
-        <OutputFolder>/home/dlemmer/nasp_results3</OutputFolder>
+        <OutputFolder>/home/jlabadie/nasp_results3</OutputFolder>
         <Reference name="reference" path="/home/dlemmer/NASP/examples/example_1/reference.fasta">
             <FindDups>True</FindDups>
         </Reference>

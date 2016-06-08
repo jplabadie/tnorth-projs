@@ -36,12 +36,10 @@ class DefaultSNPDistribution {
      *
      * @param snp_matrix_tsv expects a tab-delimited best-SNPs output from NASP
      */
-    DefaultSNPDistribution(File snp_matrix_tsv) {
-        try {
+    DefaultSNPDistribution(File snp_matrix_tsv) throws IOException {
+
             init(snp_matrix_tsv);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
@@ -102,7 +100,7 @@ class DefaultSNPDistribution {
      *
      * @return int representing the position (in the contig) of the last SNP
      */
-    int getLastSNPIndex()  {
+    private int getLastSNPIndex()  {
 
         String largest = snapshot.get(snapshot.size()-1)[POS];
         return new Integer(largest);

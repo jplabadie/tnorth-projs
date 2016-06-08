@@ -1,12 +1,13 @@
 
 package xmlbinds;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,7 +21,6 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Index" type="{}IndexType"/>
- *         &lt;element name="BamIndex" type="{}BamIndexType"/>
  *         &lt;element name="MatrixGenerator" type="{}MatrixGeneratorType"/>
  *         &lt;element name="Picard" type="{}PicardType"/>
  *         &lt;element name="Samtools" type="{}SamtoolsType"/>
@@ -39,7 +39,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ExternalApplications", propOrder = {
     "index",
-    "bamIndex",
     "matrixGenerator",
     "picard",
     "samtools",
@@ -48,25 +47,32 @@ import javax.xml.bind.annotation.XmlType;
     "aligner",
     "snpCaller"
 })
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
 public class ExternalApplications {
 
     @XmlElement(name = "Index", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected Index index;
-    @XmlElement(name = "BamIndex", required = true)
-    protected BamIndex bamIndex;
     @XmlElement(name = "MatrixGenerator", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected MatrixGenerator matrixGenerator;
     @XmlElement(name = "Picard", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected Picard picard;
     @XmlElement(name = "Samtools", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected Samtools samtools;
     @XmlElement(name = "DupFinder", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected DupFinder dupFinder;
     @XmlElement(name = "AssemblyImporter", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected AssemblyImporter assemblyImporter;
     @XmlElement(name = "Aligner")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected List<Aligner> aligner;
     @XmlElement(name = "SNPCaller")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected List<SNPCaller> snpCaller;
 
     /**
@@ -77,6 +83,7 @@ public class ExternalApplications {
      *     {@link Index }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public Index getIndex() {
         return index;
     }
@@ -89,32 +96,9 @@ public class ExternalApplications {
      *     {@link Index }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setIndex(Index value) {
         this.index = value;
-    }
-
-    /**
-     * Gets the value of the bamIndex property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BamIndex }
-     *     
-     */
-    public BamIndex getBamIndex() {
-        return bamIndex;
-    }
-
-    /**
-     * Sets the value of the bamIndex property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BamIndex }
-     *     
-     */
-    public void setBamIndex(BamIndex value) {
-        this.bamIndex = value;
     }
 
     /**
@@ -125,6 +109,7 @@ public class ExternalApplications {
      *     {@link MatrixGenerator }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public MatrixGenerator getMatrixGenerator() {
         return matrixGenerator;
     }
@@ -137,6 +122,7 @@ public class ExternalApplications {
      *     {@link MatrixGenerator }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setMatrixGenerator(MatrixGenerator value) {
         this.matrixGenerator = value;
     }
@@ -149,6 +135,7 @@ public class ExternalApplications {
      *     {@link Picard }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public Picard getPicard() {
         return picard;
     }
@@ -161,6 +148,7 @@ public class ExternalApplications {
      *     {@link Picard }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setPicard(Picard value) {
         this.picard = value;
     }
@@ -173,6 +161,7 @@ public class ExternalApplications {
      *     {@link Samtools }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public Samtools getSamtools() {
         return samtools;
     }
@@ -185,6 +174,7 @@ public class ExternalApplications {
      *     {@link Samtools }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setSamtools(Samtools value) {
         this.samtools = value;
     }
@@ -197,6 +187,7 @@ public class ExternalApplications {
      *     {@link DupFinder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public DupFinder getDupFinder() {
         return dupFinder;
     }
@@ -209,6 +200,7 @@ public class ExternalApplications {
      *     {@link DupFinder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setDupFinder(DupFinder value) {
         this.dupFinder = value;
     }
@@ -221,6 +213,7 @@ public class ExternalApplications {
      *     {@link AssemblyImporter }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public AssemblyImporter getAssemblyImporter() {
         return assemblyImporter;
     }
@@ -233,6 +226,7 @@ public class ExternalApplications {
      *     {@link AssemblyImporter }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setAssemblyImporter(AssemblyImporter value) {
         this.assemblyImporter = value;
     }
@@ -259,6 +253,7 @@ public class ExternalApplications {
      * 
      * 
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public List<Aligner> getAligner() {
         if (aligner == null) {
             aligner = new ArrayList<Aligner>();
@@ -288,6 +283,7 @@ public class ExternalApplications {
      * 
      * 
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public List<SNPCaller> getSNPCaller() {
         if (snpCaller == null) {
             snpCaller = new ArrayList<SNPCaller>();

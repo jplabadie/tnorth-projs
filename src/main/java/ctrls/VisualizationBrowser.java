@@ -2,7 +2,6 @@ package ctrls;
 
 /**
  * @author Jean-Paul Labadie
- * @date 8/11/2015
  */
 
 import javafx.geometry.HPos;

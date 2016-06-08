@@ -11,15 +11,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
-import utils.JobSaveLoadManager;
+import utils.DefaultRemoteNetUtil;
 import utils.LogManager;
-import utils.NetworkManager;
 import utils.RemoteFileSystemManager;
-import xmlbinds.NaspInputData;
+import utils.UserSettingsManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +43,9 @@ public class MainController implements Initializable{
 
     private static RemoteFileSystemManager rfsm;
     private static LogManager log;
-    private static NetworkManager nm;
+    private static DefaultRemoteNetUtil nm;
+
+    private Optional<Pair<String, String>> userpass;
 
     /**
      *
@@ -58,13 +57,13 @@ public class MainController implements Initializable{
 
         rfsm = RemoteFileSystemManager.getInstance();
         log = LogManager.getInstance();
-        nm = NetworkManager.getInstance();
 
         gracefulLogin();
         initLogin();
         initLocalFileBrowserTree();
 
         initMenuItemQuit();
+        initMenuItemLoad();
         initCreateNewJobHandler();
         //initUserSettingsPaneHandler();
 
@@ -79,8 +78,12 @@ public class MainController implements Initializable{
 
     private void gracefulLogin(){
         LoginDialog ld = new LoginDialog();
-        Optional<Pair<String, String>> output = ld.showAndWait();
-        if (output.isPresent() && rfsm.isConnected()) {
+        userpass = ld.showAndWait();
+
+
+        if (userpass.isPresent() && rfsm.isConnected()) {
+            UserSettingsManager.setUsername(userpass.get().getKey());
+            UserSettingsManager.setCurrentPassword(userpass.get().getValue());
             initRemotePathBrowserTree(rfsm);
         }
         else {
@@ -102,7 +105,6 @@ public class MainController implements Initializable{
     private void gracefulQuit(){
         log.info("Quiting: Application Closing By Request.");
         rfsm.close();
-        nm.closeSession();
         Platform.exit();
     }
 
@@ -111,27 +113,34 @@ public class MainController implements Initializable{
      */
     private void initMenuItemLoad(){
 
-        newJobBtn.setOnAction(
+        loadJobBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
                     //@Override
                     public void handle(final ActionEvent e) {
 
-                        final Stage dialogStage = new Stage();
-                        FileChooser fileChooser = new FileChooser();
-                        fileChooser.setTitle("Load Template");
-                        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
-                        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
-                        fileChooser.getExtensionFilters().add(extFilter);
-                        File file = fileChooser.showOpenDialog(dialogStage);
-
+//                        final Stage dialogStage = new Stage();
+//                        FileChooser fileChooser = new FileChooser();
+//                        fileChooser.setTitle("Load Template");
+//                        fileChooser.setInitialDirectory(new File(getClass()
+//                                .getResource("/test/NaspInputExample.xml").getFile()).getParentFile());
+//                        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+//                        fileChooser.getExtensionFilters().add(extFilter);
+//                        File file = fileChooser.showOpenDialog(dialogStage);
+//
                         try {
-                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
+
+                            FXMLLoader loader = new FXMLLoader(getClass().
+                                    getResource("/job/NASPDefaultJobPane.fxml"));
+                            AnchorPane job_tab = loader.load();
+                            JobTabMainController ctlr = loader.<JobTabMainController>getController();
+
+                            ctlr.initialize(loader.getLocation(),loader.getResources());
+
                             Tab new_tab = new Tab("New Tab");
-                            new_tab.setContent(new_job_pane);
+
+                            new_tab.setContent(job_tab);
                             jobTabPane.getTabs().add(new_tab);
-
-                            NaspInputData naspData = JobSaveLoadManager.jaxbXMLToObject(file);
-
+                            ctlr.showLoadNaspDialog();
 
                         } catch (IOException e1) {
                             e1.printStackTrace();
@@ -152,7 +161,8 @@ public class MainController implements Initializable{
                     //@Override
                     public void handle(final ActionEvent e) {
                         try {
-                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getClassLoader().getResource("job/NASPDefaultJobPane.fxml"));
+                            AnchorPane new_job_pane = FXMLLoader.load(getClass().getResource("/job/NASPDefaultJobPane.fxml"));
+                            new_job_pane.setUserData(userpass);
                             Tab new_tab = new Tab("New Tab");
                             new_tab.setContent(new_job_pane);
                             jobTabPane.getTabs().add(new_tab);
@@ -173,7 +183,8 @@ public class MainController implements Initializable{
                     public void handle(final ActionEvent e) {
                         try {
                             jobTabPane.setVisible(false);
-                            AnchorPane user_settings = FXMLLoader.load(getClass().getClassLoader().getResource("main/UserSettingsPane.fxml"));
+                            AnchorPane user_settings = FXMLLoader.load(getClass()
+                                    .getResource("/main/UserSettingsPane.fxml"));
                             centerPane = user_settings;
 
                         } catch (IOException e1) {
@@ -193,9 +204,10 @@ public class MainController implements Initializable{
         File[] roots = File.listRoots();    // Get a list of all drives attached
 
         TreeItem<File> dummyRoot = new TreeItem<File>();    // This dummy node is used to that we have multiple drives as roots
+        dummyRoot.setValue(new File("local"));
         // Iterate over the list of drives and add them and their children as children to the dummy node
-        for (int i = 0; i < roots.length; i++) {
-            dummyRoot.getChildren().addAll(createNode(roots[i]));
+        for (File root : roots) {
+            dummyRoot.getChildren().addAll(createNode(root));
         }
 
         localFileBrowserTree.setEditable(true);
@@ -221,15 +233,16 @@ public class MainController implements Initializable{
      * directories into containers in a JobTabPane.
      */
     private void initRemotePathBrowserTree(RemoteFileSystemManager rfsm) {
-        TreeItem<Path> dummyRoot = new TreeItem<>();
+        RemoteTreeItem rti = new RemoteTreeItem();
 
         if(rfsm != null && rfsm.isConnected())
         {
             try {
-                RemoteTreeItem rti = new RemoteTreeItem();
-                rti.setValue(rfsm.getRootAsPath());
+                String default_rem_dir = UserSettingsManager.getDefaultRemoteDirs();
+                log.info("RPBT: Init at root: " + default_rem_dir);
+                rti = new RemoteTreeItem(rfsm.getDirAsPath(default_rem_dir));
+
                 rti.buildChildren(rti);
-                dummyRoot.getChildren().addAll(rti.getChildren());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -244,8 +257,8 @@ public class MainController implements Initializable{
                 return new DraggableTreeCell<>();
             }
         });
-        remotePathBrowserTree.setRoot(dummyRoot);     // Set dummy node as root of the TreeView
-        remotePathBrowserTree.setShowRoot(false);     // Hide the root so the drives appear as roots
+        remotePathBrowserTree.setRoot(rti);     // Set dummy node as root of the TreeView
+        remotePathBrowserTree.setShowRoot(true);     // Hide the root so the drives appear as roots
     }
 
 
@@ -322,9 +335,11 @@ public class MainController implements Initializable{
      *
      */
     private class RemoteTreeItem extends TreeItem<Path>{
-        public RemoteTreeItem(){
 
+        public RemoteTreeItem(Path path){
+            super.setValue(path);
         }
+        public RemoteTreeItem(){}
 
         // We cache whether the File is a leaf or not. A File is a leaf if
         // it is not a directory and does not have any files contained within
@@ -355,8 +370,7 @@ public class MainController implements Initializable{
         @Override public boolean isLeaf() {
             if (isFirstTimeLeaf) {
                 isFirstTimeLeaf = false;
-                Path f = getValue();
-                isLeaf = f.getNameCount()==0;
+                isLeaf = false;
             }
             return isLeaf;
         }
@@ -366,26 +380,26 @@ public class MainController implements Initializable{
             return this.getValue().toString();
         }
 
-        private ObservableList<TreeItem<Path>> buildChildren(TreeItem<Path> tree_item) {
-            Path f = tree_item.getValue();
+        private ObservableList<TreeItem<Path>> buildChildren(RemoteTreeItem tree_item) {
+            Path this_path = tree_item.getValue();
 
-            if (f != null && f.getNameCount()==0) {
+            if (this_path != null) {
                 try {
-                    DirectoryStream<Path> ds = rfsm.getDirectory(f.toString());
+                    DirectoryStream<Path> ds = rfsm.getDirectory(this_path.toString());
                     ObservableList<TreeItem<Path>> children = FXCollections.observableArrayList();
                     for(Path path : ds){
-                        TreeItem<Path> temp = new TreeItem<>(path);
-                        temp.getChildren();
-                        children.add(temp);
+                        if(path != this_path) {
+                            children.add(new RemoteTreeItem(path));
+                        }
+                        System.out.println(path.toString());
                     }
                     return children;
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("RTB: Error while building remote directory tree: " + e);
                 }
             }
             return FXCollections.emptyObservableList();
         }
-
     }
 }

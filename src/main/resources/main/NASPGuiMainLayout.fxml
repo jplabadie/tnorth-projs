@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="800.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ctrls.MainController">
+<BorderPane fx:id="mainStage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ctrls.MainController">
    <top>
       <MenuBar fx:id="menu_bar">
         <menus>
@@ -34,12 +34,9 @@
    </top>
    <center>
        <AnchorPane fx:id="centerPane" prefHeight="600.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-      <TabPane fx:id="jobTabPane" prefHeight="600.0" prefWidth="800.0" tabMaxHeight="50.0" tabMaxWidth="2000.0">
+      <TabPane fx:id="jobTabPane" prefHeight="600.0" prefWidth="800.0" tabMaxHeight="50.0" tabMaxWidth="1000.0">
          <tabs>
          </tabs>
-         <BorderPane.margin>
-            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-         </BorderPane.margin>
       </TabPane>
        </AnchorPane>
    </center>
@@ -50,7 +47,7 @@
          </BorderPane.margin>
          <children>
             <TreeView fx:id="remotePathBrowserTree" editable="true" prefWidth="200.0" />
-            <TreeView fx:id="localFileBrowserTree" editable="true" opacity="0.78" prefWidth="248.0">
+            <TreeView fx:id="localFileBrowserTree" editable="true" opacity="0.78" prefWidth="200.0">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>

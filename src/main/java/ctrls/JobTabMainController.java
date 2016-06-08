@@ -5,25 +5,24 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import utils.JobSaveLoadManager;
-import utils.NetworkManager;
+import utils.*;
 import xmlbinds.*;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -40,7 +39,6 @@ public class JobTabMainController implements Initializable {
     @FXML   private TitledPane general_settings_pane;
     @FXML   private TitledPane inputs_pane;
     @FXML   private TitledPane aligner_options_pane;
-    @FXML   private VBox alignerVbox;
     @FXML   private TitledPane bwaSampTitledPane;
     @FXML   private TitledPane bwaMemTitledPane;
     @FXML   private TitledPane bowTieTitledPane;
@@ -54,10 +52,12 @@ public class JobTabMainController implements Initializable {
     @FXML   private TitledPane filter_options_pane;
 
     // JobManagerOptions Fields and Buttons
+    @FXML   private TextField runName;
     @FXML   private TextField jobOutputDir;
+    @FXML   private TextField jobReferencePath;
     @FXML   private ChoiceBox<String> jobManagerSystem;
-    @FXML   private TextField jobManagerQueue;
-    @FXML   private TextArea jobManagerArgs;
+    @FXML   private TextField jobProportionFilter;
+    @FXML   private TextField jobCoverageFilter;
     @FXML   private Button outputDirButton;
 
     // Inputs Fields and Buttons
@@ -168,12 +168,14 @@ public class JobTabMainController implements Initializable {
     @FXML   private Button btnLoadSettings;
 
     private File nasp_xml;
+    private JobRecord jobrec;
+    private RemoteNetUtil rem_network;
 
     private ResourceBundle resources;
     /**
      * This is the root Object which represents the Job XML
      */
-    private NaspInputData naspData;
+    private NaspInputData NASP_DATA;
 
     private DirectoryChooser dirChooser = new DirectoryChooser();
 
@@ -185,17 +187,42 @@ public class JobTabMainController implements Initializable {
      */
     @Override
     public void initialize(final URL fxmlFileLocation, ResourceBundle resources) {
-
         this.resources = resources;
 
         // The lists of all ListViews, CheckBoxes, and TitledPanes are created to add drag, and toggle functionality iteratively
         TextField[] textFieldArray = {inputFastaExternalGen, jobOutputDir};
         ListView[] listViewArray = {inputReadFiles, inputSamBamFiles, inputSamBamFiles};
-        CheckBox[] checkBoxArray = {cbAlignersSnap,cbInputAdvNucmer,cbAlignersNovoalign,cbAlignersBowtie,
-                cbAlignersBwaMem,cbAlignersBwaSamp,cbSnpCallerGATK,cbSnpCallerSAMTools,cbSnpCallerSolSNP,
-                cbSnpCallerVarScan};
-        TitledPane[] checkPaneArray = {bwaSampTitledPane, bwaMemTitledPane, bowTieTitledPane, novoalignTitledPane,
-                snapTitledPane, gatkOptionsPane, solSnpPane, varScanPane, samtoolsPane};
+        CheckBox[] checkBoxArray = {
+                cbAlignersBwaMem,
+                cbAlignersNovoalign,
+                cbAlignersBowtie,
+                cbAlignersBwaSamp,
+                cbAlignersSnap,
+                cbSnpCallerGATK,
+                cbSnpCallerSolSNP,
+                cbSnpCallerVarScan,
+                cbSnpCallerSAMTools
+        };
+        TitledPane[] checkPaneArray = {
+                bwaMemTitledPane,
+                novoalignTitledPane,
+                bowTieTitledPane,
+                bwaSampTitledPane,
+                snapTitledPane,
+                gatkOptionsPane,
+                solSnpPane,
+                varScanPane,
+                samtoolsPane
+        };
+
+        //cbInputAdvNucmer;
+
+        AbstractRemoteNetUtilFactory arnuf = RemoteNetUtilFactoryMaker.getFactory();
+        rem_network = arnuf.createRemoteNetUtil();
+
+        rem_network.initSession(UserSettingsManager.getUsername(),UserSettingsManager.getCurrentPassword(),
+                UserSettingsManager.getCurrentServerUrl(),UserSettingsManager.getCurrentServerPort());
+        rem_network.openSession();
 
         //Initialize Buttons
         initStartJobButton();
@@ -206,17 +233,16 @@ public class JobTabMainController implements Initializable {
         initializeCheckBoxToggle(checkBoxArray, checkPaneArray);
         initializeListViewDrag(listViewArray);
         initializeTextFieldDrag(textFieldArray);
-        toggleCheckBoxes();
 
-        // Config file Candidate
         // Define the options for observableArrayList
         ObservableList items =FXCollections.observableArrayList(
-                "None", new Separator(), "PBS/TORQUE", "SLURM", "SGE*");
+                "None", new Separator(), "PBS", "SLURM", "SGE*");
+
         jobManagerSystem.setItems(items);
         jobManagerSystem.getSelectionModel().select(0);
 
         //Create a new NaspInputData Object which represents a blank job request
-        naspData = new ObjectFactory().createNaspInputDataType();
+        NASP_DATA = new ObjectFactory().createNaspInputDataType();
     }
 
     /**
@@ -253,9 +279,6 @@ public class JobTabMainController implements Initializable {
                     if (!file.isDirectory()) {
                         event.acceptTransferModes(TransferMode.ANY);
                         listContents.add(content);
-
-                        System.out.println(listContents);
-
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -372,59 +395,280 @@ public class JobTabMainController implements Initializable {
     private void initStartJobButton() {
         btnStartJob.setOnAction(
                 new EventHandler<ActionEvent>() {
-                    //@Override
-                    public void handle(final ActionEvent e) {
-                       // try {
-                            saveFormState();
-                        File temp = new File(String.valueOf(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml")));
-                        NetworkManager.getInstance().upload(temp,"/home/jlabadie");
-                        NetworkManager.getInstance().runNaspJob("/home/jlabadie/NaspInputExample_Aspen.xml");
-//                            AnchorPane job_monitor_pane = FXMLLoader.load(this.getClass().getClassLoader().getResource("job/NASPJobMonitorPane.fxml"));
-//
-//                            // Testing only, remove from production builds
-//                            AnchorPane test = (AnchorPane)resources.getObject("NASPJobMonitorPane.fxml");
-//                            test.setVisible(true);
-//
-//                            jobConfigTabAnchorPane.getChildren().clear();
-//                            jobConfigTabAnchorPane.getChildren().add(job_monitor_pane);
 
-//                        } catch (IOException e1) {
-//                            e1.printStackTrace();
-//                        }
+                    public void handle(final ActionEvent e) {
+                        if(!gracefulJobStart()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("The job could not be started.");
+                            alert.setHeaderText(null);
+                            alert.setContentText("An error with the job occurred. Please check your logs.");
+                            alert.showAndWait();
+                        }
+                        //else open the job tab pane here
+                        jobConfigTabAnchorPane.getChildren().remove(0,jobConfigTabAnchorPane.getChildren().size());
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().
+                                    getResource("/job/NASPJobMonitorPane.fxml"));
+                            AnchorPane job_detail_pane = loader.load();
+                            JobTabStatusController ctrlr = loader.<JobTabStatusController>getController();
+                            ctrlr.initialize(loader.getLocation(),loader.getResources());
+                            ctrlr.setRemoteNetUtil(rem_network);
+
+                            jobConfigTabAnchorPane.getChildren().add(job_detail_pane);
+                        }
+                        catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 });
+    }
+
+    private boolean gracefulJobStart() {
+        LogManager.getInstance().info("JTMC: User Requesting Job Start.");
+        File file = saveFormState();
+        if (file != null) {
+            LogManager.getInstance().info("JTMC: Job Saved. Building Job Record.");
+            URI remote;
+            try {
+                remote = new URI(NASP_DATA.getOptions().getOutputFolder());
+
+            } catch (URISyntaxException e) {
+                LogManager.getInstance().error("JTMC: Job Start failed. Could not create remote path -"+
+                e.getMessage());
+                return false;
+            }
+            jobrec = new JobRecord(
+                    UserSettingsManager.getUsername(),
+                    UserSettingsManager.getCurrentServerUrl(),
+                    UserSettingsManager.getCurrentServerPort(),
+                    remote.getPath(),
+                    file.getAbsolutePath()
+            );
+            JobManager jm = new JobManager();
+            try {
+                jm.saveJobRecord(jobrec);
+            }
+            catch (Exception e){
+                LogManager.getInstance().error("JTMC: Saving job record failed.");
+            }
+                LogManager.getInstance().info("JTMC: Remote upload path set to: "+jobrec.getRemoteXmlPath());
+            LogManager.getInstance().info("JTMC: Local XML path set to: "+jobrec.getLocalXmlPath());
+            LogManager.getInstance().info("JTMC: Job Record Created. Starting job XML upload.");
+            File temp = new File(jobrec.getLocalXmlPath());
+            if(!temp.exists()){
+                LogManager.getInstance().error("JTMC: Job Start failed. Could not load local XML.");
+                return false;
+            }
+            LogManager.getInstance().info("JTMC: Starting Job XML upload.");
+            rem_network.upload(temp, jobrec.getRemoteXmlPath());
+            LogManager.getInstance().info("JTMC: Job XML upload completed. Attempting to run NASP.");
+            String go = remote.getPath() +"/"+file.getName();
+            rem_network.runNaspJob(go);
+            return true; //should also return false if any checks fail
+        }
+        LogManager.getInstance().warn("JTMC: Job Start failed - Job not saved locally.");
+        return false; // could not save
     }
 
     /**
      *
      */
-    private void saveFormState(){
+    private File saveFormState(){
 
-        ExternalApplications exapps = new ExternalApplications();
-        naspData.setExternalApplications(exapps);
+        if(NASP_DATA != null ){
+            try {
+                final Stage dialogStage = new Stage();
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Save Template");
+                fileChooser.setInitialDirectory(new File(getClass()
+                        .getResource("/test/NaspInputExample.xml").getFile()).getParentFile());
 
-        Options opts = new Options();
-        naspData.setOptions(opts);
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+                fileChooser.getExtensionFilters().add(extFilter);
+                File outfile = fileChooser.showSaveDialog(dialogStage);
 
-        Files files = new Files();
-        naspData.setFiles(files);
+                NASP_DATA.getOptions().setOutputFolder(jobOutputDir.getText());
+
+                JobSaveLoadManager.jaxbObjectToXML(NASP_DATA, outfile.toString());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Successfully Saved");
+                alert.setHeaderText("");
+                alert.setContentText("Your job was saved successfully.");
+                alert.showAndWait();
+                return outfile;
+            }
+            catch (Exception e){
+                LogManager.getInstance().error("Failed to save NASP data to XML");
+            }
+        }
+
+        ObjectFactory nasp_factory = new ObjectFactory();
+
+        NASP_DATA = nasp_factory.createNaspInputDataType();
+
+        ExternalApplications exapps = NASP_DATA.getExternalApplications();
+        if(exapps == null) exapps = new ExternalApplications();
+        NASP_DATA.setExternalApplications(exapps);
+
+        Options opts = NASP_DATA.getOptions();
+        if(opts == null) opts = new Options();
+        NASP_DATA.setOptions(opts);
+
+        Files files = NASP_DATA.getFiles();
+        if(files == null) files = new Files();
+        NASP_DATA.setFiles(files);
+
+        /**
+         * Save Reference Settings
+         */
+        Reference refs = opts.getReference();
+        if(refs == null) refs = new Reference();
+
+        if(outputFindDuplicates.isSelected())
+            refs.setFindDups("true");
+        else refs.setFindDups("false");
 
         String ref_path = inputRefFastaPath.getText();
-        String ref_name = ref_path.split("/([^/.]+)(([^/]*)(.[^/.]+))?$")[0];
-        Reference ref = new Reference();
-        System.out.println();
-        ref.setName(ref_name);
-        ref.setPath(ref_path);
-        opts.setReference(ref);
-        opts.setOutputFolder(jobOutputDir.getText());
-        opts.setJobSubmitter(jobManagerSystem.getValue().toString());
-        opts.setRunName( "test"+"_"+Calendar.DATE);
+        String ref_name = ref_path.substring(
+                ref_path.lastIndexOf('/'),
+                ref_path.indexOf('.')
+        );
 
-        // aligner_options_pane
+        refs.setName(ref_name);
+        refs.setPath(ref_path);
+
+        /**
+         * Save Options Settings
+         */
+        opts.setReference(refs);
+        opts.setOutputFolder(jobOutputDir.getText());
+        opts.setJobSubmitter(jobManagerSystem.getValue());
+        opts.setRunName(runName.getText());
+
+        /**
+         * Save Options Filters Settings
+         */
+        Filters filt = opts.getFilters();
+        if(filt == null) filt = new Filters();
+        filt.setCoverageFilter("10");
+        filt.setProportionFilter("0.9");
+        opts.setFilters(filt);
+
+        /**
+         * Save Files Settings from Inputs pane
+         */
+        ReadFolder readfolder = files.getReadFolder();
+        if(readfolder == null) readfolder = new ReadFolder();
+        files.setReadFolder(readfolder);
+        if(!inputSamBamFiles.getItems().isEmpty()){
+            String algnstr = inputSamBamFiles.getItems().get(0).toString();
+            readfolder.setPath(algnstr);
+        }
+
+        AssemblyFolder assembly_folder = new AssemblyFolder();
+        files.setAssemblyFolder(assembly_folder);
+        if(!inputVcfFiles.getItems().isEmpty()) {
+            String vcfstr = inputVcfFiles.getItems().get(0);
+            assembly_folder.setPath(vcfstr);
+        }
+
+        Assembly assembly = assembly_folder.getAssembly();
+        if(assembly==null) assembly = new Assembly();
+        assembly_folder.setAssembly(assembly);
+        if(inputFastaExternalGen.getText().length()>0) {
+            assembly.setSample(inputFastaExternalGen.getText()
+                    .substring(0, inputFastaExternalGen.getText().indexOf('.')));
+            assembly.setValue(inputFastaExternalGen.getText());
+        }
+        ReadFolder read = files.getReadFolder();
+        if(read == null) read = new ReadFolder();
+        files.setReadFolder(read);
+        if(!inputReadFiles.getItems().isEmpty()) {
+            String readstr = inputReadFiles.getItems().get(0);
+            read.setPath(readstr);
+        }
+
+        /**
+         * Save External Application Settings
+         */
+        Index index = new Index();
+        Index bindex = new Index();
+        MatrixGenerator mgen = new MatrixGenerator();
+        Picard picard = new Picard();
+        Samtools samtools = new Samtools();
+        DupFinder  dupfind = new DupFinder();
+        AssemblyImporter assimport = new AssemblyImporter();
+
+        index.setPath("scratch/packages/tnorth/bin/nasp_python/");
+        JobParameters ijp = new JobParameters();
+        ijp.setName("nasp_index");
+        ijp.setMemRequested("2");
+        ijp.setNumCPUs("1");
+        ijp.setWalltime("4");
+        //ijp.setQueue();
+        //ijp.setJobSubmitterArgs();
+        index.setJobParameters(ijp);
+
+        bindex.setPath("scratch/packages/tnorth/bin/nasp_python/");
+        JobParameters ibjp = new JobParameters();
+        ibjp.setName("nasp_bamindex");
+        ibjp.setMemRequested("2");
+        ibjp.setNumCPUs("1");
+        ibjp.setWalltime("4");
+        //ibjp.setQueue();
+        //ibjp.setJobSubmitterArgs();
+        bindex.setJobParameters(ibjp);
+
+        mgen.setPath("scratch/packages/tnorth/bin/nasp_python/vcf_to_matrix.py");
+        JobParameters mgenjp = new JobParameters();
+        mgenjp.setName("nasp_matrix");
+        mgenjp.setMemRequested("45");
+        mgenjp.setNumCPUs("12");
+        mgenjp.setWalltime("48");
+        mgenjp.setQueue("hmem");
+        //mgenjp.setJobSubmitterArgs();
+        mgen.setJobParameters(mgenjp);
+
+        picard.setPath("scratch/packages/tnorth/bin/");
+
+        samtools.setPath("scratch/packages/tnorth/bin/samtools");
+
+        dupfind.setPath("scratch/packages/tnorth/bin/nucmer");
+        JobParameters dupfindjp = new JobParameters();
+        dupfindjp.setName("dup_finder");
+        dupfindjp.setMemRequested("2");
+        dupfindjp.setNumCPUs("1");
+        dupfindjp.setWalltime("1");
+        //dupfindjp.setQueue("hmem");
+        //dupfindjp.setJobSubmitterArgs();
+        dupfind.setJobParameters(dupfindjp);
+
+        assimport.setPath("scratch/packages/tnorth/bin/delta-filter");
+        JobParameters assimportjp = new JobParameters();
+        assimportjp.setName("assembly_importer");
+        assimportjp.setMemRequested("2");
+        assimportjp.setNumCPUs("1");
+        assimportjp.setWalltime("1");
+        //assimportjp.setQueue("hmem");
+        //assimportjp.setJobSubmitterArgs();
+        assimport.setJobParameters(assimportjp);
+
+        exapps.setIndex(index);
+        exapps.setIndex(bindex);
+        exapps.setMatrixGenerator(mgen);
+        exapps.setPicard(picard);
+        exapps.setSamtools(samtools);
+        exapps.setDupFinder(dupfind);
+        exapps.setAssemblyImporter(assimport);
+
+        /**
+         * Save Aligners Settings
+         */
         List<Aligner> aligners = exapps.getAligner();
         List<SNPCaller> snpcallers = exapps.getSNPCaller();
 
         Aligner bwa_samp = new Aligner();
+        bwa_samp.setName("BWA sampe");
         aligners.add(bwa_samp);
         JobParameters bwa_samp_param = new JobParameters();
         bwa_samp.setJobParameters(bwa_samp_param);
@@ -433,9 +677,10 @@ public class JobTabMainController implements Initializable {
         bwa_samp_param.setMemRequested(limitBwaSampMem.getText());
         bwa_samp_param.setNumCPUs(limitBwaSampCpu.getText());
         bwa_samp_param.setWalltime(limitBwaSampRuntime.getText());
-        bwa_samp.setAdditionalArgs(bwaSampArgs.getText());
+        bwa_samp.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner bwa_mem = new Aligner();
+        bwa_mem.setName("BWA mem");
         aligners.add(bwa_mem);
         JobParameters bwa_mem_param = new JobParameters();
         bwa_mem.setJobParameters(bwa_mem_param);
@@ -444,9 +689,10 @@ public class JobTabMainController implements Initializable {
         bwa_mem_param.setMemRequested(limitBwaMemMem.getText());
         bwa_mem_param.setNumCPUs(limitBwaMemCpu.getText());
         bwa_mem_param.setWalltime(limitBwaMemRuntime.getText());
-        bwa_mem.setAdditionalArgs(bwaSampArgs.getText());
+        bwa_mem.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner novo = new Aligner();
+        novo.setName("Novoalign");
         aligners.add(novo);
         JobParameters novo_param = new JobParameters();
         novo.setJobParameters(novo_param);
@@ -455,9 +701,10 @@ public class JobTabMainController implements Initializable {
         novo_param.setMemRequested(limitNovoalignMem.getText());
         novo_param.setNumCPUs(limitNovoalignCpu.getText());
         novo_param.setWalltime(limitNovoalignRuntime.getText());
-        novo.setAdditionalArgs(bwaSampArgs.getText());
+        novo.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner snap = new Aligner();
+        snap.setName("SNAP");
         aligners.add(snap);
         JobParameters snap_param = new JobParameters();
         snap.setJobParameters(snap_param);
@@ -466,9 +713,10 @@ public class JobTabMainController implements Initializable {
         snap_param.setMemRequested(limitSnapMem.getText());
         snap_param.setNumCPUs(limitSnapCpu.getText());
         snap_param.setWalltime(limitSnapRuntime.getText());
-        snap.setAdditionalArgs(bwaSampArgs.getText());
+        snap.setAdditionalArguments(bwaSampArgs.getText());
 
         Aligner bow = new Aligner();
+        bow.setName("Bowtie2");
         aligners.add(bow);
         JobParameters bow_param = new JobParameters();
         bow.setJobParameters(bow_param);
@@ -477,14 +725,14 @@ public class JobTabMainController implements Initializable {
         bow_param.setMemRequested(limitBowtieMem.getText());
         bow_param.setNumCPUs(limitBowtieCpu.getText());
         bow_param.setWalltime(limitBowtieRuntime.getText());
-        bow.setAdditionalArgs(bwaSampArgs.getText());
+        bow.setAdditionalArguments(bwaSampArgs.getText());
 
         SNPCaller gatk = new SNPCaller();
         snpcallers.add(gatk);
         JobParameters gatk_param = new JobParameters();
         gatk.setJobParameters(gatk_param);
         gatk.setPath(GATKPath.getText());
-        gatk.setAdditionalArgs(GATKArguments.getText());
+        gatk.setAdditionalArguments(GATKArguments.getText());
         gatk_param.setQueue(GATKQueue.getText());
         gatk_param.setMemRequested(GATKMemory.getText());
         gatk_param.setNumCPUs(GATKCPU.getText());
@@ -495,7 +743,7 @@ public class JobTabMainController implements Initializable {
         JobParameters sol_param = new JobParameters();
         sol.setJobParameters(sol_param);
         sol.setPath(solPath.getText());
-        sol.setAdditionalArgs(solArguments.getText());
+        sol.setAdditionalArguments(solArguments.getText());
         sol_param.setQueue(solQueue.getText());
         sol_param.setMemRequested(solMemory.getText());
         sol_param.setNumCPUs(solCPU.getText());
@@ -506,7 +754,7 @@ public class JobTabMainController implements Initializable {
         JobParameters var_param = new JobParameters();
         var.setJobParameters(var_param);
         var.setPath(varPath.getText());
-        var.setAdditionalArgs(varArguments.getText());
+        var.setAdditionalArguments(varArguments.getText());
         var_param.setQueue(varQueue.getText());
         var_param.setMemRequested(varMemory.getText());
         var_param.setNumCPUs(varCPU.getText());
@@ -517,41 +765,31 @@ public class JobTabMainController implements Initializable {
         JobParameters sam_param = new JobParameters();
         sam.setJobParameters(sam_param);
         sam.setPath(SAMPath.getText());
-        sam.setAdditionalArgs(SAMArguments.getText());
+        sam.setAdditionalArguments(SAMArguments.getText());
         sam_param.setQueue(SAMQueue.getText());
         sam_param.setMemRequested(SAMMemory.getText());
         sam_param.setNumCPUs(SAMCPU.getText());
         sam_param.setWalltime(SAMRuntime.getText());
 
         //filter_options_pane
-
-        //  inputs_pane
-        AlignmentFolder alignment = new AlignmentFolder();
-            files.setAlignmentFolder(alignment);
-        AssemblyFolder assembly = new AssemblyFolder();
-            files.setAssemblyFolder(assembly);
-        ReadFolder read = new ReadFolder();
-            files.setReadFolder(read);
-
-        alignment.setPath(inputFastaExternalGen.getText());
-        //read.setPath(inputRead.getItems().get(0).toString());
-
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Template");
-        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
+        fileChooser.setInitialDirectory(new File(getClass()
+                .getResource("/test/NaspInputExample.xml").getFile()).getParentFile());
+
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
-
-        File file = fileChooser.showOpenDialog(dialogStage);
+        File file = fileChooser.showSaveDialog(dialogStage);
 
         try {
-            JobSaveLoadManager.jaxbObjectToXML(naspData, file.getPath());
+            JobSaveLoadManager.jaxbObjectToXML(NASP_DATA, file.getPath());
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Successfully Saved");
             alert.setHeaderText("");
             alert.setContentText("Your job was saved successfully.");
             alert.showAndWait();
+            return file;
         }
         catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -559,6 +797,7 @@ public class JobTabMainController implements Initializable {
             alert.setHeaderText("");
             alert.setContentText("Your job could not be saved!");
             alert.showAndWait();
+            return null;
         }
     }
 
@@ -566,54 +805,80 @@ public class JobTabMainController implements Initializable {
      *
      */
     private void loadFormState(){
+
+        /**
+         * Start a pop-up dialog to chose a saved xml to load
+         */
         final Stage dialogStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Saved Job");
-        fileChooser.setInitialDirectory(new File(getClass().getClassLoader().getResource("test/NaspInputExample_Aspen.xml").getFile()).getParentFile());
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
+        fileChooser.setInitialDirectory(new File(getClass()
+                .getResource("/test/NaspInputExample.xml").getFile()).getParentFile());
+        FileChooser.ExtensionFilter extFilter = new FileChooser
+                .ExtensionFilter("xml files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(dialogStage);
 
-        naspData = JobSaveLoadManager.jaxbXMLToObject(file);
+        /**
+         * convert the loaded file into XML data
+         */
+        NASP_DATA = JobSaveLoadManager.jaxbXMLToObject(file);
+        nasp_xml = file;
 
-        ExternalApplications exapps = naspData.getExternalApplications();
-        Options opts = naspData.getOptions();
-        Files files = naspData.getFiles();
-        Filters filters = opts.getFilters();
-
-        //Options
-        inputRefFastaPath.setText(opts.getReference().getPath());
-
-        // Inputs
+        //load Options from the saved XML and init options form
         try {
-            ObservableList<String> vcf = FXCollections.observableArrayList(files.getVCFFolder().getPath());
-            inputVcfFiles.setItems(vcf);
-            ObservableList<String> read = FXCollections.observableArrayList(files.getReadFolder().getPath());
+            Options opts = NASP_DATA.getOptions();
+            Reference ref = opts.getReference();
+            Filters filters = opts.getFilters();
+
+            jobOutputDir.setText(opts.getOutputFolder());
+            jobReferencePath.setText(ref.getPath());
+            jobProportionFilter.setText(filters.getProportionFilter());
+            jobCoverageFilter.setText(filters.getCoverageFilter());
+            runName.setText(opts.getRunName());
+            jobManagerSystem.getSelectionModel().select(opts.getJobSubmitter());
+
+            if (ref.getFindDups().equalsIgnoreCase("true"))
+                outputFindDuplicates.setSelected(true);
+            else outputFindDuplicates.setSelected(false);
+            inputRefFastaPath.setText(opts.getReference().getPath());
+        }
+        catch (NullPointerException e){
+            LogManager.getInstance().error("JTMC: Failed to load Options data");
+        }
+        // load Files from the saved XML and init Inputs Form
+        try {
+            Files files = NASP_DATA.getFiles();
+            ObservableList<String> assembly = FXCollections.observableArrayList();
+            String assemblypath = files.getAssemblyFolder().getPath();
+            String asssample = files.getAssemblyFolder().getAssembly().getValue();
+            assembly.add(assemblypath +"/"+asssample);
+            inputVcfFiles.setItems(assembly);
+
+            ObservableList<String> read = FXCollections.observableArrayList();
+            String readpath = files.getReadFolder().getPath();
+            String readsample1 = files.getReadFolder().getReadPair().getRead1Filename();
+            String readsample2 = files.getReadFolder().getReadPair().getRead2Filename();
+            read.add(readpath +"/"+readsample1);
+            read.add(readpath +"/"+readsample2);
             inputReadFiles.setItems(read);
-            ObservableList<String> assembly = FXCollections.observableArrayList(files.getAssemblyFolder().getPath());
-            inputReadFiles.setItems(assembly);
         }
         catch (Exception e){
-            System.out.println("?");
+            LogManager.getInstance().error("JTMC: Failed to load Files data");
         }
-        inputRefFastaPath.setText(opts.getReference().getPath());
 
-        jobOutputDir.setText(opts.getOutputFolder());
-        jobManagerSystem.getSelectionModel().select(opts.getJobSubmitter());
-        outputFindDuplicates.setSelected(opts.getReference().getFindDups().equals("true"));
-        opts.setRunName("test"+"_"+ Calendar.DATE);
-
-        // aligner_options_pane
-        List<Aligner> aligners = exapps.getAligner();
-        List<SNPCaller> snpcallers = exapps.getSNPCaller();
+        // load Aligner
+        List<Aligner> aligners = NASP_DATA.getExternalApplications().getAligner();
+        List<SNPCaller> snpcallers = NASP_DATA.getExternalApplications().getSNPCaller();
 
         for(Aligner aligner : aligners){
             JobParameters job_params = aligner.getJobParameters();
             String name = aligner.getName().toLowerCase();
-            String args = aligner.getAdditionalArgs();
+            String args = aligner.getAdditionalArguments();
             String path = aligner.getPath();
 
             if(name.contains("sampe")){
+                bwaSampTitledPane.setExpanded(true);
                 cbAlignersBwaSamp.setSelected(true);
                 altBwaSampPath.setText(path);
                 altBwaSampQueue.setText(job_params.getQueue());
@@ -624,6 +889,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("mem")){
                 cbAlignersBwaMem.setSelected(true);
+                bwaMemTitledPane.setExpanded(true);
                 altBwaMemPath.setText(path);
                 altBwaMemQueue.setText(job_params.getQueue());
                 limitBwaMemCpu.setText(job_params.getNumCPUs());
@@ -633,6 +899,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("novo")){
                 cbAlignersNovoalign.setSelected(true);
+                novoalignTitledPane.setExpanded(true);
                 altNovoalignPath.setText(path);
                 altNovoalignQueue.setText(job_params.getQueue());
                 limitNovoalignCpu.setText(job_params.getNumCPUs());
@@ -642,6 +909,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("snap")){
                 cbAlignersSnap.setSelected(true);
+                snapTitledPane.setExpanded(true);
                 altSnapPath.setText(path);
                 altSnapQueue.setText(job_params.getQueue());
                 limitSnapCpu.setText(job_params.getNumCPUs());
@@ -651,6 +919,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("bow")){
                 cbAlignersBowtie.setSelected(true);
+                bowTieTitledPane.setExpanded(true);
                 altBowtiePath.setText(path);
                 altBowtieQueue.setText(job_params.getQueue());
                 limitBowtieCpu.setText(job_params.getNumCPUs());
@@ -663,10 +932,11 @@ public class JobTabMainController implements Initializable {
         for(SNPCaller caller: snpcallers){
             JobParameters job_params = caller.getJobParameters();
             String name = caller.getName().toLowerCase();
-            String args = caller.getAdditionalArgs();
+            String args = caller.getAdditionalArguments();
             String path = caller.getPath();
             if(name.contains("gatk")){
                 cbSnpCallerGATK.setSelected(true);
+                gatkOptionsPane.setExpanded(true);
                 GATKPath.setText(path);
                 GATKQueue.setText(job_params.getQueue());
                 GATKCPU.setText(job_params.getNumCPUs());
@@ -676,6 +946,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("sol")){
                 cbSnpCallerSolSNP.setSelected(true);
+                solSnpPane.setExpanded(true);
                 solPath.setText(path);
                 solQueue.setText(job_params.getQueue());
                 solCPU.setText(job_params.getNumCPUs());
@@ -685,6 +956,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("var")){
                 cbSnpCallerVarScan.setSelected(true);
+                varScanPane.setExpanded(true);
                 varPath.setText(path);
                 varQueue.setText(job_params.getQueue());
                 varCPU.setText(job_params.getNumCPUs());
@@ -694,6 +966,7 @@ public class JobTabMainController implements Initializable {
             }
             else if(name.contains("sam")){
                 cbSnpCallerSAMTools.setSelected(true);
+                samtoolsPane.setExpanded(true);
                 SAMPath.setText(path);
                 SAMQueue.setText(job_params.getQueue());
                 SAMCPU.setText(job_params.getNumCPUs());
@@ -719,20 +992,14 @@ public class JobTabMainController implements Initializable {
      */
     private void initializeCheckBoxToggle (CheckBox[] checkArray, TitledPane[] checkPanes) {
         for (int i = 0; i < checkArray.length; i++) {
-            if (i < checkArray.length - 1) {
-                setCheckboxToggle(checkArray[i], checkPanes[i]);
-            }
-            else {
-                TitledPane dummy = new TitledPane();
-                setCheckboxToggle(checkArray[i], dummy);
-            }
+            setCheckboxToggle(checkArray[i], checkPanes[i]);
         }
     }
 
     /**
      *
-     * @param checkBox
-     * @param checkPane
+     * @param checkBox the checkbox which will gain a new eventhandler
+     * @param checkPane the titlepane which will be toggled by the checkbox
      */
     private void setCheckboxToggle (final CheckBox checkBox, TitledPane checkPane) {
         //System.out.println("ID: " + checkBox.getId());
@@ -740,117 +1007,19 @@ public class JobTabMainController implements Initializable {
         checkBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (checkBox.isSelected()) {
-                    //System.out.println(checkBox.getId() + "Checkbox toggled");
-                    if (checkBox.getId().equals("enableAdvNucmerButton")) { 
-                        cbInputAdvNucmer.setDisable(false);
-                        inputDeltaArgs.setDisable(false);
-                    }
-                    else {
-                        correspondingPane.setDisable(false);
-                        correspondingPane.setExpanded(true);
-                    }
+                if(checkBox.isSelected()){
+                    checkPane.setExpanded(true);
+                    checkPane.setDisable(false);
                 }
-                else if (!checkBox.isSelected()){
-                    if (checkBox.getId().equals("enableAdvNucmerButton")) {
-                        cbInputAdvNucmer.setDisable(true);
-                        inputDeltaArgs.setDisable(true);
-                    }
-                    else {
-                        correspondingPane.setDisable(true);
-                        correspondingPane.setExpanded(false);
-                    }
+                else{
+                    checkPane.setExpanded(false);
+                    checkPane.setDisable(true);
                 }
             }
         });
     }
 
-
-
-
-    /*
-        saving the file into specified location
-     */
-    private void saveTempFile(String content,File file){
-        try {
-            FileWriter fileWriter = null;
-            fileWriter = new FileWriter(file);
-            fileWriter.write(content);
-            fileWriter.close();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("");
-            alert.setContentText("Your template was saved successfully");
-            alert.showAndWait();
-        }
-        catch (IOException exception)
-        {
-            System.out.println("Error processing file: " + exception);
-        }
+    public void showLoadNaspDialog() {
+        loadFormState();
     }
-
-    private void toggleCheckBoxes()
-    {
-        useAltBwaSampVer.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (useAltBwaSampVer.isSelected())
-                            altBwaSampPath.setDisable(false);
-                        else
-                            altBwaSampPath.setDisable(true);
-                    }
-                }
-        );
-
-        useAltBwaMemVer.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (useAltBwaMemVer.isSelected())
-                            altBwaMemPath.setDisable(false);
-                        else
-                            altBwaMemPath.setDisable(true);
-                    }
-                }
-        );
-
-        useAltBowtieVer.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (useAltBowtieVer.isSelected())
-                            altBowtiePath.setDisable(false);
-                        else
-                            altBowtiePath.setDisable(true);
-                    }
-                }
-        );
-
-        useAltNovoalignVer.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (useAltNovoalignVer.isSelected())
-                            altNovoalignPath.setDisable(false);
-                        else
-                            altNovoalignPath.setDisable(true);
-                    }
-                }
-        );
-
-        useAltSnapVer.setOnAction(
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (useAltSnapVer.isSelected())
-                            altSnapPath.setDisable(false);
-                        else
-                            altSnapPath.setDisable(true);
-
-                    }
-                }
-        );
-    }
-
 }

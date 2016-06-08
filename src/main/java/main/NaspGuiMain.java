@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.LogManager;
+import utils.UserSettingsManager;
 
 /**
  * Main method which defines the root of the JavaFX application
@@ -43,7 +44,7 @@ public class NaspGuiMain extends Application {
 
     public static void main(String[] args) {
         LogManager lm = LogManager.getInstance();
-        lm.info("started");
+        UserSettingsManager usm = UserSettingsManager.getInstance();
 
         Application.launch(args);
     }

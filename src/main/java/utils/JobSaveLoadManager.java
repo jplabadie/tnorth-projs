@@ -1,13 +1,9 @@
 package utils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import xmlbinds.NaspInputData;
 import xmlbinds.ObjectFactory;
 
 import javax.xml.bind.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 
@@ -18,26 +14,28 @@ import java.io.File;
  */
 public class JobSaveLoadManager {
 
-    private DocumentBuilderFactory docFactory;
-    private DocumentBuilder docBuilder;
-    private Document output;
-    private Element mainRootElement;
+    private static JobSaveLoadManager instance;
+    private static LogManager lm = LogManager.getInstance();
 
-    public JobSaveLoadManager(){}
+    private JobSaveLoadManager(){
+        lm.info("JSLM: JSLM Singleton Initialized");
+    }
 
     /**
      *
       * @param xml_path the absolute path to the xml file we will use to create Java objects
      * @return a populated NaspInputData object with references to related classes
      */
+    @SuppressWarnings(" unchecked ")
     public static NaspInputData jaxbXMLToObject(File xml_path) {
         try {
             JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            NaspInputData naspData = ((JAXBElement<NaspInputData>) unmarshaller.unmarshal(xml_path)).getValue();
+            NaspInputData naspData = ((NaspInputData) unmarshaller.unmarshal(xml_path));
+            lm.info("JSLM: Job XML loaded and converted to objects from: "+xml_path.getPath());
             return naspData;
         } catch (JAXBException e) {
-            e.printStackTrace();
+            lm.error("JSLM: Job XML failed to load from: " + xml_path.getPath() + "\nError occured:\n" + e.getMessage());
         }
         return null;
     }
@@ -62,7 +60,14 @@ public class JobSaveLoadManager {
             output_path = setFileTagsToXml(output_path);
             // Write to File
             m.marshal(input_for_conversion, new File(output_path));
+            lm.info("JSLM: Job XML converted from objects and saved to XML at: "+output_path);
         } catch (JAXBException e) {
+            String temp ="";
+            for( StackTraceElement x : e.getStackTrace()){
+                temp+= "\t"+ x.toString()+"\n";
+            }
+            lm.error("JSLM: Job objects failed to convert or save as XML to: " + output_path + "\nError occured:\n"
+                    + temp);
             e.printStackTrace();
         }
     }
@@ -75,15 +80,26 @@ public class JobSaveLoadManager {
      */
     private static String setFileTagsToXml(String path){
         String xmltag = ".xml";
-        int done = path.lastIndexOf(".xml");
+        int done = path.lastIndexOf(xmltag);
         int dot = path.lastIndexOf(".");
 
         if(done>=0) return path;
 
         else if(dot>=0){
             path = path.substring(0,dot);
-            path += ".xml";
+            path += xmltag;
         }
+        lm.info("JSLM: .xml tag missing, was automatically added to Job XML save name: "+ path);
         return path;
+    }
+
+    /**
+     *
+     * @return a Singleton object instance of this class
+     */
+    public static JobSaveLoadManager getInstance() {
+        if(instance == null)
+            instance = new JobSaveLoadManager();
+        return instance;
     }
 }

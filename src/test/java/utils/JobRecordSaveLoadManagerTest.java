@@ -1,6 +1,5 @@
-package ctrls;
+package utils;
 
-import utils.JobSaveLoadManager;
 import xmlbinds.NaspInputData;
 
 import java.io.File;
@@ -8,13 +7,13 @@ import java.io.File;
 /**
  * @author Jean-Paul Labadie
  */
-public class JobSaveLoadManagerTest {
+public class JobRecordSaveLoadManagerTest {
 
     private static JobSaveLoadManager tempparser;
 
     @org.junit.BeforeClass
     public static void onlyOnce(){
-        tempparser = new JobSaveLoadManager();
+        tempparser =JobSaveLoadManager.getInstance();
     }
 
     @org.junit.Test

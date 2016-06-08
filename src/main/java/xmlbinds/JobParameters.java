@@ -1,6 +1,7 @@
 
 package xmlbinds;
 
+import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -22,7 +23,8 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *               &lt;enumeration value="2"/>
- *               &lt;enumeration value="45"/>
+ *               &lt;enumeration value="8"/>
+ *               &lt;enumeration value="4"/>
  *               &lt;enumeration value="10"/>
  *             &lt;/restriction>
  *           &lt;/simpleType>
@@ -31,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;simpleType>
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *               &lt;enumeration value="1"/>
- *               &lt;enumeration value="12"/>
+ *               &lt;enumeration value="8"/>
  *               &lt;enumeration value="4"/>
  *             &lt;/restriction>
  *           &lt;/simpleType>
@@ -41,21 +43,12 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *               &lt;enumeration value="4"/>
  *               &lt;enumeration value="48"/>
- *               &lt;enumeration value="1"/>
  *               &lt;enumeration value="36"/>
- *               &lt;enumeration value="24"/>
  *             &lt;/restriction>
  *           &lt;/simpleType>
  *         &lt;/element>
- *         &lt;element name="Queue" minOccurs="0">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;enumeration value=""/>
- *               &lt;enumeration value="hmem"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
- *         &lt;element name="JobSubmitterArgs" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="Queue" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="JobSubmitterArgs" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
@@ -73,19 +66,26 @@ import javax.xml.bind.annotation.XmlType;
     "queue",
     "jobSubmitterArgs"
 })
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
 public class JobParameters {
 
     @XmlElement(name = "MemRequested", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String memRequested;
     @XmlElement(name = "NumCPUs", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String numCPUs;
     @XmlElement(name = "Walltime", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String walltime;
-    @XmlElement(name = "Queue")
+    @XmlElement(name = "Queue", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String queue;
-    @XmlElement(name = "JobSubmitterArgs")
+    @XmlElement(name = "JobSubmitterArgs", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String jobSubmitterArgs;
     @XmlAttribute(name = "name")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected String name;
 
     /**
@@ -96,6 +96,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getMemRequested() {
         return memRequested;
     }
@@ -108,6 +109,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setMemRequested(String value) {
         this.memRequested = value;
     }
@@ -120,6 +122,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getNumCPUs() {
         return numCPUs;
     }
@@ -132,6 +135,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setNumCPUs(String value) {
         this.numCPUs = value;
     }
@@ -144,6 +148,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getWalltime() {
         return walltime;
     }
@@ -156,6 +161,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setWalltime(String value) {
         this.walltime = value;
     }
@@ -168,6 +174,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getQueue() {
         return queue;
     }
@@ -180,6 +187,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setQueue(String value) {
         this.queue = value;
     }
@@ -192,6 +200,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getJobSubmitterArgs() {
         return jobSubmitterArgs;
     }
@@ -204,6 +213,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setJobSubmitterArgs(String value) {
         this.jobSubmitterArgs = value;
     }
@@ -216,6 +226,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public String getName() {
         return name;
     }
@@ -228,6 +239,7 @@ public class JobParameters {
      *     {@link String }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setName(String value) {
         this.name = value;
     }

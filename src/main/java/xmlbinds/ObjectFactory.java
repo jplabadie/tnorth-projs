@@ -50,14 +50,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link VCFFolder }
-     * 
-     */
-    public VCFFolder createVCFFolderType() {
-        return new VCFFolder();
-    }
-
-    /**
      * Create an instance of {@link Picard }
      * 
      */
@@ -87,6 +79,14 @@ public class ObjectFactory {
      */
     public AssemblyFolder createAssemblyFolderType() {
         return new AssemblyFolder();
+    }
+
+    /**
+     * Create an instance of {@link ReadPair }
+     * 
+     */
+    public ReadPair createReadPairType() {
+        return new ReadPair();
     }
 
     /**
@@ -127,22 +127,6 @@ public class ObjectFactory {
      */
     public Assembly createAssemblyType() {
         return new Assembly();
-    }
-
-    /**
-     * Create an instance of {@link AlignmentFolder }
-     * 
-     */
-    public AlignmentFolder createAlignmentFolderType() {
-        return new AlignmentFolder();
-    }
-
-    /**
-     * Create an instance of {@link BamIndex }
-     * 
-     */
-    public BamIndex createBamIndexType() {
-        return new BamIndex();
     }
 
     /**

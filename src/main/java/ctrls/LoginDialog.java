@@ -5,9 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import utils.LogManager;
-import utils.NetworkManager;
-import utils.RemoteFileSystemManager;
+import utils.*;
 
 /**
  * @author Jean-Paul Labadie
@@ -15,7 +13,7 @@ import utils.RemoteFileSystemManager;
 public class LoginDialog extends Dialog<Pair<String,String>>{
 
     private RemoteFileSystemManager rfsm = RemoteFileSystemManager.getInstance();
-    private NetworkManager nm = NetworkManager.getInstance();
+    private RemoteNetUtil nm = RemoteNetUtilFactoryMaker.getFactory().createRemoteNetUtil();
     LogManager log = LogManager.getInstance();
 
     /**
@@ -23,7 +21,7 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
      */
     public LoginDialog(){
 
-        this.setTitle("Login Dialog");
+        this.setTitle("Login");
         this.setHeaderText("NASP GUI Login");
         // Set the icon (must be included in the project).
         //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
@@ -38,15 +36,27 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         grid.setVgap(10);
         //grid.setPadding(new Insets(20, 150, 10, 10));
 
+        // Enable/Disable login button depending on whether a username was entered.
+        Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
         TextField username = new TextField();
         username.setPromptText("Username");
+        // Do some validation (using the Java 8 lambda syntax).
+        username.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty());
+        });
+        username.setText(UserSettingsManager.getUsername());
+
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
 
         TextField host = new TextField();
         host.setPromptText("Host");
+        host.setText(UserSettingsManager.getCurrentServerUrl());
+
         TextField port = new TextField();
-        port.setText("22");
+        port.setText(String.valueOf(UserSettingsManager.getCurrentServerPort()));
 
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
@@ -57,14 +67,7 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
         grid.add(new Label("Port:"), 0, 3);
         grid.add(port, 1, 3);
 
-        // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
-        loginButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
-        });
 
         this.getDialogPane().setContent(grid);
 
@@ -95,7 +98,6 @@ public class LoginDialog extends Dialog<Pair<String,String>>{
                     log.error("Login Failed: RFSM and/or NM failed to initialize.");
                     return null;
                 }
-
                 return new Pair<>(username.getText(), password.getText());
             }
             return null;

@@ -1,9 +1,7 @@
 package utils;
 
 import com.jcraft.jsch.Logger;
-import org.json.simple.JSONObject;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,13 +46,12 @@ public class LogManager implements Logger{
             fh.setFormatter(formatter);
 
             // the following statement is used to log any messages
-            this.info("Logger initialized.");
+            this.info("LM: Logger initialized.");
 
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Check what level of logging has been enabled.
@@ -103,27 +100,6 @@ public class LogManager implements Logger{
      */
     public void error(String message){
         log(ERROR,message);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void logJob(DispatchConfiguration dc) {
-        JSONObject obj = new JSONObject();
-        obj.put("User Name", dc.getUsername());
-        obj.put("Timestamp", dc.getTimestamp());
-        obj.put("Host",dc.getServer());
-        obj.put("Port",dc.getPort());
-        obj.put("XML Path",dc.getXmlPath());
-
-        // try-with-resources statement based on post comment below :)
-        String path = "out\\joblog\\"+getTimestamp()+".json";
-        try (FileWriter file = new FileWriter(path)) {
-            file.write(obj.toJSONString());
-
-            info("Job Dispatch Configuration logged to file: "+ path);
-        } catch (IOException e) {
-            e.printStackTrace();
-            error("Failed to log Job Dispatch Configuration to file: "+ path +"\nReason:\n"+e.getMessage());
-        }
     }
 
     /**

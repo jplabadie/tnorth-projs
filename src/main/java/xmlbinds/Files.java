@@ -1,6 +1,7 @@
 
 package xmlbinds;
 
+import javax.annotation.Generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -19,8 +20,6 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="ReadFolder" type="{}ReadFolderType"/>
  *         &lt;element name="AssemblyFolder" type="{}AssemblyFolderType"/>
- *         &lt;element name="AlignmentFolder" type="{}AlignmentFolderType"/>
- *         &lt;element name="VCFFolder" type="{}VCFFolderType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,20 +31,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Files", propOrder = {
     "readFolder",
-    "assemblyFolder",
-    "alignmentFolder",
-    "vcfFolder"
+    "assemblyFolder"
 })
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
 public class Files {
 
     @XmlElement(name = "ReadFolder", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected ReadFolder readFolder;
     @XmlElement(name = "AssemblyFolder", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected AssemblyFolder assemblyFolder;
-    @XmlElement(name = "AlignmentFolder", required = true)
-    protected AlignmentFolder alignmentFolder;
-    @XmlElement(name = "VCFFolder", required = true)
-    protected VCFFolder vcfFolder;
 
     /**
      * Gets the value of the readFolder property.
@@ -55,6 +51,7 @@ public class Files {
      *     {@link ReadFolder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public ReadFolder getReadFolder() {
         return readFolder;
     }
@@ -67,6 +64,7 @@ public class Files {
      *     {@link ReadFolder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setReadFolder(ReadFolder value) {
         this.readFolder = value;
     }
@@ -79,6 +77,7 @@ public class Files {
      *     {@link AssemblyFolder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public AssemblyFolder getAssemblyFolder() {
         return assemblyFolder;
     }
@@ -91,56 +90,9 @@ public class Files {
      *     {@link AssemblyFolder }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setAssemblyFolder(AssemblyFolder value) {
         this.assemblyFolder = value;
-    }
-
-    /**
-     * Gets the value of the alignmentFolder property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AlignmentFolder }
-     *     
-     */
-    public AlignmentFolder getAlignmentFolder() {
-        return alignmentFolder;
-    }
-
-    /**
-     * Sets the value of the alignmentFolder property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link AlignmentFolder }
-     *     
-     */
-    public void setAlignmentFolder(AlignmentFolder value) {
-        this.alignmentFolder = value;
-    }
-
-    /**
-     * Gets the value of the vcfFolder property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link VCFFolder }
-     *     
-     */
-    public VCFFolder getVCFFolder() {
-        return vcfFolder;
-    }
-
-    /**
-     * Sets the value of the vcfFolder property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link VCFFolder }
-     *     
-     */
-    public void setVCFFolder(VCFFolder value) {
-        this.vcfFolder = value;
     }
 
 }

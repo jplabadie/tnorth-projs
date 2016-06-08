@@ -59,6 +59,16 @@
             <version>${jsch-agentproxy.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.pastdev</groupId>
+            <artifactId>jsch-extension</artifactId>
+            <version>0.1.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pastdev</groupId>
+            <artifactId>jsch-nio</artifactId>
+            <version>1.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>

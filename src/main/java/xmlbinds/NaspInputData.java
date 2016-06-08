@@ -1,6 +1,7 @@
 
 package xmlbinds;
 
+import javax.annotation.Generated;
 import javax.xml.bind.annotation.*;
 
 
@@ -25,20 +26,24 @@ import javax.xml.bind.annotation.*;
  * 
  * 
  */
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "NaspInputData", propOrder = {
     "options",
     "files",
     "externalApplications"
 })
-@XmlRootElement(name = "NaspInputData")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
 public class NaspInputData {
 
     @XmlElement(name = "Options", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected Options options;
     @XmlElement(name = "Files", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected Files files;
     @XmlElement(name = "ExternalApplications", required = true)
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     protected ExternalApplications externalApplications;
 
     /**
@@ -49,6 +54,7 @@ public class NaspInputData {
      *     {@link Options }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public Options getOptions() {
         return options;
     }
@@ -61,6 +67,7 @@ public class NaspInputData {
      *     {@link Options }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setOptions(Options value) {
         this.options = value;
     }
@@ -73,6 +80,7 @@ public class NaspInputData {
      *     {@link Files }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public Files getFiles() {
         return files;
     }
@@ -85,6 +93,7 @@ public class NaspInputData {
      *     {@link Files }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setFiles(Files value) {
         this.files = value;
     }
@@ -97,6 +106,7 @@ public class NaspInputData {
      *     {@link ExternalApplications }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public ExternalApplications getExternalApplications() {
         return externalApplications;
     }
@@ -109,6 +119,7 @@ public class NaspInputData {
      *     {@link ExternalApplications }
      *     
      */
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2016-04-27T09:28:09-07:00", comments = "JAXB RI v2.2.8-b130911.1802")
     public void setExternalApplications(ExternalApplications value) {
         this.externalApplications = value;
     }

@@ -8,7 +8,7 @@ import java.util.Vector;
 /**
  * @author Jean-Paul Labadie
  */
-public class NetworkManager {
+public class DefaultRemoteNetUtil implements RemoteNetUtil {
 
     private Session session;
     private ChannelSftp sftp_channel;
@@ -19,14 +19,14 @@ public class NetworkManager {
     private OutputStream exec_out;
 
 
-    private static NetworkManager instance = null;
+    private static DefaultRemoteNetUtil instance = null;
     private LogManager log = LogManager.getInstance();
     private JSch jsch = new JSch();
 
     /**
      * Initialize the logger and create a new Jsch object
      */
-    public NetworkManager() {
+    public DefaultRemoteNetUtil() {
         JSch.setLogger(log);
     }
 
@@ -75,23 +75,29 @@ public class NetworkManager {
      * Start the session, and open relevant channels.
      * Should be called after initSession()
      *
-     * @throws JSchException
-     * @throws IOException
      */
     public void openSession(){
+        log.info("RNU: Attempting to Open Remote Session and related connections.");
 
         try {
             session.connect();
+            log.info("RNU: Open Session - Session connected successfully.");
         } catch (JSchException e) {
             log.error("NM - Unable to Open the Session: \n" + e.getMessage());
             return;
         }
 
         try {
-            sftp_channel = (ChannelSftp)session.openChannel("sftp");
-            exec_channel = (ChannelExec)session.openChannel("exec");
-            sftp_channel.connect();
-            exec_channel.connect();
+
+            Channel sftpchannel=session.openChannel("sftp");
+            sftpchannel.connect();
+            sftp_channel=(ChannelSftp)sftpchannel;
+
+            Channel execchannel=session.openChannel("exec");
+            execchannel.connect();
+            exec_channel=(ChannelExec)execchannel;
+
+            log.info("RNU: Open Session - SFTP/EXEC Channels connected successfully.");
         } catch (JSchException e) {
             log.error("NM - Unable to Open and Connect to SFTP/EXEC Channels: \n" + e.getMessage());
             session.disconnect();
@@ -100,16 +106,18 @@ public class NetworkManager {
         }
 
         try {
-            sftp_in = new BufferedReader(new InputStreamReader(sftp_channel.getInputStream()));
-            sftp_out = sftp_channel.getOutputStream();
+            (exec_channel).setErrStream(System.err);
+
             exec_in = new BufferedReader(new InputStreamReader(exec_channel.getInputStream()));
-            exec_out = exec_channel.getOutputStream();
+            log.info("RNU: Open Session - I/O Streams connected successfully.");
+            log.info("RNU: Open Session - SFTP channel at directory: "+sftp_channel.pwd());
         } catch (IOException e) {
             log.error("NM - Unable to Get SFTP/EXEC I/O Streams: \n" + e.getMessage());
             session.disconnect();
             log.warn("NM - Session failed : Closing Session.");
+        } catch (SftpException e) {
+            log.error("RNU: Unable to Get SFTP PWD \n" + e.getMessage());
         }
-
     }
 
     /**
@@ -128,23 +136,7 @@ public class NetworkManager {
 
             sftp_channel.disconnect();
             exec_channel.disconnect();
-            sftp_channel = null;
-            exec_channel = null;
             log.info("NM - Session Channels Disconnected." );
-
-            try {
-                sftp_in.close();
-                exec_in.close();
-            } catch (IOException e) {
-                log.warn("NM - Could Not Close Input Streams: \n" + e.getMessage());
-            }
-
-            try {
-                sftp_out.close();
-                exec_out.close();
-            } catch (IOException e) {
-                log.warn("NM - Could Not Close Output Streams: \n" + e.getMessage());
-            }
 
             session.disconnect();
             log.info("NM - Session Disconnected." );
@@ -166,35 +158,32 @@ public class NetworkManager {
      * @param abs_remote_path the absolute path to the file on the remote machine
      */
     public void upload(File file, String abs_remote_path){
+        log.info("RNU: Attempting upload: "+ file.getName()+ " at "+ abs_remote_path);
 
         if (sftp_channel == null){
             log.error("NM - Upload Step Fail: SFTP Channel is null. Cannot upload.");
             return;
         }
-        else if(file == null){
+        else if(!file.exists()){
             log.error("NM - Upload Step Fail: File for SFTP Upload is null. Cannot upload.");
             return;
         }
-        try {
-            testDirExists(abs_remote_path);
-        }
-        catch (IOException e){
+
+        if(!isRemoteDir(abs_remote_path)){
             log.error("NM - Upload Step Fail: Connection failed or remote path " +
                     "is not a valid path for SFTP Upload. Cannot upload.");
             return;
         }
 
-        try{
-            if(abs_remote_path != "") {
-                sftp_channel.cd("/"); //main from root
+        try {
+            log.info("RNU: Upload - Attempting: cd " + abs_remote_path);
                 sftp_channel.cd(abs_remote_path); //cd to the absolute directory
-                log.info("cd " + abs_remote_path);
-                log.info("NM - Upload Step Successful: cd " + abs_remote_path);
-            }
+
+
         }
         catch (SftpException e){
             //the directory cannot be visited
-            log.error("NM - Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
+            log.error("RNU: Upload Step Fail: cd " + abs_remote_path +": Failed. Insufficient Permissions? \n"
                     + e.getMessage());
 
         }
@@ -202,10 +191,10 @@ public class NetworkManager {
         try {
             try {
                 sftp_channel.put(new FileInputStream(file), file.getName());
-                log.info("NM - Upload Step Successful: file uploaded to " + abs_remote_path );
+                log.info("RNU: Upload Step Successful: file uploaded to " + abs_remote_path );
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
-                log.error("NM - Upload Step Fail: File Not Found. " +
+                log.error("RNU: Upload Step Fail: File Not Found. " +
                         "Insufficient Permissions? \n" + e.getMessage());
             }
 
@@ -271,21 +260,43 @@ public class NetworkManager {
      * @param job_XML_abs_path the absolute path to the XML job file on the remote server
      */
     public String runNaspJob(String job_XML_abs_path) {
-
+        String runpath = job_XML_abs_path.substring(0,job_XML_abs_path.lastIndexOf('/'));
         try {
             assert exec_channel != null;
+            exec_channel.setCommand("cd "+ runpath);
             exec_channel.setCommand("module load nasp"); //main nasp tool
-            log.info("module load nasp");
+            log.info("RNU: Run command - module load nasp");
             exec_channel.setCommand("module load tnorth"); //main the tnorth tool [what does this do??]
-            log.info("module load tnorth");
+            log.info("RNU: Run command - module load tnorth");
             exec_channel.setCommand("nasp --config " + job_XML_abs_path); //run nasp with the xml
-            log.info("nasp --config " + job_XML_abs_path);
+            log.info("RNU: Run command - nasp --config " + job_XML_abs_path);
 
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("RNU: Run NASP failed: " + e.getMessage());
         }
 
+        //dreams
         return "The ID of the started Job";
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String getUserJobs() {
+        exec_channel.setCommand("qstat -au" + getUsername() );
+        String output = "";
+        try {
+            while(exec_in.ready()) {
+                output += exec_in.readLine() + "\n";
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 
 
@@ -293,56 +304,71 @@ public class NetworkManager {
      *  Tests to see if a specified file exists and is a file on the remote server
      *
      * @param remote_file_abs_path the absolute path to the file on the remote server
+     * @return true if the file exists on the remote system, false otherwise
      */
-    private void testFileExists(String remote_file_abs_path) throws IOException {
+    public boolean isRemoteFile(String remote_file_abs_path){
 
         InputStream exec_in;
+        int exec_status =-1;
         assert exec_channel != null;
-        exec_in = exec_channel.getInputStream();
+        try {
+            exec_in = exec_channel.getInputStream();
+            exec_status = exec_in.read();
+        } catch (IOException e) {
+            log.error("RN: Could not determine if remote file exists. Failed due to:\n" +e.getMessage());
+            return false;
+        }
         exec_channel.setCommand("test -f " + remote_file_abs_path);
 
-        if (exec_in.read() != 1){
-            System.out.println("The file does not exist or is not a file.");
-        }
+        return exec_status != -1; //returns false only if the remote system returned -1
     }
 
     /**
      *  Tests to see if a specified directory exists and is a directory on the remote server
      *
      * @param remote_dir_abs_path the absolute path to the file on the remote server
+     * @return true if the directory exists on the remote system, false otherwise
      */
-    private void testDirExists(String remote_dir_abs_path) throws IOException {
+    public boolean isRemoteDir(String remote_dir_abs_path) {
         int exec_status;
-
-        assert exec_channel != null;
-        exec_status = exec_channel.getExitStatus();
+        log.info("RNU: Checking for remote directory - " + remote_dir_abs_path);
+        if (exec_channel == null)
+            log.error("RNU: Cannot check remote dir - Exec channel is null.");
+        log.info("RNU: Checking for remote directory - Running test -d (remote path)...");
         exec_channel.setCommand("test -d " + remote_dir_abs_path);
-
-        if (exec_status != -1){
-            System.out.println("The directory does not exist or is not a directory.");
-        }
+        exec_status = exec_channel.getExitStatus();
+        log.info("RNU: Checking for remote directory - Exec returned: "+exec_status);
+        return exec_status != -1;
     }
 
-    public static NetworkManager getInstance(){
+    public String getUsername(){
+        if(isInitialized())
+            return session.getUserName();
+        log.warn("RNU: Cannot get username, session is not active.");
+        return null;
+    }
 
-        if(instance == null)
-            return new NetworkManager();
-        return instance;
+    public int getPort(){
+        if(isInitialized())
+            return session.getPort();
+        log.warn("RN: Cannot get port, session is not active.");
+        return -1;
+    }
+
+    public String getHost(){
+        if(isInitialized())
+            return session.getHost();
+        log.warn("RN: Cannot get hostname, session is not active.");
+        return null;
     }
 
     public boolean isInitialized() {
-        if(session == null)
-            return false;
-        try{
-            session.connect();
-            if(session.isConnected())
-                return true;
-            else
-                return false;
-        }
-        catch (JSchException e) {
-            return false;
-        }
+        return session != null ;
+
+    }
+
+    public boolean isConnected() {
+        return session.isConnected();
     }
 }
 

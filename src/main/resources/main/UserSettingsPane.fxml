@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="UserSettingsPane" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ctrls.UserSettingsController">
+   <children>
+      <ScrollPane>
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <TitledPane animated="false" prefHeight="306.0" prefWidth="492.0" text="Local Settings">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.2865013774104683" layoutX="8.0" layoutY="10.0" prefHeight="264.0" prefWidth="466.0">
+                                      <items>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <VBox layoutX="14.0" layoutY="8.0" prefHeight="246.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="User Name" />
+                                                      <Label text="Password" />
+                                                      <Label text="Default Server URL" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <VBox layoutX="28.0" layoutY="5.0" prefWidth="150.0" spacing="5.0">
+                                                   <children>
+                                                      <TextField fx:id="usrnamefield" promptText="User Name" />
+                                                      <TextField fx:id="pwdfield" promptText="Password" />
+                                                      <TextField fx:id="defaultserverurlfield" />
+                                                      <Button fx:id="savecreds" mnemonicParsing="false" text="Save" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                      </items>
+                                    </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TitledPane animated="false" text="Remote Settings">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <ScrollPane fitToHeight="true" fitToWidth="true">
+                                             <content>
+                                                <TextArea fx:id="remoteSettingsText" prefHeight="200.0" prefWidth="200.0" />
+                                             </content>
+                                          </ScrollPane>
+                                          <VBox prefHeight="200.0" prefWidth="100.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

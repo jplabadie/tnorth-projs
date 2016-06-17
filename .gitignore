@@ -51,7 +51,7 @@ hs_err_pid*
 # IntelliJ
 /out/
 
-#DS_Store
+# Mac DS_Store is dumb
 *.DS_Store
 
 # mpeltonen/sbt-idea plugin

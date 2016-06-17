@@ -1,9 +1,16 @@
 package snpdist;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Gathers SNP Density information from NASP output 'best-snps.tsv'
@@ -378,6 +385,7 @@ class DefaultSNPDistribution {
         return getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false);
     }
 
+
     /**
      * <h>Gives SNP Distribution data for a single sample</h>
      * Creates an ArrayList of Strings. Each Element represents a line of output.
@@ -399,63 +407,112 @@ class DefaultSNPDistribution {
     ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample_field,
                                                          boolean no_meta_data, boolean include_header) throws IOException {
 
-        String header = "fromPos,toPos,"+sample_field+":"+sample_names.get(sample_field-1);
-        if(sample_field<=0 || sample_field > sample_count)
-            throw new IndexOutOfBoundsException( "No such sample. Refer to a sample between 1 and " + sample_count );
-
         ArrayList<String> output = new ArrayList<>();
 
-        int true_max = getLastSNPIndex();
-        boolean no_slide = false;
-        if(window_size==step_size) no_slide = true;
+            String header = "fromPos,toPos," + sample_field + ":" + sample_names.get(sample_field - 1);
+            if (sample_field <= 0 || sample_field > sample_count)
+                throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and " + sample_count);
 
-        int start_pos=0;
-        int ss_index = 0;
-        int ss_step_index=0;
-        boolean step_index_set;
-        int end_pos;
+            int true_max = getLastSNPIndex();
+            boolean no_slide = false;
+            if (window_size == step_size) no_slide = true;
 
-        String out; // used to create formatted output per each line
+            int start_pos = 0;
+            int ss_index = 0;
+            int ss_step_index = 0;
+            boolean step_index_set;
+            int end_pos;
 
-        int range_total;
-        while(start_pos+window_size < true_max){
+            String out; // used to create formatted output per each line
 
-            end_pos = start_pos+window_size;
-            step_index_set = false;
-            range_total=0;
+            int range_total;
+            while (start_pos + window_size < true_max) {
 
-            // if the next snp position in the snapshot is beyond (after) our current window:
-            // the total for this range is zero (the for-loop will be ignored)
-            if(snapshot_index[ss_index] > end_pos){
+                end_pos = start_pos + window_size;
+                step_index_set = false;
                 range_total = 0;
-            }
-            else {
-                for (ss_index = ss_step_index; snapshot_index[ss_index] <= end_pos; ss_index++) {
-                    String sample = snapshot.get(ss_index)[sample_field + TOT];
-                    String reference = snapshot.get(ss_index)[REF];
-                    if (!sample.equals(reference))
-                        range_total++;
-                    if (no_slide)
-                        ss_step_index++;
-                    else if (snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
-                        ss_step_index = ss_index;
-                        step_index_set = true;
+
+                // if the next snp position in the snapshot is beyond (after) our current window:
+                // the total for this range is zero (the for-loop will be ignored)
+                if (snapshot_index[ss_index] > end_pos) {
+                    range_total = 0;
+                } else {
+                    for (ss_index = ss_step_index; snapshot_index[ss_index] <= end_pos; ss_index++) {
+                        String sample = snapshot.get(ss_index)[sample_field + TOT];
+                        String reference = snapshot.get(ss_index)[REF];
+                        if (!sample.equals(reference))
+                            range_total++;
+                        if (no_slide)
+                            ss_step_index++;
+                        else if (snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
+                            ss_step_index = ss_index;
+                            step_index_set = true;
+                        }
                     }
                 }
+
+                if (no_meta_data) // don't include window position information per line
+                    out = "" + range_total;
+                else
+                    out = start_pos + "," + end_pos + "," + range_total;
+
+                output.add(out);
+                start_pos += step_size;
+            }
+            if (include_header) {
+                output.add(0, header);
             }
 
-            if(no_meta_data) // don't include window position information per line
-                out = "" + range_total;
-            else
-                out = start_pos + "," + end_pos + "," + range_total;
-
-            output.add(out);
-            start_pos += step_size;
-        }
-        if(include_header) {
-            output.add(0, header);
-        }
         return output;
+    }
+
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @param sample
+     * @return
+     */
+    private Callable<ArrayList<String>> callableGetIndividual(int window_size, int step_size, int sample){
+        System.out.println("Callable hit");
+        return () -> getIndividualSampleSNPDistribution(window_size, step_size, sample, true, false);
+    }
+
+    /**
+     *
+     * @param window_size
+     * @param step_size
+     * @return
+     * @throws InterruptedException
+     */
+    private ArrayList<ArrayList<String>> getAllSampleSNPDistributionParallel ( int window_size, int step_size ) throws InterruptedException {
+
+        ExecutorService executor = Executors.newWorkStealingPool();
+
+        List<Callable<ArrayList<String>>> callables = new ArrayList<>();
+        for( int i = 1; i <= sample_count; i++)
+        {
+            System.out.println("Callable add 1a: " + i);
+            callables.add(callableGetIndividual(window_size, step_size, i));
+            System.out.println("Callable add 1b: " + i);
+        }
+
+        ArrayList<ArrayList<String>> output = new ArrayList<>();
+        executor.invokeAll(callables)
+                .stream()
+                .map(future -> {
+                    try {
+                        return future.get();
+                    }
+                    catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                })
+                .forEachOrdered(output::add);
+
+        System.out.println(output);
+        return output;
+
     }
 
     /**
@@ -480,16 +537,17 @@ class DefaultSNPDistribution {
         header += getSampleNames();
 
         ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size,false);
-        ArrayList<ArrayList<String>> snp_dists = new ArrayList<>();
-        ArrayList<String> snp_dist;
+        ArrayList<ArrayList<String>> snp_lists = new ArrayList<>();
 
-        for(int i = 1; i <= sample_count; i++){
-            snp_dist = getIndividualSampleSNPDistribution(window_size,step_size,i, false, false);
-            snp_dists.add(snp_dist);
+        try {
+            snp_lists = getAllSampleSNPDistributionParallel( window_size , step_size );
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
+
         int index = 0;
-        for(ArrayList<String> snp_list : snp_dists){
+        for(ArrayList<String> snp_list : snp_lists){
             for (String out_dist : agg_dist) {
 
                 String temp = snp_list.get(index);

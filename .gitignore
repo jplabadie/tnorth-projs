@@ -51,6 +51,9 @@ hs_err_pid*
 # IntelliJ
 /out/
 
+#DS_Store
+*.DS_Store
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
@@ -62,3 +65,5 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+.idea/
+snpdistjava/target/

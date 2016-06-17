@@ -23,7 +23,7 @@ class DefaultSNPDistribution {
     private int TOT = 2; // index of snp total in snapshot (arbitrary)
 
     private int snp_position_field_index = 0; // index of snp position in tab-delimited input File
-    private int reference_field_index = 0; // index of reference nucleotide in input File
+    private int reference_field_index = 1; // index of reference nucleotide in input File
     private int snp_call_field_index = 0; // index of snp total in input File
     private int sample_count = 0; // a count of the unique samples found in the input (begins at 1)
 
@@ -36,10 +36,12 @@ class DefaultSNPDistribution {
      *
      * @param snp_matrix_tsv expects a tab-delimited best-SNPs output from NASP
      */
-    DefaultSNPDistribution(File snp_matrix_tsv) throws IOException {
-
+    DefaultSNPDistribution(File snp_matrix_tsv) {
+        try {
             init(snp_matrix_tsv);
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -100,7 +102,7 @@ class DefaultSNPDistribution {
      *
      * @return int representing the position (in the contig) of the last SNP
      */
-    private int getLastSNPIndex()  {
+    int getLastSNPIndex()  {
 
         String largest = snapshot.get(snapshot.size()-1)[POS];
         return new Integer(largest);

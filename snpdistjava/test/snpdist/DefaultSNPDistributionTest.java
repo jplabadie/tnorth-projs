@@ -178,14 +178,14 @@ public class DefaultSNPDistributionTest {
         }
     }
 
-    @Test
-    public void testIndividualSamplesNum1SNPDistributionSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false,true);
-
-        for(int i = 0; i < temp.size(); i++){
-            Assert.assertEquals(temp.get(i),indv_sampl1_sliding_test_reference.get(i));
-        }
-    }
+//    @Test
+//    public void testIndividualSamplesNum1SNPDistributionSlide() throws Exception {
+//        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false,true);
+//
+//        for(int i = 0; i < temp.size(); i++){
+//            Assert.assertEquals(temp.get(i),indv_sampl1_sliding_test_reference.get(i));
+//        }
+//    }
 
     @Test
     public void testIndividualSamplesNum35SNPDistributionNoSlide() throws Exception {
@@ -195,13 +195,13 @@ public class DefaultSNPDistributionTest {
         }
     }
 
-    @Test
-    public void testIndividualSamplesNum35SNPDistributionSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false, true);
-        for(int i = 0; i < temp.size(); i++){
-            Assert.assertEquals(temp.get(i),indv_sampl35_sliding_test_reference.get(i));
-        }
-    }
+//    @Test
+//    public void testIndividualSamplesNum35SNPDistributionSlide() throws Exception {
+//        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false, true);
+//        for(int i = 0; i < temp.size(); i++){
+//            Assert.assertEquals(temp.get(i),indv_sampl35_sliding_test_reference.get(i));
+//        }
+//    }
 
     @Test
     public void getMultiSampleSNPDistributionNoSlide() throws Exception {

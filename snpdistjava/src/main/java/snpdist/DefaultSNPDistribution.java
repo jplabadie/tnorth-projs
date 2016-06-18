@@ -385,7 +385,6 @@ class DefaultSNPDistribution {
         return getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false);
     }
 
-
     /**
      * <h>Gives SNP Distribution data for a single sample</h>
      * Creates an ArrayList of Strings. Each Element represents a line of output.
@@ -475,7 +474,7 @@ class DefaultSNPDistribution {
      */
     private Callable<ArrayList<String>> callableGetIndividual(int window_size, int step_size, int sample){
         System.out.println("Callable hit");
-        return () -> getIndividualSampleSNPDistribution(window_size, step_size, sample, true, false);
+        return () -> getIndividualSampleSNPDistribution(window_size, step_size, sample, false, false);
     }
 
     /**
@@ -510,7 +509,9 @@ class DefaultSNPDistribution {
                 })
                 .forEachOrdered(output::add);
 
-        System.out.println(output);
+        for(ArrayList<String> temp : output) {
+            System.out.println(temp);
+        }
         return output;
 
     }
@@ -531,35 +532,34 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getCompleteSNPDistribution(int window_size, int step_size) throws IOException{
+    ArrayList<String> getCompleteSNPDistribution( int window_size, int step_size ) throws IOException{
 
         String header = "fromPos,toPos,AggregateDist,";
         header += getSampleNames();
 
-        ArrayList<String> agg_dist = getAggregateSNPDistribution(window_size,step_size,false);
+        ArrayList<String> agg_dist = getAggregateSNPDistribution( window_size, step_size, false );
         ArrayList<ArrayList<String>> snp_lists = new ArrayList<>();
 
         try {
             snp_lists = getAllSampleSNPDistributionParallel( window_size , step_size );
-        } catch (InterruptedException e) {
+        } catch ( InterruptedException e ) {
             e.printStackTrace();
         }
 
-
         int index = 0;
-        for(ArrayList<String> snp_list : snp_lists){
+        for( ArrayList<String> snp_list : snp_lists ){
             for (String out_dist : agg_dist) {
 
-                String temp = snp_list.get(index);
-                temp = temp.substring(temp.lastIndexOf(','),temp.length());
-                out_dist+=temp;
-                agg_dist.set(index,out_dist);
+                String temp = snp_list.get( index );
+                temp = temp.substring( temp.lastIndexOf(','),temp.length() );
+                out_dist += temp;
+                agg_dist.set( index,out_dist );
 
                 index++;
             }
-            index=0;
+            index = 0;
         }
-        agg_dist.add(0,header);
+        agg_dist.add( 0,header );
         return agg_dist;
     }
 }

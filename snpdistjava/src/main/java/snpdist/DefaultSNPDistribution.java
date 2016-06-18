@@ -507,7 +507,7 @@ class DefaultSNPDistribution {
                         throw new IllegalStateException(e);
                     }
                 })
-                .forEachOrdered(output::add);
+                .forEachOrdered( output::add );
 
         for(ArrayList<String> temp : output) {
             System.out.println(temp);

@@ -1,20 +1,14 @@
 package snpdist;
 
-import com.sun.tools.javac.code.Type;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import joptsimple.util.DateConverter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static java.io.File.pathSeparatorChar;
-import static java.util.Arrays.*;
-
-import static joptsimple.util.DateConverter.*;
+import static java.util.Arrays.asList;
 
 /**
  * Project tnorth-projs.

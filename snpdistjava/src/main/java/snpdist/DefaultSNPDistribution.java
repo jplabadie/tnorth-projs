@@ -382,7 +382,7 @@ class DefaultSNPDistribution {
      * @throws IOException
      */
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
-        return getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false);
+        return getIndividualSampleSNPDistribution(window_size, step_size, sample, false, false);
     }
 
     /**
@@ -467,21 +467,22 @@ class DefaultSNPDistribution {
 
     /**
      *
-     * @param window_size
-     * @param step_size
-     * @param sample
-     * @return
+     * @param window_size the window size to use for grouping positions
+     * @param step_size the step size to use. When step size is less than window size, the window will slide
+     * @param sample the number of the sample to run SNP distribution analysis on
+     * @return a Callable method with return type matching (as ArrayList of Strings)
      */
-    private Callable<ArrayList<String>> callableGetIndividual(int window_size, int step_size, int sample){
-        System.out.println("Callable hit");
+    private Callable<ArrayList<String>> getCallableIndividualSamples(int window_size, int step_size, int sample){
+
         return () -> getIndividualSampleSNPDistribution(window_size, step_size, sample, false, false);
     }
 
     /**
      *
-     * @param window_size
-     * @param step_size
-     * @return
+     * @param window_size the window size to use
+     * @param step_size the step size to use. When step size is less than window size, the window will slide
+     * @return an ArrayList of ArrayLists of strings, where the inner ArrayList
+     * represents the distribution return for a single sample
      * @throws InterruptedException
      */
     private ArrayList<ArrayList<String>> getAllSampleSNPDistributionParallel ( int window_size, int step_size ) throws InterruptedException {
@@ -489,11 +490,8 @@ class DefaultSNPDistribution {
         ExecutorService executor = Executors.newWorkStealingPool();
 
         List<Callable<ArrayList<String>>> callables = new ArrayList<>();
-        for( int i = 1; i <= sample_count; i++)
-        {
-            System.out.println("Callable add 1a: " + i);
-            callables.add(callableGetIndividual(window_size, step_size, i));
-            System.out.println("Callable add 1b: " + i);
+        for( int i = 1; i <= sample_count; i++) {
+            callables.add(getCallableIndividualSamples(window_size, step_size, i));
         }
 
         ArrayList<ArrayList<String>> output = new ArrayList<>();
@@ -503,17 +501,13 @@ class DefaultSNPDistribution {
                     try {
                         return future.get();
                     }
-                    catch (Exception e) {
+                    catch ( Exception e ) {
                         throw new IllegalStateException(e);
                     }
                 })
                 .forEachOrdered( output::add );
 
-        for(ArrayList<String> temp : output) {
-            System.out.println(temp);
-        }
         return output;
-
     }
 
     /**

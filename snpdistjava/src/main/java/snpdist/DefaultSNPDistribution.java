@@ -90,6 +90,7 @@ class DefaultSNPDistribution {
 
         String line;
         String contig = "";
+
         ArrayList<String[]> snapshot = new ArrayList<>();
         ArrayList<Integer> index = new ArrayList<>();
 
@@ -103,25 +104,36 @@ class DefaultSNPDistribution {
             temp[CONTIG] = line_fields[contig_name_field_index];
 
             System.arraycopy( line_fields, reference_field_index + 1, temp,
-                    CONTIG + 1, snp_call_field_index - (reference_field_index + 1 ));
+                    CONTIG + 1, snp_call_field_index - ( reference_field_index + 1 ));
 
             if( contig.isEmpty() ){
                 contig = temp[CONTIG];
-                index.add(new Integer(temp[POS]));
+                index.add( new Integer( temp[POS] ) );
             }
-            else if ( contig.equals(temp[CONTIG])){
-                    snapshot.add(temp);
-                    index.add(new Integer(temp[POS]));
+            else if ( contig.equals( temp[CONTIG] ) ){
+                snapshot.add( temp );
+                index.add( new Integer(temp[POS] ) );
             }
             else{
-                contigs.add(snapshot);
-                snapshot = new ArrayList<>();
-                snapshot.add(temp);
+                contig = temp[CONTIG];
 
-                contigs_index.add(index);
-                index = new ArrayList<>();
+                ArrayList<String[]> copy_contig = new ArrayList<>();
+                copy_contig.addAll( snapshot );
+                contigs.add( copy_contig );
+                snapshot.clear();
+                snapshot.add( temp );
+
+                ArrayList<Integer> copy_index = new ArrayList<>();
+                copy_index.addAll(index);
+                contigs_index.add( copy_index );
+                index.clear();
                 index.add(new Integer(temp[POS]));
             }
+        }
+
+        if( !snapshot.isEmpty() ){ // put the last lines and index into our data structures
+            contigs.add(snapshot);
+            contigs_index.add(index);
         }
 
         Collections.addAll(sample_names, getSampleNames().split(","));
@@ -198,9 +210,7 @@ class DefaultSNPDistribution {
     private void writeTextToFile( ArrayList<String> text, Path path, boolean overwrite) throws IOException{
 
         if(overwrite) {
-
             Files.write(path, text, Charset.forName("UTF-8"));
-
         }
         else
             Files.write(path, text, Charset.forName("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
@@ -215,10 +225,10 @@ class DefaultSNPDistribution {
     ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size, boolean include_header){
 
         ArrayList<String> output = new ArrayList<>();
-        for(ArrayList<String[]> contig : contigs){
-            output.addAll(getAggregateSNPDistribution(window_size,step_size,contig));
+        for( ArrayList<String[]> contig : contigs){
+            output.addAll( getAggregateSNPDistribution( window_size,step_size,contig ));
         }
-        if(include_header) {
+        if( include_header ) {
             String header = "fromPos,toPos,Contig,SumSNPDistribution";
             output.add(0, header);
         }
@@ -247,15 +257,17 @@ class DefaultSNPDistribution {
         boolean no_slide = false;
         if( window_size == step_size ) no_slide = true;
 
-        int start_pos = 0;
-        int ss_index = 0;
-        int ss_step_index = 0;
-        boolean step_index_set;
-        int end_pos;
+        int start_pos = 0; // the start position (window lower bound)
+        int end_pos = 0; // the end position (window upper bound)
 
-        int range_total;
+        int ss_index = 0; // where we are 'pointing' in the contig arraylist
+        int ss_step_index = 0; // where in the contig arraylist we will start for the next loop
+        boolean step_index_set; // if the ss_step_index has been set for the current loop or not
 
-        while( start_pos + window_size < contig.size() ){
+        int range_total; // the sum total of snps in each window we analyze
+
+
+        while( start_pos + window_size < new Integer( contig.get( contig.size()-1 )[POS] ) ){
             end_pos = start_pos + window_size;
 
             step_index_set = false;
@@ -283,7 +295,7 @@ class DefaultSNPDistribution {
                     }
                 }
             }
-            String contig_name = contig.get(ss_index)[CONTIG];
+            String contig_name = contig.get( ss_index )[CONTIG];
             String out = start_pos + "," + end_pos + "," + contig_name + "," + range_total;
             output.add( out );
 
@@ -389,7 +401,7 @@ class DefaultSNPDistribution {
         int sample_index = getSamplePosition(sample);
 
         if(sample_index >= 0){
-            return getIndividualSampleSNPDistribution(window_size, step_size,sample_index);
+            return getIndividualSampleSNPDistribution(window_size, step_size, sample_index, true, false);
         } else{
             throw new NoSuchElementException(" Failed to run > There is no sample named: " + sample);
         }
@@ -405,8 +417,10 @@ class DefaultSNPDistribution {
     public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample,
                                                                 boolean include_meta, boolean include_header) throws IOException {
 
-        ArrayList<String> output = getIndividualSampleSNPDistribution(window_size, step_size, sample);
-
+        ArrayList<String> output = new ArrayList<>();
+        for(ArrayList<String[]> contig : contigs) {
+            output.addAll(getIndividualSampleSNPDistribution(window_size, step_size, contig, sample));
+        }
         if(include_header) {
             String header = "fromPos,toPos,Contig,SumSNPDistribution";
             output.add(0, header);
@@ -436,7 +450,7 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample_field) throws IOException {
+    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig, int sample_field) throws IOException {
 
         ArrayList<String> output = new ArrayList<>();
 
@@ -456,7 +470,7 @@ class DefaultSNPDistribution {
             String out; // used to create formatted output per each line
 
             int range_total;
-            while (start_pos + window_size < true_max) {
+            while (start_pos + window_size < contig.size()) {
 
                 end_pos = start_pos + window_size;
                 step_index_set = false;
@@ -464,33 +478,28 @@ class DefaultSNPDistribution {
 
                 // if the next snp position in the snapshot is beyond (after) our current window:
                 // the total for this range is zero (the for-loop will be ignored)
-                if (snapshot_index[ss_index] > end_pos) {
+                int temp_pos = new Integer( contig.get( ss_index )[POS] );
+                if (temp_pos > end_pos) {
                     range_total = 0;
                 } else {
-                    for (ss_index = ss_step_index; snapshot_index[ss_index] <= end_pos; ss_index++) {
-                        String sample = snapshot.get(ss_index)[sample_field + TOT];
-                        String reference = snapshot.get(ss_index)[REF];
+                    for ( ss_index = ss_step_index; new Integer(contig.get( ss_index )[POS]) <= end_pos; ss_index++ ) {
+                        String sample = contig.get( ss_index )[sample_field + TOT];
+                        String reference = contig.get( ss_index )[REF];
                         if (!sample.equals(reference))
                             range_total++;
                         if (no_slide)
                             ss_step_index++;
-                        else if (snapshot_index[ss_index] >= start_pos + step_size && !step_index_set) {
+                        else if (new Integer(contig.get( ss_index )[POS]) >= start_pos + step_size && !step_index_set) {
                             ss_step_index = ss_index;
                             step_index_set = true;
                         }
                     }
                 }
 
-                if (no_meta_data) // don't include window position information per line
-                    out = "" + range_total;
-                else
-                    out = start_pos + "," + end_pos + "," + range_total;
+                out = start_pos + "," + end_pos + "," + range_total;
 
                 output.add(out);
                 start_pos += step_size;
-            }
-            if (include_header) {
-                output.add(0, header);
             }
 
         return output;
@@ -522,7 +531,7 @@ class DefaultSNPDistribution {
 
         List<Callable<ArrayList<String>>> callables = new ArrayList<>();
         for( int i = 1; i <= sample_count; i++) {
-            callables.add(getCallableIndividualSamples(window_size, step_size, i));
+            callables.add( getCallableIndividualSamples(window_size, step_size, i) );
         }
 
         ArrayList<ArrayList<String>> output = new ArrayList<>();
@@ -572,19 +581,17 @@ class DefaultSNPDistribution {
         }
 
         int index = 0;
-        for( ArrayList<String> snp_list : snp_lists ){
-            for (String out_dist : agg_dist) {
 
-                String temp = snp_list.get( index );
-                temp = temp.substring( temp.lastIndexOf(','),temp.length() );
-                out_dist += temp;
-                agg_dist.set( index,out_dist );
-
-                index++;
-            }
+        for( ArrayList<String> list : snp_lists ){
+           for( String line : list ){
+               String temp1 = agg_dist.get( index );
+               String temp2 = line.substring( line.lastIndexOf( ',' ), line.length() );
+               temp1 += temp2;
+               agg_dist.set(index++,temp1);
+           }
             index = 0;
         }
-        agg_dist.add( 0,header );
+        agg_dist.add( 0, header );
         return agg_dist;
     }
 }

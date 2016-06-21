@@ -67,3 +67,8 @@ crashlytics-build.properties
 fabric.properties
 .idea/
 snpdistjava/target/
+
+
+#ignore tsv and csv files
+.csv
+.tsv

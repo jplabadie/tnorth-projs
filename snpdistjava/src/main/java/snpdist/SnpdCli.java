@@ -160,7 +160,8 @@ public class SnpdCli {
                 output = (String) temp.get(1);
 
                 if(numerical){
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(Integer) temp.get(0));
+                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,
+                            (Integer) temp.get(0),true, true);
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 else {
@@ -177,7 +178,7 @@ public class SnpdCli {
         else if(opts.has( "a" ) || opts.has( "aggregate" )){
             try{
                 output = (String)opts.valueOf( "a" );
-                results = snpd.getAggregateSNPDistribution(window_size,step_size);
+                results = snpd.getAggregateSNPDistribution(window_size,step_size, true);
                 snpd.exportResultsToCSV(results, output, overwrite);
                 System.out.println("Success!");
             }

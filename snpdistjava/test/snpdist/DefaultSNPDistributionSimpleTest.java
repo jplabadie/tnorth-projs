@@ -40,6 +40,18 @@ public class DefaultSNPDistributionSimpleTest {
     }
 
     @Test
+    public void testAllIndv() throws Exception {
+
+        ArrayList<ArrayList<String>> output = snpd.getAllSampleSNPDistributionParallel( 1000,500 );
+
+
+        snpd.exportResultsToCSV(output.get(0), "simple_results_indv", true);
+
+    }
+
+
+
+    @Test
     public void testAggregate() throws Exception {
 
         ArrayList<String> output = snpd.getAggregateSNPDistribution(1000,500,true);

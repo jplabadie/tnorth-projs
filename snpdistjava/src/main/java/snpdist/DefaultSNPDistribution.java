@@ -110,7 +110,7 @@ class DefaultSNPDistribution {
                 contig = temp[CONTIG];
                 index.add( new Integer( temp[POS] ) );
             }
-            else if ( contig.equals( temp[CONTIG] ) ){
+            if ( contig.equals( temp[CONTIG] ) ){
                 snapshot.add( temp );
                 index.add( new Integer(temp[POS] ) );
             }
@@ -269,7 +269,6 @@ class DefaultSNPDistribution {
 
         while( start_pos + window_size < new Integer( contig.get( contig.size()-1 )[POS] ) ){
             end_pos = start_pos + window_size;
-
             step_index_set = false;
             range_total = 0;
 
@@ -280,7 +279,7 @@ class DefaultSNPDistribution {
                 range_total = 0;
             }
             else{
-                for( ss_index = ss_step_index; temp_pos <= end_pos; ss_index++ ){
+                for( ss_index = ss_step_index; new Integer(contig.get(ss_index)[POS]) <= end_pos; ss_index++ ){
                     int tot = new Integer( contig.get( ss_index )[TOT] );
                     temp_pos = new Integer( contig.get( ss_index )[POS] );
 
@@ -427,7 +426,7 @@ class DefaultSNPDistribution {
         }
         if(include_meta){
             for(String line : output){
-
+                // TODO: handle meta-data true state
             }
         }
         return output;
@@ -454,12 +453,12 @@ class DefaultSNPDistribution {
 
         ArrayList<String> output = new ArrayList<>();
 
-            String header = "fromPos,toPos," + sample_field + ":" + sample_names.get(sample_field - 1);
-            if (sample_field <= 0 || sample_field > sample_count)
-                throw new IndexOutOfBoundsException("No such sample. Refer to a sample between 1 and " + sample_count);
+            String header = "fromPos,toPos," + sample_field + ":" + sample_names.get( sample_field - 1 );
+            if ( sample_field <= 0 || sample_field > sample_count )
+                throw new IndexOutOfBoundsException( "No such sample. Refer to a sample between 1 and " + sample_count );
 
             boolean no_slide = false;
-            if (window_size == step_size) no_slide = true;
+            if ( window_size == step_size ) no_slide = true;
 
             int start_pos = 0;
             int ss_index = 0;
@@ -470,7 +469,7 @@ class DefaultSNPDistribution {
             String out; // used to create formatted output per each line
 
             int range_total;
-            while (start_pos + window_size < contig.size()) {
+            while ( start_pos + window_size < new Integer( contig.get( contig.size()-1 )[POS]) ){
 
                 end_pos = start_pos + window_size;
                 step_index_set = false;
@@ -479,15 +478,15 @@ class DefaultSNPDistribution {
                 // if the next snp position in the snapshot is beyond (after) our current window:
                 // the total for this range is zero (the for-loop will be ignored)
                 int temp_pos = new Integer( contig.get( ss_index )[POS] );
-                if (temp_pos > end_pos) {
+                if ( temp_pos > end_pos ) {
                     range_total = 0;
                 } else {
                     for ( ss_index = ss_step_index; new Integer(contig.get( ss_index )[POS]) <= end_pos; ss_index++ ) {
-                        String sample = contig.get( ss_index )[sample_field + TOT];
+                        String sample = contig.get( ss_index )[CONTIG + sample_field];
                         String reference = contig.get( ss_index )[REF];
-                        if (!sample.equals(reference))
+                        if ( !sample.equals(reference) )
                             range_total++;
-                        if (no_slide)
+                        if ( no_slide )
                             ss_step_index++;
                         else if (new Integer(contig.get( ss_index )[POS]) >= start_pos + step_size && !step_index_set) {
                             ss_step_index = ss_index;
@@ -498,7 +497,7 @@ class DefaultSNPDistribution {
 
                 out = start_pos + "," + end_pos + "," + range_total;
 
-                output.add(out);
+                output.add( out );
                 start_pos += step_size;
             }
 
@@ -512,9 +511,9 @@ class DefaultSNPDistribution {
      * @param sample the number of the sample to run SNP distribution analysis on
      * @return a Callable method with return type matching (as ArrayList of Strings)
      */
-    private Callable<ArrayList<String>> getCallableIndividualSamples(int window_size, int step_size, int sample){
+    Callable<ArrayList<String>> getCallableIndividualSamples(int window_size, int step_size, int sample){
 
-        return () -> getIndividualSampleSNPDistribution(window_size, step_size, sample, false, false);
+        return () -> getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false );
     }
 
     /**
@@ -525,7 +524,7 @@ class DefaultSNPDistribution {
      * represents the distribution return for a single sample
      * @throws InterruptedException
      */
-    private ArrayList<ArrayList<String>> getAllSampleSNPDistributionParallel ( int window_size, int step_size ) throws InterruptedException {
+    ArrayList<ArrayList<String>> getAllSampleSNPDistributionParallel ( int window_size, int step_size ) throws InterruptedException {
 
         ExecutorService executor = Executors.newWorkStealingPool();
 
@@ -535,7 +534,7 @@ class DefaultSNPDistribution {
         }
 
         ArrayList<ArrayList<String>> output = new ArrayList<>();
-        executor.invokeAll(callables)
+        executor.invokeAll( callables )
                 .stream()
                 .map(future -> {
                     try {
@@ -574,6 +573,8 @@ class DefaultSNPDistribution {
         ArrayList<String> agg_dist = getAggregateSNPDistribution( window_size, step_size, false );
         ArrayList<ArrayList<String>> snp_lists = new ArrayList<>();
 
+        System.out.println( agg_dist.size() );
+
         try {
             snp_lists = getAllSampleSNPDistributionParallel( window_size , step_size );
         } catch ( InterruptedException e ) {
@@ -587,7 +588,7 @@ class DefaultSNPDistribution {
                String temp1 = agg_dist.get( index );
                String temp2 = line.substring( line.lastIndexOf( ',' ), line.length() );
                temp1 += temp2;
-               agg_dist.set(index++,temp1);
+               agg_dist.set( index++,temp1 );
            }
             index = 0;
         }

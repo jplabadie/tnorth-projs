@@ -34,8 +34,16 @@ public class DefaultSNPDistributionSimpleTest {
     @Test
     public void testComplete() throws Exception {
 
-        ArrayList<String> output = snpd.getCompleteSNPDistribution(5000, 2500);
-        snpd.exportResultsToCSV(output, "simple_results", true);
+        ArrayList<String> output = snpd.getCompleteSNPDistribution(1000, 500);
+        snpd.exportResultsToCSV(output, "simple_results_complete", true);
+
+    }
+
+    @Test
+    public void testAggregate() throws Exception {
+
+        ArrayList<String> output = snpd.getAggregateSNPDistribution(1000,500,true);
+        snpd.exportResultsToCSV(output, "simple_results_agg", true);
 
     }
 }

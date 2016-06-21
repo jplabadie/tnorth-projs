@@ -95,10 +95,6 @@ public class DefaultSNPDistributionTest {
         }
     }
 
-    @Test
-    public void testGetLastSNPIndex() throws Exception {
-        Assert.assertEquals(snpd.getLastSNPIndex(),1750724);
-    }
 
 //    @Test
 //    public void testWriteResultsToCSV() throws Exception {
@@ -154,7 +150,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testAggregateSNPDistributionWithoutSlide() throws Exception {
-        ArrayList<String> temp = snpd.getAggregateSNPDistribution(1000,1000);
+        ArrayList<String> temp = snpd.getAggregateSNPDistribution(1000,1000, false);
 
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),agg_nonsliding_test_reference.get(i));

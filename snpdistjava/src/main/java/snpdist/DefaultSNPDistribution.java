@@ -510,8 +510,6 @@ class DefaultSNPDistribution {
         ArrayList<String> agg_dist = getAggregateSNPDistribution( window_size, step_size, false );
         ArrayList<ArrayList<String>> snp_lists = new ArrayList<>();
 
-        System.out.println( agg_dist.size() );
-
         try {
             snp_lists = getAllSampleSNPDistributionParallel( window_size , step_size );
             snp_lists.remove(0); // remove the header line

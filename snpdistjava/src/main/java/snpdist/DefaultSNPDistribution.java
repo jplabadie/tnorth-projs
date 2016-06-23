@@ -314,80 +314,6 @@ class DefaultSNPDistribution {
     }
 
     /**
-     * <h>Gives SNP Distribution data for a given list of samples</h>
-     * Creates an ArrayList of Strings. Each Element represents a line of output.
-     * <br/>
-     * The first line is a header which represents each column of data below it.
-     * Each subsequent line presents, in order: start_position, end_position,
-     * and an absolute count of SNPS for each sample found in the sample_list given.
-     * <br/>
-     * This output is typically passed to the exportToCSV method for output parsing.
-     * <br/>
-     *
-     * @param window_size the window size to use
-     * @param step_size the stepping size to use, if step_size < window_size, the window will 'slide'
-     * @param samples an ArrayList of Strings representing the samples we are interested in
-     * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
-     *
-     */
-    ArrayList<String> getMultiSampleSNPDistribution(int window_size, int step_size, ArrayList<String> samples,
-                                                    boolean numerical){
-
-        ArrayList<Integer> samps = new ArrayList<>();
-        ArrayList<String> output = new ArrayList<>();
-        String header = "fromPos,toPos";
-
-        if(numerical){
-            for(String samp : samples){
-                if (samp.contains(":")) {
-                    int temp1 = new Integer(samp.substring(0,samp.indexOf(":")));
-                    int temp2 = new Integer(samp.substring(samp.indexOf(":")+1,samp.length()));
-
-                    for(int i = temp1; i <= temp2; i++){
-                        samps.add(i);
-                        header += ","+sample_names.get(i-1);
-                    }
-                }
-                else{
-                    samps.add(new Integer(samp));
-                }
-            }
-        }
-        else{
-            for(String samp : samples){
-                int temp = sample_names.indexOf(samp)+1;
-                samps.add(temp);
-                header += ","+temp+":"+samp;
-            }
-        }
-
-        try{
-            for(int indv : samps){
-                if(indv == samps.get(0)){
-                    output = getIndividualSampleSNPDistribution(window_size,step_size,samps.get(0),false,false);
-                }
-                else{
-                    ArrayList<String> indv_output =
-                            getIndividualSampleSNPDistribution(window_size,step_size,indv,true,false);
-
-                    for(int index = 0; index < output.size(); index++){
-                        String line = output.get(index); // get the output that already exists
-                        line += ","+indv_output.get(index); // append each sample's snp total
-                        output.set(index,line);
-                    }
-                }
-            }
-
-            output.add( 0, header );
-            return output;
-        }
-        catch (Exception e){
-            System.out.println("There was an error in finding the distribution for multiple samples.");
-            return null;
-        }
-    }
-
-    /**
      *
      * @param sample_name get the 'position' of a sample name in the array of names (taken in-order)
      * @return an int representing the position of the sample name
@@ -404,12 +330,12 @@ class DefaultSNPDistribution {
      * @return an ArrayList representing lines of comma-delimited output
      * @throws IOException
      */
-    public ArrayList<String> getIndividualSampleSNPDistribution( int window_size, int step_size, String sample ) throws IOException {
+    public ArrayList<String> getAllIndividualSampleSNPDistribution(int window_size, int step_size, String sample ) throws IOException {
 
         int sample_index = getSamplePosition(sample);
 
         if(sample_index >= 0){
-            return getIndividualSampleSNPDistribution(window_size, step_size, sample_index, true, false);
+            return getAllIndividualSampleSNPDistribution(window_size, step_size, sample_index);
         } else{
             throw new NoSuchElementException(" Failed to run > There is no sample named: " + sample);
         }
@@ -422,22 +348,13 @@ class DefaultSNPDistribution {
      * @return an ArrayList representing lines of comma-delimited output
      * @throws IOException
      */
-    public ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, int sample,
-                                                                boolean include_meta, boolean include_header) throws IOException {
+    public ArrayList<String> getAllIndividualSampleSNPDistribution(int window_size, int step_size, int sample) throws IOException {
 
         ArrayList<String> output = new ArrayList<>();
         for(ArrayList<String[]> contig : contigs) {
-            output.addAll(getIndividualSampleSNPDistribution(window_size, step_size, contig, sample));
+            output.addAll(getAllIndividualSampleSNPDistribution(window_size, step_size, contig, sample));
         }
-        if(include_header) {
-            String header = "fromPos,toPos,Contig,SumSNPDistribution";
-            output.add(0, header);
-        }
-        if(include_meta){
-            for(String line : output){
-                // TODO: handle meta-data true state
-            }
-        }
+
         return output;
     }
 
@@ -458,8 +375,8 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig,
-                                                         int sample_field) throws IOException {
+    ArrayList<String> getAllIndividualSampleSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig,
+                                                            int sample_field) throws IOException {
 
         ArrayList<String> output = new ArrayList<>();
         String name = contig.get(0)[CONTIG];
@@ -533,7 +450,7 @@ class DefaultSNPDistribution {
      */
     Callable<ArrayList<String>> getCallableIndividualSamples(int window_size, int step_size, int sample){
 
-        return () -> getIndividualSampleSNPDistribution( window_size, step_size, sample, false, false );
+        return () -> getAllIndividualSampleSNPDistribution( window_size, step_size, sample);
     }
 
     /**
@@ -587,7 +504,7 @@ class DefaultSNPDistribution {
      */
     ArrayList<String> getCompleteSNPDistribution( int window_size, int step_size ) throws IOException{
 
-        String header = "fromPos,toPos,AggregateDist,";
+        String header = "Contig,fromPos,toPos,AggregateDist,";
         header += getSampleNames();
 
         ArrayList<String> agg_dist = getAggregateSNPDistribution( window_size, step_size, false );
@@ -597,6 +514,7 @@ class DefaultSNPDistribution {
 
         try {
             snp_lists = getAllSampleSNPDistributionParallel( window_size , step_size );
+            snp_lists.remove(0); // remove the header line
         } catch ( InterruptedException e ) {
             e.printStackTrace();
         }

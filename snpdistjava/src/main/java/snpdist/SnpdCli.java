@@ -160,13 +160,13 @@ public class SnpdCli {
                 output = (String) temp.get(1);
 
                 if(numerical){
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,
-                            (Integer) temp.get(0),true, true);
+                    results = snpd.getAllIndividualSampleSNPDistribution(window_size,step_size,
+                            (Integer) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 else {
 
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(0));
+                    results = snpd.getAllIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 System.out.println("Success!");

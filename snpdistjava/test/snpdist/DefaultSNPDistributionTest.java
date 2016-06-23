@@ -168,7 +168,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum1SNPDistributionNoSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,1000,1,false,true);
+        ArrayList<String> temp = snpd.getAllIndividualSampleSNPDistribution(1000,1000,1);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl1_nonsliding_test_reference.get(i));
         }
@@ -176,7 +176,7 @@ public class DefaultSNPDistributionTest {
 
 //    @Test
 //    public void testIndividualSamplesNum1SNPDistributionSlide() throws Exception {
-//        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false,true);
+//        ArrayList<String> temp = snpd.getAllIndividualSampleSNPDistribution(1000,500,1, false,true);
 //
 //        for(int i = 0; i < temp.size(); i++){
 //            Assert.assertEquals(temp.get(i),indv_sampl1_sliding_test_reference.get(i));
@@ -185,7 +185,7 @@ public class DefaultSNPDistributionTest {
 
     @Test
     public void testIndividualSamplesNum35SNPDistributionNoSlide() throws Exception {
-        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,1000,1, false,true);
+        ArrayList<String> temp = snpd.getAllIndividualSampleSNPDistribution(1000,1000,1);
         for(int i = 0; i < temp.size(); i++){
             Assert.assertEquals(temp.get(i),indv_sampl35_nonsliding_test_reference.get(i));
         }
@@ -193,61 +193,11 @@ public class DefaultSNPDistributionTest {
 
 //    @Test
 //    public void testIndividualSamplesNum35SNPDistributionSlide() throws Exception {
-//        ArrayList<String> temp = snpd.getIndividualSampleSNPDistribution(1000,500,1, false, true);
+//        ArrayList<String> temp = snpd.getAllIndividualSampleSNPDistribution(1000,500,1, false, true);
 //        for(int i = 0; i < temp.size(); i++){
 //            Assert.assertEquals(temp.get(i),indv_sampl35_sliding_test_reference.get(i));
 //        }
 //    }
 
-    @Test
-    public void getMultiSampleSNPDistributionNoSlide() throws Exception {
-
-        ArrayList<String> samples = new ArrayList<>();
-        samples.add("06-299002_S31_L001"); // #9
-        samples.add("03-2525_S26_L001"); // #2
-        samples.add("06-2950_S32_L001"); // #8
-
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,false);
-    }
-
-    @Test
-    public void getMultiSampleSNPDistributionSlide() throws Exception {
-
-        ArrayList<String> samples = new ArrayList<>();
-        samples.add("03-2454_S25_L001"); // #1
-        samples.add("03-2525_S26_L001"); // #2
-        samples.add("06-2950_S32_L001"); // #8
-
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,false);
-    }
-
-    @Test
-    public void getMultiSampleSNPDistributionNoSlideNumerical() throws Exception {
-
-        ArrayList<String> samples = new ArrayList<>();
-        samples.add("1");
-        samples.add("5");
-        samples.add("35");
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,1000,samples,true);
-    }
-
-    @Test
-    public void getMultiSampleSNPDistributionSlideNumerical() throws Exception {
-
-        ArrayList<String> samples = new ArrayList<>();
-        samples.add("1");
-        samples.add("33");
-        samples.add("35");
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
-    }
-
-    @Test
-    public void getMultiSampleSNPDistributionSlideNumericalRange() throws Exception {
-
-        ArrayList<String> samples = new ArrayList<>();
-        samples.add("1:5");
-        samples.add("32:35");
-        ArrayList<String> output = snpd.getMultiSampleSNPDistribution(1000,500,samples,true);
-    }
 
 }

@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>snpdistjava</artifactId>
-    <version>0.3.0</version>
+    <version>0.5.0</version>
     <description>Produces SNP Distribution data given a best-SNPs .tsv input from NASP</description>
 
     <build>
@@ -52,6 +52,12 @@
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
             <version>5.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

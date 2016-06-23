@@ -91,3 +91,8 @@ proguard/
 nb-configuration.xml
 
 snpdistjava/target/
+
+
+#ignore tsv and csv files
+.csv
+.tsv

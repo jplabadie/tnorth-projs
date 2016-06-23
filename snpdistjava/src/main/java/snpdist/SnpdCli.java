@@ -1,20 +1,14 @@
 package snpdist;
 
-import com.sun.tools.javac.code.Type;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import joptsimple.util.DateConverter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static java.io.File.pathSeparatorChar;
-import static java.util.Arrays.*;
-
-import static joptsimple.util.DateConverter.*;
+import static java.util.Arrays.asList;
 
 /**
  * Project tnorth-projs.
@@ -45,6 +39,7 @@ public class SnpdCli {
         catch (Exception e){
             System.out.println("Failed: Expected a path to a best-snps.tsv in the first argument field. " +
                     "Use the -help option for syntax guidance.");
+            System.exit(1);
         }
 
         OptionParser parser = new OptionParser() {
@@ -52,7 +47,7 @@ public class SnpdCli {
                 acceptsAll( asList( "c", "complete" ), "Will output aggregate distributions AND distributions for " +
                         "each sample. MUST be followed by a path representing where to write the output as a CSV." +
                         "This is the DEFAULT behavior." )
-                        .withRequiredArg().ofType( String.class )
+                        .withOptionalArg().ofType( String.class )
                         .describedAs( "output/path/name" );
 
                 acceptsAll( asList( "i", "individual" ), " Will output distributions for a single sample. " +
@@ -61,16 +56,10 @@ public class SnpdCli {
                         .withRequiredArg().ofType( String.class )
                         .describedAs( "sample output/path/name" );
 
-                acceptsAll( asList( "im", "individualmultiple" ), "Will output the distributions for multiple specific " +
-                        "samples. MUST be followed by a list of samples, separated by commas, or as a range using a " +
-                        "colon. The final argument MUST be a path representing where to write the output as a CSV." )
-                        .withRequiredArg().ofType( String.class )
-                        .describedAs( "samplename1, samplename2, ... , output/path/name" );
-
                 acceptsAll( asList( "n", "numerical" ), "Will alert the program to expect samples to referenced by" +
                         "their position in the list of samples, rather than their name. ONLY works when using the" +
-                        "'i', 'individual', im' or 'individualmultiple' options.")
-                        .availableIf( "im","i" );
+                        "'i', 'individual' option.")
+                        .availableIf( "i" );
 
                 acceptsAll( asList( "a", "aggregate" ), "Will output the aggregate distribution across all samples." +
                         "MUST be followed by a path representing where to write the output as a CSV.")
@@ -100,8 +89,6 @@ public class SnpdCli {
 
             }
         };
-        //parser.posixlyCorrect(true);
-        //parser.printHelpOn(System.out);
 
         String[] arguments = new String[args.length-1];
         System.arraycopy(args, 1, arguments, 0, args.length - 1);
@@ -150,16 +137,30 @@ public class SnpdCli {
             }
         }
 
-        if(opts.has( "c" ) || opts.has( "complete" )){
-            try{
-                output = (String) opts.valueOf( "c" );
+        if(opts.has( "c" ) || opts.has( "complete" )) {
 
-                results = snpd.getCompleteSNPDistribution(window_size,step_size);
+            output = (String) opts.valueOf("c");
+            String default_name = "snpdist_output";
+            if (output != null) {
+                File out = new File(output);
+                if (out.isDirectory()) {
+                    output = out.getPath() +"/"+ default_name;
+                }
+            }
+            try {
+                results = snpd.getCompleteSNPDistribution(window_size, step_size);
                 snpd.exportResultsToCSV(results, output, overwrite);
                 System.out.println("Success!");
-            }
-            catch (Exception e){
-                System.out.println( "Non-valid output file name, location, or permissions." );
+            } catch (Exception e) {
+                try {
+
+                    output = input.getParent() + "/" + default_name;
+                    results = snpd.getCompleteSNPDistribution(window_size, step_size);
+                    snpd.exportResultsToCSV(results, output, overwrite);
+                    System.out.println("Success!");
+                } catch (Exception e1) {
+                    System.out.println("Non-valid output file name, location, or permissions.");
+                }
             }
         }
         else if(opts.has( "i" ) || opts.has( "individual" )){
@@ -167,20 +168,18 @@ public class SnpdCli {
 
                 List<?> temp = opts.valuesOf("i");
 
-
-                for(int i = 0; i <temp.size(); i++)
-                {
-                    System.out.println( temp.get(i));
+                for (Object aTemp : temp) {
+                    System.out.println(aTemp);
                 }
                 output = (String) temp.get(1);
 
                 if(numerical){
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(Integer) temp.get(0));
+                    results = snpd.getAllIndividualSampleSNPDistribution(window_size,step_size,
+                            (Integer) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 else {
-
-                    results = snpd.getIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(0));
+                    results = snpd.getAllIndividualSampleSNPDistribution(window_size,step_size,(String) temp.get(0));
                     snpd.exportResultsToCSV(results, output,overwrite);
                 }
                 System.out.println("Success!");
@@ -189,28 +188,10 @@ public class SnpdCli {
                 System.out.println( "Non-valid output file name, location, or permissions." );
             }
         }
-        else if(opts.has( "im" ) || opts.has( "individualmultiple" )){
-            try{
-                List<?> temp = opts.valuesOf("im");
-                int i;
-                for(i = 0; i < temp.size()-1; i++){
-                    String sample = (String) temp.get(i);
-                    chosen_samples.add(sample);
-                }
-
-                output = (String) temp.get(i);
-
-                results = snpd.getMultiSampleSNPDistribution(window_size,step_size,chosen_samples,numerical);
-                snpd.exportResultsToCSV(results, output,overwrite);
-                System.out.println("Success!");
-            }
-            catch (Exception e){
-                System.out.println( "Non-valid output file name, location, or permissions." );
-            }
-        }else if(opts.has( "a" ) || opts.has( "aggregate" )){
+        else if(opts.has( "a" ) || opts.has( "aggregate" )){
             try{
                 output = (String)opts.valueOf( "a" );
-                results = snpd.getAggregateSNPDistribution(window_size,step_size);
+                results = snpd.getAggregateSNPDistribution(window_size,step_size, true);
                 snpd.exportResultsToCSV(results, output, overwrite);
                 System.out.println("Success!");
             }

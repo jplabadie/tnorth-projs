@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>groupId</groupId>
   <artifactId>snpdistjava</artifactId>
-  <version>0.3.0</version>
+  <version>0.5.0</version>
   <description>Produces SNP Distribution data given a best-SNPs .tsv input from NASP</description>
   <build>
     <plugins>

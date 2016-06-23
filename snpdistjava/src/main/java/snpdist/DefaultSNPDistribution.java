@@ -254,6 +254,7 @@ class DefaultSNPDistribution {
     private ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig){
 
         ArrayList<String> output = new ArrayList<>();
+        String name = contig.get(0)[CONTIG];
 
         int cur_index = 0;
         int step_index = 0;
@@ -267,7 +268,7 @@ class DefaultSNPDistribution {
         int step_pos = 0 ;
         int cur_pos = 0 ;
 
-        int total;
+        int total = 0;
 
         while( cur_pos + step_size <= final_pos){
 
@@ -278,7 +279,7 @@ class DefaultSNPDistribution {
             step_set = false;
             cur_pos = new Integer( contig.get( step_index )[POS] );
 
-            for (cur_index = step_index; cur_pos < win_end_pos && cur_index < final_index; cur_index++) {
+            for (cur_index = step_index; cur_pos < win_end_pos && cur_index <= final_index; cur_index++) {
                 cur_pos = new Integer(contig.get(cur_index)[POS]);
                 int agg = new Integer(contig.get(cur_index)[TOT]);
 
@@ -295,10 +296,18 @@ class DefaultSNPDistribution {
                 }
             }
 
-            String out = win_start_pos + "," + win_end_pos + "," + total;
+            String out = name + "," + win_start_pos + "," + win_end_pos + "," + total;
             output.add( out );
-
         }
+
+        total = 0;
+        for(cur_index = cur_index; cur_index < final_index; cur_index++){
+            int agg = new Integer(contig.get(cur_index)[TOT]);
+            if ( agg > 1)
+                total++;
+        }
+        String out = name + "," + step_pos + "," + final_pos + "," + total;
+        output.add(out);
 
         return output;
 
@@ -453,6 +462,7 @@ class DefaultSNPDistribution {
                                                          int sample_field) throws IOException {
 
         ArrayList<String> output = new ArrayList<>();
+        String name = contig.get(0)[CONTIG];
 
         int cur_index = 0;
         int step_index = 0;
@@ -477,7 +487,7 @@ class DefaultSNPDistribution {
             step_set = false;
             cur_pos = new Integer( contig.get( step_index )[POS] );
 
-            for (cur_index = step_index; cur_pos < win_end_pos && cur_index < final_index; cur_index++) {
+            for (cur_index = step_index; cur_pos < win_end_pos && cur_index <= final_index; cur_index++) {
 
                 String[] line = contig.get(cur_index);
                 cur_pos = new Integer(line[POS]);
@@ -496,17 +506,20 @@ class DefaultSNPDistribution {
                 }
             }
 
-            String out = win_start_pos + "," + win_end_pos + "," + total;
+            String out = name +","+win_start_pos + "," + win_end_pos + "," + total;
             output.add( out );
-
         }
-
-
-
-        /**
-         * TODO: Add a step to deal with the last few lines in an input, which are likely to be smaller than a window
-         *          If this is not done, these last lines will be essentially discarded, which is an error
-         **/
+        total = 0;
+        for(cur_index = cur_index; cur_index < final_index; cur_index++){
+            String[] line = contig.get(cur_index);
+            cur_pos = new Integer(line[POS]);
+            String cur_samp = line[ CONTIG + sample_field];
+            String cur_ref = line[REF];
+            if ( !cur_ref.equals(cur_samp) && cur_pos > win_start_pos )
+                total++;
+        }
+        String out = name+","+step_pos + "," + final_pos + "," + total;
+        output.add(out);
 
         return output;
     }

@@ -252,56 +252,56 @@ class DefaultSNPDistribution {
      * @return an ArrayList representing lines of comma-delimited output
      */
     private ArrayList<String> getAggregateSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig){
+
         ArrayList<String> output = new ArrayList<>();
 
-        boolean no_slide = false;
-        if( window_size == step_size ) no_slide = true;
+        int cur_index = 0;
+        int step_index = 0;
+        boolean step_set ;
 
-        int start_pos = 0; // the start position (window lower bound)
-        int end_pos = 0; // the end position (window upper bound)
+        int final_index = contig.size();
+        int final_pos = new Integer( contig.get((contig.size() - 1 ))[POS] );
 
-        int ss_index = 0; // where we are 'pointing' in the contig arraylist
-        int ss_step_index = 0; // where in the contig arraylist we will start for the next loop
-        boolean step_index_set; // if the ss_step_index has been set for the current loop or not
+        int win_start_pos = 0;
+        int win_end_pos ;
+        int step_pos = 0 ;
+        int cur_pos = 0 ;
 
-        int range_total; // the sum total of snps in each window we analyze
+        int total;
 
+        while( cur_pos + step_size <= final_pos){
 
-        while( start_pos + window_size < new Integer( contig.get( contig.size()-1 )[POS] ) ){
-            end_pos = start_pos + window_size;
-            step_index_set = false;
-            range_total = 0;
+            win_start_pos = step_pos;
+            win_end_pos = win_start_pos + window_size;
+            step_pos = win_start_pos + step_size;
+            total = 0;
+            step_set = false;
+            cur_pos = new Integer( contig.get( step_index )[POS] );
 
-            // if the next snp position in the snapshot is beyond (after) our current window:
-            // the total for this range is zero (the for-loop will be ignored)
-            int temp_pos = new Integer( contig.get( ss_index )[POS] );
-            if( temp_pos > end_pos ){
-                range_total = 0;
-            }
-            else{
-                for( ss_index = ss_step_index; new Integer(contig.get(ss_index)[POS]) <= end_pos; ss_index++ ){
-                    int tot = new Integer( contig.get( ss_index )[TOT] );
-                    temp_pos = new Integer( contig.get( ss_index )[POS] );
+            for (cur_index = step_index; cur_pos < win_end_pos && cur_index < final_index; cur_index++) {
+                cur_pos = new Integer(contig.get(cur_index)[POS]);
+                int agg = new Integer(contig.get(cur_index)[TOT]);
 
-                    if( tot > 1 )
-                        range_total++ ;
-                    if( no_slide )
-                        ss_step_index++;
-                    else if( temp_pos >= start_pos + step_size
-                            && !step_index_set ) {
-                        ss_step_index = ss_index;
-                        step_index_set = true;
-                    }
+                if (agg > 1 && cur_pos > win_start_pos)
+                    total++;
+                if (cur_pos >= step_pos && !step_set) {
+                    step_index = cur_index;
+                    step_set = true;
+                }
+                try {
+                    cur_pos = new Integer(contig.get(cur_index + 1)[POS]);
+                } catch (IndexOutOfBoundsException e) {
+                    break;
                 }
             }
-            String contig_name = contig.get( ss_index )[CONTIG];
-            String out = start_pos + "," + end_pos + "," + contig_name + "," + range_total;
+
+            String out = win_start_pos + "," + win_end_pos + "," + total;
             output.add( out );
 
-            start_pos += step_size;
         }
 
         return output;
+
     }
 
     /**
@@ -449,57 +449,64 @@ class DefaultSNPDistribution {
      * @return return a Generic ArrayList as output, with each element representing distribution data for a single sample.
      * @throws IOException
      */
-    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig, int sample_field) throws IOException {
+    ArrayList<String> getIndividualSampleSNPDistribution(int window_size, int step_size, ArrayList<String[]> contig,
+                                                         int sample_field) throws IOException {
 
         ArrayList<String> output = new ArrayList<>();
 
-            String header = "fromPos,toPos," + sample_field + ":" + sample_names.get( sample_field - 1 );
-            if ( sample_field <= 0 || sample_field > sample_count )
-                throw new IndexOutOfBoundsException( "No such sample. Refer to a sample between 1 and " + sample_count );
+        int cur_index = 0;
+        int step_index = 0;
+        boolean step_set ;
 
-            boolean no_slide = false;
-            if ( window_size == step_size ) no_slide = true;
+        int final_index = contig.size();
+        int final_pos = new Integer( contig.get((contig.size() - 1 ))[POS] );
 
-            int start_pos = 0;
-            int ss_index = 0;
-            int ss_step_index = 0;
-            boolean step_index_set;
-            int end_pos;
+        int win_start_pos = 0;
+        int win_end_pos ;
+        int step_pos = 0 ;
+        int cur_pos = 0 ;
 
-            String out; // used to create formatted output per each line
+        int total;
 
-            int range_total;
-            while ( start_pos + window_size < new Integer( contig.get( contig.size()-1 )[POS]) ){
+        while( cur_pos + step_size <= final_pos){
 
-                end_pos = start_pos + window_size;
-                step_index_set = false;
-                range_total = 0;
+            win_start_pos = step_pos;
+            win_end_pos = win_start_pos + window_size;
+            step_pos = win_start_pos + step_size;
+            total = 0;
+            step_set = false;
+            cur_pos = new Integer( contig.get( step_index )[POS] );
 
-                // if the next snp position in the snapshot is beyond (after) our current window:
-                // the total for this range is zero (the for-loop will be ignored)
-                int temp_pos = new Integer( contig.get( ss_index )[POS] );
-                if ( temp_pos > end_pos ) {
-                    range_total = 0;
-                } else {
-                    for ( ss_index = ss_step_index; new Integer(contig.get( ss_index )[POS]) <= end_pos; ss_index++ ) {
-                        String sample = contig.get( ss_index )[CONTIG + sample_field];
-                        String reference = contig.get( ss_index )[REF];
-                        if ( !sample.equals(reference) )
-                            range_total++;
-                        if ( no_slide )
-                            ss_step_index++;
-                        else if (new Integer(contig.get( ss_index )[POS]) >= start_pos + step_size && !step_index_set) {
-                            ss_step_index = ss_index;
-                            step_index_set = true;
-                        }
-                    }
+            for (cur_index = step_index; cur_pos < win_end_pos && cur_index < final_index; cur_index++) {
+
+                String[] line = contig.get(cur_index);
+                cur_pos = new Integer(line[POS]);
+                String cur_samp = line[ CONTIG + sample_field];
+                String cur_ref = line[REF];
+                if ( !cur_ref.equals(cur_samp) && cur_pos > win_start_pos )
+                    total++;
+                if (cur_pos >= step_pos && !step_set) {
+                    step_index = cur_index;
+                    step_set = true;
                 }
-
-                out = start_pos + "," + end_pos + "," + range_total;
-
-                output.add( out );
-                start_pos += step_size;
+                try {
+                    cur_pos = new Integer(contig.get(cur_index + 1)[POS]);
+                } catch (IndexOutOfBoundsException e) {
+                    break;
+                }
             }
+
+            String out = win_start_pos + "," + win_end_pos + "," + total;
+            output.add( out );
+
+        }
+
+
+
+        /**
+         * TODO: Add a step to deal with the last few lines in an input, which are likely to be smaller than a window
+         *          If this is not done, these last lines will be essentially discarded, which is an error
+         **/
 
         return output;
     }
@@ -585,6 +592,7 @@ class DefaultSNPDistribution {
 
         for( ArrayList<String> list : snp_lists ){
            for( String line : list ){
+               if(index>=agg_dist.size()) break;
                String temp1 = agg_dist.get( index );
                String temp2 = line.substring( line.lastIndexOf( ',' ), line.length() );
                temp1 += temp2;
